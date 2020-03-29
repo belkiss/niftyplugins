@@ -105,7 +105,7 @@ namespace Aurora
 
 		private static void OnMessage(Level level, string format, object[] args)
 		{
-			string message = string.Format(format, args);
+			string message = args.Length > 0 ? string.Format(format, args) : format;
 			string formattedLine;
 			string indent = "";
 			string levelName = level.ToString().PadLeft(5, ' ');
