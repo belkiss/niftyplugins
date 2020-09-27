@@ -37,13 +37,6 @@ namespace Aurora
 			get { return mHandlers.Count; }
 		}
 
-		static Log()
-		{
-			mHandlers = new List<Handler>();
-			mPrefix = "";
-			mIndent = 0;
-		}
-
 		public static void AddHandler(Handler handler)
 		{
 			if(null == handler)
@@ -133,8 +126,8 @@ namespace Aurora
 			}
 		}
 
-		private static List<Handler> mHandlers;
-		private static string mPrefix;
-		private static int mIndent;
+		private static List<Handler> mHandlers = new List<Handler>();
+		private static string mPrefix = "";
+		private static int mIndent = 0;
 	}
 }
