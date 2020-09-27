@@ -78,12 +78,12 @@ namespace Aurora
 		//
 		// BEGIN INTERNALS
 		//
-		static private Mutex m_queueLock = new Mutex();
-		static private Semaphore m_startEvent = new Semaphore(0, 9999);
-		static private Queue<CommandThread> m_commandQueue = new Queue<CommandThread>();
-		static private System.Threading.Thread m_helperThread;
+		private static Mutex m_queueLock = new Mutex();
+		private static Semaphore m_startEvent = new Semaphore(0, 9999);
+		private static Queue<CommandThread> m_commandQueue = new Queue<CommandThread>();
+		private static System.Threading.Thread m_helperThread;
 
-		static private void ThreadMain()
+		private static void ThreadMain()
 		{
 			while(true)
 			{
@@ -138,7 +138,7 @@ namespace Aurora
 			}
 		}
 
-		static private bool RunCommand(OutputWindowPane output, string executable, string commandline, string workingdir, int timeout)
+		private static bool RunCommand(OutputWindowPane output, string executable, string commandline, string workingdir, int timeout)
 		{
 			try
 			{
@@ -176,7 +176,7 @@ namespace Aurora
 					// Fire and forget task.
 					return true;
 				}
-				
+
 				bool exited = false;
 				string alloutput = "";
 				using (Process.Handler stderr = new Process.Handler(), stdout = new Process.Handler())
@@ -191,8 +191,8 @@ namespace Aurora
 
 					/*
 					 * This causes the plugin to unexpectedly crash, since it brings the entire thread down, and thus the entire environment?!?
-					 * 
-					
+					 *
+
 					if (0 != process.ExitCode)
 					{
 						throw new Process.Error("Failed to execute {0} {1}, exit code was {2}", executable, process.StartInfo.Arguments, process.ExitCode);
@@ -202,7 +202,7 @@ namespace Aurora
 					stdout.sentinel.WaitOne();
 					alloutput = stdout.buffer + "\n" + stderr.buffer;
 				}
-				
+
 				if(!exited)
 				{
 					Log.Info("{0}: {1} timed out ({2} ms)", executable, commandline, timeout);
