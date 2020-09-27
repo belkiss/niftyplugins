@@ -1,24 +1,16 @@
 ﻿// Copyright (C) 2006-2015 Jim Tilander. See COPYING for and README for more details.
 using System;
 using System.ComponentModel.Design;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
+using System.Reflection;
 using System.Runtime.InteropServices;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.OLE.Interop;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.Win32;
+using Aurora;
+using Aurora.NiftyPerforce;
 using EnvDTE;
-using System.Resources;
 using EnvDTE80;
 using Microsoft.VisualStudio.CommandBars;
-using System.IO;
-using System.Reflection;
-using Aurora.NiftyPerforce;
-using Aurora;
-using System.Windows.Forms;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 
 using System.Threading;
 using Task = System.Threading.Tasks.Task;
@@ -42,19 +34,23 @@ namespace NiftyPerforce
 	/// To get loaded into VS, the package must be referred by &lt;Asset Type="Microsoft.VisualStudio.VsPackage" ...&gt; in .vsixmanifest file.
 	/// </para>
 	/// </remarks>
+	// Declare that resources for the package are to be found in the managed assembly resources, and not in a satellite dll
 	[PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-	[InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
+	// Register the product to be listed in About box
+	[InstalledProductRegistration("#110", "#112", Vsix.Version, IconResourceID = 400)]
 	[ProvideAutoLoad(Microsoft.VisualStudio.VSConstants.UICONTEXT.NoSolution_string, PackageAutoLoadFlags.BackgroundLoad)] // Note: the package must be loaded on startup to create and bind commands
-	[Guid(NiftyPerforcePackage.PackageGuidString)]
+	// Register the resource ID of the CTMENU section (generated from compiling the VSCT file), so the IDE will know how to merge this package's menus with the rest of the IDE when "devenv /setup" is run
+	// The menu resource ID needs to match the ResourceName number defined in the csproj project file in the VSCTCompile section
+	// Everytime the version number changes VS will automatically update the menus on startup; if the version doesn't change, you will need to run manually "devenv /setup /rootsuffix:Exp" to see VSCT changes reflected in IDE
+	[ProvideMenuResource("Menus.ctmenu", 1)]
+	// Register a sample options page visible as Tools/Options/SourceControl/NiftyPerforceSettings when the provider is active
+	[ProvideOptionPage(typeof(Config), "Source Control", Vsix.Name, 106, 107, false)]
+	//[ProvideToolsOptionsPageVisibility("Source Control", "Nifty Perforce Settings", PackageGuids.guidNiftyPerforceSccProviderString)]
+	// Declare the package guid
+	[Guid(PackageGuids.guidNiftyPerforcePackageString)]
 	[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
 	public sealed class NiftyPerforcePackage : AsyncPackage
 	{
-		/// <summary>
-		/// Package GUID string.
-		/// </summary>
-		public const string PackageGuidString = "47a20418-f762-4ce9-a34d-a8c96611a172";
-		public const string PackageGuidGroup = "d8ef26a8-e88c-4ad1-85fd-ddc48a207530";
-
 		private Plugin m_plugin = null;
 		private CommandRegistry m_commandRegistry = null;
 
@@ -77,25 +73,26 @@ namespace NiftyPerforce
 			await base.InitializeAsync(cancellationToken, progress);
 
 			// Every plugin needs a command bar.
-			DTE2 application = await base.GetServiceAsync(typeof(DTE)).ConfigureAwait(false) as DTE2;
-			IVsProfferCommands3 profferCommands3 = await base.GetServiceAsync(typeof(SVsProfferCommands)) as IVsProfferCommands3;
+			DTE2 application = await GetServiceAsync(typeof(DTE)).ConfigureAwait(false) as DTE2;
 			OleMenuCommandService oleMenuCommandService = await GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
 
 			// Switches to the UI thread in order to consume some services used in command initialization
 			await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
-			// Load up the options from file.
-			string optionsFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "NiftyPerforce.xml");
-			Config options = Config.Load(optionsFileName);
+			var config = (Config)GetDialogPage(typeof(Config));
+			Singleton<Config>.Instance = config;
 
-			ImageList icons = new ImageList();
-			icons.Images.AddStrip(Properties.Resources.Icons);
-			m_plugin = new Plugin(application, profferCommands3, icons, oleMenuCommandService, "NiftyPerforce", "Aurora.NiftyPerforce.Connect", options);
+			config.OnApplyEvent += (object sender, EventArgs e) => {
+				if (config.CleanLegacyNiftyCommands)
+				{
+					Cleanup();
+					config.CleanLegacyNiftyCommands = false;
+				}
+			};
 
-//			Cleanup(); // TODO: remove this line
+			m_plugin = new Plugin(application, oleMenuCommandService, "NiftyPerforce", "Aurora.NiftyPerforce.Connect", config);
 
-			CommandBar commandBar = m_plugin.AddCommandBar("NiftyPerforce", MsoBarPosition.msoBarTop);
-			m_commandRegistry = new CommandRegistry(m_plugin, commandBar, new Guid(PackageGuidString), new Guid(PackageGuidGroup));
+			m_commandRegistry = new CommandRegistry(m_plugin, new Guid(PackageGuids.guidNiftyPerforcePackageString), new Guid(PackageGuids.guidNiftyPerforcePackageCmdSetString));
 
 			// Initialize the logging system.
 			if (Log.HandlerCount == 0)
@@ -111,55 +108,25 @@ namespace NiftyPerforce
 			Log.Debug("Booting up...");
 			Log.IncIndent();
 
-			bool doContextCommands = true;
+			// Add our command handlers for menu (commands must exist in the .vsct file)
+			m_commandRegistry.RegisterCommand(new P4EditModified       (m_plugin, "NiftyEditModified"));
+			m_commandRegistry.RegisterCommand(new P4EditItem           (m_plugin, "NiftyEdit"));
+			m_commandRegistry.RegisterCommand(new P4DiffItem           (m_plugin, "NiftyDiff"));
+			m_commandRegistry.RegisterCommand(new P4RevisionHistoryItem(m_plugin, "NiftyHistory", false));
+			m_commandRegistry.RegisterCommand(new P4RevisionHistoryItem(m_plugin, "NiftyHistoryMain", true));
+			m_commandRegistry.RegisterCommand(new P4TimeLapseItem      (m_plugin, "NiftyTimeLapse", false));
+			m_commandRegistry.RegisterCommand(new P4TimeLapseItem      (m_plugin, "NiftyTimeLapseMain", true));
+			m_commandRegistry.RegisterCommand(new P4RevisionGraphItem  (m_plugin, "NiftyRevisionGraph", false));
+			m_commandRegistry.RegisterCommand(new P4RevisionGraphItem  (m_plugin, "NiftyRevisionGraphMain", true));
+			m_commandRegistry.RegisterCommand(new P4RevertItem         (m_plugin, "NiftyRevert", false));
+			m_commandRegistry.RegisterCommand(new P4RevertItem         (m_plugin, "NiftyRevertUnchanged", true));
+			m_commandRegistry.RegisterCommand(new P4ShowItem           (m_plugin, "NiftyShow"));
 
-			bool doBindings = options.EnableBindings;
-			m_commandRegistry.RegisterCommand(doBindings, new NiftyConfigure(m_plugin, "NiftyConfig"), true);
-
-			m_commandRegistry.RegisterCommand(doBindings, new P4EditModified(m_plugin, "NiftyEditModified"), true);
-
-			m_commandRegistry.RegisterCommand(doBindings, new P4EditItem(m_plugin, "NiftyEdit"), true);
-			if (doContextCommands) m_commandRegistry.RegisterCommand(doBindings, new P4EditItem(m_plugin, "NiftyEditItem"), false);
-			if (doContextCommands) m_commandRegistry.RegisterCommand(doBindings, new P4EditSolution(m_plugin, "NiftyEditSolution"), false);
-
-			m_commandRegistry.RegisterCommand(doBindings, new P4DiffItem(m_plugin, "NiftyDiff"));
-			if (doContextCommands) m_commandRegistry.RegisterCommand(doBindings, new P4DiffItem(m_plugin, "NiftyDiffItem"), false);
-			if (doContextCommands) m_commandRegistry.RegisterCommand(doBindings, new P4DiffSolution(m_plugin, "NiftyDiffSolution"), false);
-
-			m_commandRegistry.RegisterCommand(doBindings, new P4RevisionHistoryItem(m_plugin, "NiftyHistory", false), true);
-			m_commandRegistry.RegisterCommand(doBindings, new P4RevisionHistoryItem(m_plugin, "NiftyHistoryMain", true), true);
-			if (doContextCommands) m_commandRegistry.RegisterCommand(doBindings, new P4RevisionHistoryItem(m_plugin, "NiftyHistoryItem", false), false);
-			if (doContextCommands) m_commandRegistry.RegisterCommand(doBindings, new P4RevisionHistoryItem(m_plugin, "NiftyHistoryItemMain", true), false);
-			if (doContextCommands) m_commandRegistry.RegisterCommand(doBindings, new P4RevisionHistorySolution(m_plugin, "NiftyHistorySolution"), false);
-
-			m_commandRegistry.RegisterCommand(doBindings, new P4TimeLapseItem(m_plugin, "NiftyTimeLapse", false), true);
-			m_commandRegistry.RegisterCommand(doBindings, new P4TimeLapseItem(m_plugin, "NiftyTimeLapseMain", true), true);
-			if (doContextCommands) m_commandRegistry.RegisterCommand(doBindings, new P4TimeLapseItem(m_plugin, "NiftyTimeLapseItem", false), false);
-			if (doContextCommands) m_commandRegistry.RegisterCommand(doBindings, new P4TimeLapseItem(m_plugin, "NiftyTimeLapseItemMain", true), false);
-
-			m_commandRegistry.RegisterCommand(doBindings, new P4RevisionGraphItem(m_plugin, "NiftyRevisionGraph", false), true);
-			m_commandRegistry.RegisterCommand(doBindings, new P4RevisionGraphItem(m_plugin, "NiftyRevisionGraphMain", true), true);
-			if (doContextCommands) m_commandRegistry.RegisterCommand(doBindings, new P4RevisionGraphItem(m_plugin, "NiftyRevisionGraphItem", false), false);
-			if (doContextCommands) m_commandRegistry.RegisterCommand(doBindings, new P4RevisionGraphItem(m_plugin, "NiftyRevisionGraphItemMain", true), false);
-
-			m_commandRegistry.RegisterCommand(doBindings, new P4RevertItem(m_plugin, "NiftyRevert", false), true);
-			m_commandRegistry.RegisterCommand(doBindings, new P4RevertItem(m_plugin, "NiftyRevertUnchanged", true), true);
-			if (doContextCommands) m_commandRegistry.RegisterCommand(doBindings, new P4RevertItem(m_plugin, "NiftyRevertItem", false), false);
-			if (doContextCommands) m_commandRegistry.RegisterCommand(doBindings, new P4RevertItem(m_plugin, "NiftyRevertUnchangedItem", true), false);
-
-			m_commandRegistry.RegisterCommand(doBindings, new P4ShowItem(m_plugin, "NiftyShow"), true);
-			if (doContextCommands) m_commandRegistry.RegisterCommand(doBindings, new P4ShowItem(m_plugin, "NiftyShowItem"), false);
 
 			m_plugin.AddFeature(new AutoAddDelete(m_plugin));
 			m_plugin.AddFeature(new AutoCheckoutProject(m_plugin));
-			m_plugin.AddFeature(new AutoCheckoutOnBuild(m_plugin));
 			m_plugin.AddFeature(new AutoCheckoutTextEdit(m_plugin));
 			m_plugin.AddFeature(new AutoCheckoutOnSave(m_plugin));
-
-#if DEBUG
-			// Use this to track down event GUIDs.
-			//m_plugin.AddFeature(new FindEvents(m_plugin));
-#endif
 
 			P4Operations.CheckInstalledFiles();
 
@@ -171,18 +138,22 @@ namespace NiftyPerforce
 #if DEBUG
 			Log.Info("NiftyPerforce (Debug)");
 #else
-				//Log.Info("NiftyPerforce (Release)");
+			//Log.Info("NiftyPerforce (Release)");
 #endif
 			// Show where we are and when we were compiled...
 			Log.Info("I'm running {0} compiled on {1}", Assembly.GetExecutingAssembly().Location, System.IO.File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location));
 		}
 
 		/// <summary>
-		///  Removes all installed commands and controls for testing purposes.
+		///  Removes all installed legacy commands and controls.
 		/// </summary>
-		private void Cleanup()
+		public void Cleanup()
 		{
-			IVsProfferCommands3 profferCommands3 = base.GetServiceAsync(typeof(SVsProfferCommands)) as IVsProfferCommands3;
+			Log.Info("Cleaning up all legacy nifty commands");
+
+			ThreadHelper.ThrowIfNotOnUIThread();
+
+			IVsProfferCommands3 profferCommands3 = base.GetService(typeof(SVsProfferCommands)) as IVsProfferCommands3;
 			RemoveCommandBar("NiftyPerforceCmdBar", profferCommands3);
 			RemoveCommandBar("NiftyPerforce", profferCommands3);
 
@@ -224,8 +195,7 @@ namespace NiftyPerforce
 				{
 					profferCommands3.RemoveNamedCommand(name);
 				}
-			} catch (Exception) {
-			}
+			} catch (Exception) { }
 
 			string[] bars = {
 				"Project",
@@ -233,7 +203,7 @@ namespace NiftyPerforce
 				"Easy MDI Document Window",
 				"Cross Project Multi Item",
 				"Cross Project Multi Project"
-				};
+			};
 
 			string Absname = m_plugin.Prefix + "." + name;
 
@@ -268,12 +238,11 @@ namespace NiftyPerforce
 			}
 		}
 
-		private void RemoveCommandBar(string name, IVsProfferCommands3 profferCommands3)
+		// Remove a command bar and contained controls
+		private static void RemoveCommandBar(string name, IVsProfferCommands3 profferCommands3)
 		{
-			// Remove a command bar and contained controls
 			DTE2 dte = GetGlobalService(typeof(DTE)) as DTE2;
 			CommandBars commandBars = (CommandBars)dte.CommandBars;
-			Commands commands = dte.Commands;
 			CommandBar existingCmdBar = null;
 
 			try

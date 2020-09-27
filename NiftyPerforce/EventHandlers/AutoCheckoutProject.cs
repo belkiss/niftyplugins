@@ -1,9 +1,8 @@
 // Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
 using System;
-using System.IO;
-using EnvDTE;
-using EnvDTE80;
 using System.Collections.Generic;
+using EnvDTE;
+using NiftyPerforce;
 
 namespace Aurora
 {
@@ -14,25 +13,47 @@ namespace Aurora
 			public AutoCheckoutProject(Plugin plugin)
 				: base(plugin, "AutoCheckoutProject", "Automatically checks out the project files")
 			{
-				if(!Singleton<Config>.Instance.autoCheckoutProject)
+				((Config)mPlugin.Options).OnApplyEvent += RegisterEvents;
+				RegisterEvents();
+			}
+
+			private readonly string[] _commands =
+			{
+				"ClassViewContextMenus.ClassViewProject.Properties",
+				"ClassViewContextMenus.ClassViewMultiselectProjectreferencesItems.Properties",
+				"File.Properties",
+				"View.PropertiesWindow",
+				"Project.Properties",
+				"Project.AddNewItem",
+				"Project.AddExistingItem",
+				"Edit.Delete", // hmm : removing a file from Solution Explorer is just Edit.Delete !?
+				"File.Remove" // I don't think this actually does anything
+			};
+			private List<string> _registeredCommands;
+
+			private void RegisterEvents(object sender = null, EventArgs e = null)
+			{
+				if (((Config)mPlugin.Options).AutoCheckoutProject)
 				{
-					return;
+					if (_registeredCommands == null)
+					{
+						Log.Info("Adding handlers for automatically checking out .vcproj files when you do changes to the project");
+						foreach (string command in _commands)
+						{
+							if (RegisterHandler(command, OnCheckoutSelectedProjects))
+								_registeredCommands.Add(command);
+							else
+								Log.Warning("Failed to register {0} to command '{1}'", nameof(OnCheckoutSelectedProjects), command);
+						}
+					}
 				}
-
-				Log.Info("Adding handlers for automatically checking out .vcproj files when you do changes to the project");
-				RegisterHandler("ClassViewContextMenus.ClassViewProject.Properties", OnCheckoutSelectedProjects);
-				RegisterHandler("ClassViewContextMenus.ClassViewMultiselectProjectreferencesItems.Properties", OnCheckoutSelectedProjects);
-				RegisterHandler("File.Properties", OnCheckoutSelectedProjects);
-				RegisterHandler("View.PropertiesWindow", OnCheckoutSelectedProjects);
-				RegisterHandler("Project.Properties", OnCheckoutSelectedProjects);
-				RegisterHandler("Project.AddNewItem", OnCheckoutSelectedProjects);
-				RegisterHandler("Project.AddExistingItem", OnCheckoutSelectedProjects);
-
-				// hmm : removing a file from Solution Explorer is just Edit.Delete !?
-				RegisterHandler("Edit.Delete", OnCheckoutSelectedProjects);
-				//RegisterHandler("5EFC7975-14BC-11CF-9B2B-00AA00573819:17", OnCheckoutSelectedProjects);
-
-				RegisterHandler("File.Remove", OnCheckoutSelectedProjects); // I don't think this actually does anything
+				else if (_registeredCommands != null)
+				{
+					Log.Info("Removing handlers for automatically checking out .vcproj files when you do changes to the project");
+					foreach (string command in _registeredCommands)
+						UnregisterHandler(command, OnCheckoutSelectedProjects);
+					_registeredCommands = null;
+				}
 			}
 
 			private void OnCheckoutSelectedProjects(string Guid, int ID, object CustomIn, object CustomOut, ref bool CancelDefault)

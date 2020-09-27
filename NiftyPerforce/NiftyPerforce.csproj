@@ -59,39 +59,39 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands\ItemCommandBase.cs" />
-    <Compile Include="Commands\NiftyConfigure.cs" />
     <Compile Include="Commands\P4DiffItem.cs" />
-    <Compile Include="Commands\P4DiffSolution.cs" />
     <Compile Include="Commands\P4EditItem.cs" />
     <Compile Include="Commands\P4EditModified.cs" />
-    <Compile Include="Commands\P4EditSolution.cs" />
-    <Compile Include="Commands\P4RenameItem.cs" />
     <Compile Include="Commands\P4RevertItem.cs" />
     <Compile Include="Commands\P4RevisionGraphItem.cs" />
     <Compile Include="Commands\P4RevisionHistoryItem.cs" />
-    <Compile Include="Commands\P4RevisionHistorySolution.cs" />
     <Compile Include="Commands\P4ShowItem.cs" />
     <Compile Include="Commands\P4TimeLapseItem.cs" />
-    <Compile Include="Config.cs" />
-    <Compile Include="ConfigDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ConfigDialog.Designer.cs">
-      <DependentUpon>ConfigDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="EventHandlers\AutoAddDelete.cs" />
-    <Compile Include="EventHandlers\AutoCheckoutOnBuild.cs" />
     <Compile Include="EventHandlers\AutoCheckoutOnSave.cs" />
     <Compile Include="EventHandlers\AutoCheckoutProject.cs" />
     <Compile Include="EventHandlers\AutoCheckoutTextEdit.cs" />
-    <Compile Include="EventHandlers\FindEvents.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="NiftyPerforce.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>NiftyPerforce.vsct</DependentUpon>
+    </Compile>
     <Compile Include="NiftyPerforcePackage.cs" />
+    <Compile Include="OptionsDialogPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="P4Operations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="source.extension.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -101,12 +101,16 @@
     </Content>
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
+      <Generator>VsixManifestGenerator</Generator>
+      <LastGenOutput>source.extension.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
     <VSCTCompile Include="NiftyPerforce.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
+      <Generator>VsctGenerator</Generator>
+      <LastGenOutput>NiftyPerforce.cs</LastGenOutput>
     </VSCTCompile>
     <Content Include="Resources\Icons.png" />
   </ItemGroup>
@@ -120,9 +124,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ConfigDialog.resx">
-      <DependentUpon>ConfigDialog.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -140,6 +141,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
+      <Version>2.9.8</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.SDK" Version="15.9.3" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.VisualStudio.SDK.EmbedInteropTypes" Version="15.0.27" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.4.1055" />

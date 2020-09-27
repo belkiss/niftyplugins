@@ -12,7 +12,7 @@ namespace Aurora
 		private string mTooltip;
 
 		public string Name { get { return mName; } }
-		
+
 		public Feature(string name, string tooltip)
 		{
 			mName = name;
@@ -27,7 +27,6 @@ namespace Aurora
 
 	public abstract class PreCommandFeature : Feature
 	{
-		private List<CommandEvents> mEvents = new List<CommandEvents>();
 		protected Plugin mPlugin;
 
 		public PreCommandFeature(Plugin plugin, string name, string tooltip)
@@ -36,13 +35,21 @@ namespace Aurora
 			mPlugin = plugin;
 		}
 
-		protected void RegisterHandler(string commandName, _dispCommandEvents_BeforeExecuteEventHandler handler)
+		protected bool RegisterHandler(string commandName, _dispCommandEvents_BeforeExecuteEventHandler handler)
 		{
 			CommandEvents events = mPlugin.FindCommandEvents(commandName);
 			if(null == events)
-				return;
+				return false;
 			events.BeforeExecute += handler;
-			mEvents.Add(events);
+			return true;
+		}
+
+		protected void UnregisterHandler(string commandName, _dispCommandEvents_BeforeExecuteEventHandler handler)
+		{
+			CommandEvents events = mPlugin.FindCommandEvents(commandName);
+			if (null == events)
+				return;
+			events.BeforeExecute -= handler;
 		}
 	};
 }

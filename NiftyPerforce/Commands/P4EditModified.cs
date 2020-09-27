@@ -1,53 +1,52 @@
 // Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
-using System;
 using EnvDTE;
-using EnvDTE80;
+using Aurora;
 
-namespace Aurora
+namespace NiftyPerforce
 {
-	namespace NiftyPerforce
+	class P4EditModified : CommandBase
 	{
-		class P4EditModified : CommandBase
+		public P4EditModified(Plugin plugin, string canonicalName)
+			: base("EditModified", canonicalName, plugin, PackageIds.NiftyEditModified)
 		{
-			public P4EditModified(Plugin plugin, string canonicalName)
-				: base("EditModified", canonicalName, plugin, "Opens all the currently modifed files for edit")
+		}
+
+
+        public override bool OnCommand()
+		{
+			Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+			Log.Info("P4EditModified : looking for modified files");
+
+			if(!Plugin.App.Solution.Saved)
 			{
+				Log.Info($"P4EditModified : solution {Plugin.App.Solution.FullName} was dirty, checkout");
+				P4Operations.EditFile(Plugin.OutputPane, Plugin.App.Solution.FullName);
 			}
 
-			override public int IconIndex { get { return 5; } }
-
-            public override bool OnCommand()
+			foreach(Project p in Plugin.App.Solution.Projects)
 			{
-				Log.Info("P4EditModified : now checking {0} documents for modification", Plugin.App.Documents.Count);
-
-				if(!Plugin.App.Solution.Saved)
+				if(!p.Saved)
 				{
-					P4Operations.EditFile(Plugin.OutputPane, Plugin.App.Solution.FullName);
+					Log.Info($"P4EditModified : project {p.FullName} was dirty, checkout");
+					P4Operations.EditFile(Plugin.OutputPane, p.FullName);
 				}
-
-				foreach(Project p in Plugin.App.Solution.Projects)
-				{
-					if(!p.Saved)
-					{
-						P4Operations.EditFile(Plugin.OutputPane, p.FullName);
-					}
-				}
-
-				foreach(Document doc in Plugin.App.Documents)
-				{
-					if(!doc.Saved)
-					{
-						P4Operations.EditFile(Plugin.OutputPane, doc.FullName);
-					}
-				}
-
-				return true;
 			}
 
-			public override bool IsEnabled()
+			foreach(Document doc in Plugin.App.Documents)
 			{
-				return true;
+				if(!doc.Saved)
+				{
+					Log.Info($"P4EditModified : document {doc.FullName} was dirty, checkout");
+					P4Operations.EditFile(Plugin.OutputPane, doc.FullName);
+				}
 			}
+
+			return true;
+		}
+
+		public override bool IsEnabled()
+		{
+			return true;
 		}
 	}
 }

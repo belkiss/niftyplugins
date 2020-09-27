@@ -4,7 +4,7 @@ using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using System.Linq;
+using NiftyPerforce;
 
 namespace Aurora
 {
@@ -41,60 +41,43 @@ namespace Aurora
 
 		class AutoCheckoutOnSave : PreCommandFeature
 		{
-			internal DTE _dte;
-			internal readonly Lazy<RunningDocumentTable> _rdt;
-			internal readonly Lazy<Microsoft.VisualStudio.OLE.Interop.IServiceProvider> _sp;
+			internal Lazy<RunningDocumentTable> _rdt;
+			internal uint _rdte;
+			internal Lazy<Microsoft.VisualStudio.OLE.Interop.IServiceProvider> _sp;
 
 			public AutoCheckoutOnSave(Plugin plugin)
 				: base(plugin, "AutoCheckoutOnSave", "Automatically checks out files on save")
 			{
-				if(!Singleton<Config>.Instance.autoCheckoutOnSave)
-					return;
+				((Config)mPlugin.Options).OnApplyEvent += RegisterEvents;
+				RegisterEvents();
+			}
 
-				Log.Info("Adding handlers for automatically checking out dirty files when you save");
-				_dte = (DTE)Package.GetGlobalService(typeof(SDTE));
-				_sp = new Lazy<Microsoft.VisualStudio.OLE.Interop.IServiceProvider>(() => Package.GetGlobalService(typeof(Microsoft.VisualStudio.OLE.Interop.IServiceProvider)) as Microsoft.VisualStudio.OLE.Interop.IServiceProvider);
-				_rdt = new Lazy<RunningDocumentTable>(() => new RunningDocumentTable(new ServiceProvider(_sp.Value)));
-				_rdt.Value.Advise(new RunningDocTableEvents(this));
+			private bool RDTAdvised { get { return _sp != null || _rdt != null; } }
+
+			private void RegisterEvents(object sender = null, EventArgs e = null)
+			{
+				if (((Config)mPlugin.Options).AutoCheckoutOnSave)
+				{
+					if (!RDTAdvised)
+					{
+						Log.Info("Adding handlers for automatically checking out dirty files when you save");
+						_sp = new Lazy<Microsoft.VisualStudio.OLE.Interop.IServiceProvider>(() => Package.GetGlobalService(typeof(Microsoft.VisualStudio.OLE.Interop.IServiceProvider)) as Microsoft.VisualStudio.OLE.Interop.IServiceProvider);
+						_rdt = new Lazy<RunningDocumentTable>(() => new RunningDocumentTable(new ServiceProvider(_sp.Value)));
+						_rdte = _rdt.Value.Advise(new RunningDocTableEvents(this));
+					}
+				}
+				else if (RDTAdvised)
+				{
+					Log.Info("Removing handlers for automatically checking out dirty files when you save");
+					_rdt.Value.Unadvise(_rdte);
+					_rdt = null;
+					_sp = null;
+				}
 			}
 
 			internal void OnBeforeSave(string filename)
 			{
 				P4Operations.EditFileImmediate(mPlugin.OutputPane, filename);
-			}
-
-			private void OnSaveSelected(string Guid, int ID, object CustomIn, object CustomOut, ref bool CancelDefault)
-			{
-				foreach(SelectedItem sel in mPlugin.App.SelectedItems)
-				{
-					if(sel.Project != null)
-						P4Operations.EditFileImmediate(mPlugin.OutputPane, sel.Project.FullName);
-					else if(sel.ProjectItem != null)
-						P4Operations.EditFileImmediate(mPlugin.OutputPane, sel.ProjectItem.Document.FullName);
-					else
-						P4Operations.EditFileImmediate(mPlugin.OutputPane, mPlugin.App.Solution.FullName);
-				}
-			}
-
-			private void OnSaveAll(string Guid, int ID, object CustomIn, object CustomOut, ref bool CancelDefault)
-			{
-				if(!mPlugin.App.Solution.Saved)
-					P4Operations.EditFileImmediate(mPlugin.OutputPane, mPlugin.App.Solution.FullName);
-
-				foreach(Document doc in mPlugin.App.Documents)
-				{
-					if(doc.Saved)
-						continue;
-					P4Operations.EditFileImmediate(mPlugin.OutputPane, doc.FullName);
-				}
-
-				if(mPlugin.App.Solution.Projects == null)
-					return;
-
-				foreach(Project p in mPlugin.App.Solution.Projects)
-				{
-					EditProjectRecursive(p);
-				}
 			}
 
 			private void EditProjectRecursive(Project p)

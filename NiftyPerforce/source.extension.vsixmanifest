@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="NiftyPerforce.Tilander.eb29cef1-a8b5-41b1-922d-6ba8cec91ef4" Version="2.0.9" Language="en-US" Publisher="Lambert Clara" />
+        <Identity Id="NiftyPerforce.Tilander.eb29cef1-a8b5-41b1-922d-6ba8cec91ef4" Version="2.0.12" Language="en-US" Publisher="Lambert Clara" />
         <DisplayName>NiftyPerforce</DisplayName>
         <Description xml:space="preserve">Simple Perforce integration for Visual Studio</Description>
         <MoreInfo>https://github.com/belkiss/niftyplugins</MoreInfo>
@@ -20,4 +20,7 @@
     <Assets>
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
     </Assets>
+    <Content>
+        <VsPackage>|%CurrentProject%|</VsPackage>
+    </Content>
 </PackageManifest>

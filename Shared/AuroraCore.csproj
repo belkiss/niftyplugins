@@ -51,7 +51,6 @@
     <Compile Include="CommandRegistry.cs" />
     <Compile Include="DebugLogHandler.cs" />
     <Compile Include="Feature.cs" />
-    <Compile Include="File.cs" />
     <Compile Include="Help.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Plugin.cs" />
@@ -61,6 +60,11 @@
     <Compile Include="VisualStudioLogHandler.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
+      <Version>2.9.8</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.SDK" Version="15.9.3" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.VisualStudio.SDK.EmbedInteropTypes" Version="15.0.27" />
   </ItemGroup>

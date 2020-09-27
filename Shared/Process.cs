@@ -42,7 +42,7 @@ namespace Aurora
 			}
 		};
 
-		public static string Execute(string executable, string workingdir, string arguments, params object[] vaargs)
+		public static string Execute(string executable, string workingdir, string arguments, bool throwIfNonZeroExitCode = true)
 		{
 			using( System.Diagnostics.Process process = new System.Diagnostics.Process() )
 			{
@@ -52,7 +52,7 @@ namespace Aurora
 				process.StartInfo.RedirectStandardError = true;
 				process.StartInfo.CreateNoWindow = true;
 				process.StartInfo.WorkingDirectory = workingdir;
-				process.StartInfo.Arguments = string.Format(arguments, vaargs);
+				process.StartInfo.Arguments = arguments;
 
 				if(!process.Start())
 				{
@@ -69,7 +69,7 @@ namespace Aurora
 
 					process.WaitForExit();
 
-					if(0 != process.ExitCode)
+					if(throwIfNonZeroExitCode && 0 != process.ExitCode)
 					{
 						throw new Error("Failed to execute {0} {1}, exit code was {2}", executable, process.StartInfo.Arguments, process.ExitCode);
 					}

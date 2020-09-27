@@ -1,8 +1,7 @@
 // Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
-using System;
-using System.IO;
 using EnvDTE;
-using EnvDTE80;
+using NiftyPerforce;
+using System;
 
 namespace Aurora
 {
@@ -13,6 +12,12 @@ namespace Aurora
 		{
 			private ProjectItemsEvents m_projectEvents;
 			private SolutionEvents m_solutionEvents;
+
+			private _dispProjectItemsEvents_ItemAddedEventHandler _itemAddedEventHandler;
+			private _dispSolutionEvents_ProjectAddedEventHandler _projectAddedEventHandler;
+			private _dispProjectItemsEvents_ItemRemovedEventHandler _itemRemovedEventHandler;
+			private _dispSolutionEvents_ProjectRemovedEventHandler _projectRemovedEventHandler;
+
 			private Plugin m_plugin;
 
 			public AutoAddDelete(Plugin plugin)
@@ -23,18 +28,57 @@ namespace Aurora
 				m_projectEvents = ((EnvDTE80.Events2)m_plugin.App.Events).ProjectItemsEvents;
 				m_solutionEvents = ((EnvDTE80.Events2)m_plugin.App.Events).SolutionEvents;
 
-				if(((Config)m_plugin.Options).autoAdd)
+				((Config)m_plugin.Options).OnApplyEvent += RegisterEvents;
+				RegisterEvents();
+			}
+
+			private bool AddFilesHandlersInstalled { get { return _itemAddedEventHandler != null || _projectAddedEventHandler != null; } } // second conditional is useless but kept for clarity
+			private bool RemoveFilesHandlersInstalled { get { return _itemRemovedEventHandler != null || _projectRemovedEventHandler != null; } } // second conditional is useless but kept for clarity
+
+			private void RegisterEvents(object sender = null, EventArgs e = null)
+			{
+				if (((Config)m_plugin.Options).AutoAdd)
 				{
-					Log.Info("Adding handlers for automatically add files to perforce as you add them to the project");
-					m_projectEvents.ItemAdded += new _dispProjectItemsEvents_ItemAddedEventHandler(OnItemAdded);
-					m_solutionEvents.ProjectAdded += new _dispSolutionEvents_ProjectAddedEventHandler(OnProjectAdded);
+					if (!AddFilesHandlersInstalled)
+					{
+						Log.Info("Adding handlers for automatically add files to perforce as you add them to the project");
+						_itemAddedEventHandler = new _dispProjectItemsEvents_ItemAddedEventHandler(OnItemAdded);
+						m_projectEvents.ItemAdded += _itemAddedEventHandler;
+
+						_projectAddedEventHandler = new _dispSolutionEvents_ProjectAddedEventHandler(OnProjectAdded);
+						m_solutionEvents.ProjectAdded += _projectAddedEventHandler;
+					}
+				}
+				else if (AddFilesHandlersInstalled)
+				{
+					Log.Info("Removing handlers for automatically add files to perforce as you add them to the project");
+					m_projectEvents.ItemAdded -= _itemAddedEventHandler;
+					_itemAddedEventHandler = null;
+
+					m_solutionEvents.ProjectAdded -= _projectAddedEventHandler;
+					_projectAddedEventHandler = null;
 				}
 
-				if(((Config)m_plugin.Options).autoDelete)
+				if (((Config)m_plugin.Options).AutoDelete)
 				{
-					Log.Info("Adding handlers for automatically deleting files from perforce as you remove them from the project");
-					m_projectEvents.ItemRemoved += new _dispProjectItemsEvents_ItemRemovedEventHandler(OnItemRemoved);
-					m_solutionEvents.ProjectRemoved += new _dispSolutionEvents_ProjectRemovedEventHandler(OnProjectRemoved);
+					if (!RemoveFilesHandlersInstalled)
+					{
+						Log.Info("Adding handlers for automatically deleting files from perforce as you remove them from the project");
+						_itemRemovedEventHandler = new _dispProjectItemsEvents_ItemRemovedEventHandler(OnItemRemoved);
+						m_projectEvents.ItemRemoved += _itemRemovedEventHandler;
+
+						_projectRemovedEventHandler = new _dispSolutionEvents_ProjectRemovedEventHandler(OnProjectRemoved);
+						m_solutionEvents.ProjectRemoved += _projectRemovedEventHandler;
+					}
+				}
+				else if (RemoveFilesHandlersInstalled)
+				{
+					Log.Info("Removing handlers for automatically deleting files from perforce as you remove them from the project");
+					m_projectEvents.ItemRemoved -= _itemRemovedEventHandler;
+					_itemRemovedEventHandler = null;
+
+					m_solutionEvents.ProjectRemoved -= _projectRemovedEventHandler;
+					_projectRemovedEventHandler = null;
 				}
 			}
 
@@ -42,19 +86,19 @@ namespace Aurora
 			{
 				P4Operations.EditFile(m_plugin.OutputPane, item.ContainingProject.FullName);
 
-                if (item.ProjectItems != null)
-                {
-                    for (int i = 0; i < item.FileCount; i++)
-                    {
-                        string name = item.get_FileNames((short)i);
-                        P4Operations.AddFile(m_plugin.OutputPane, name);
-                    }
-                }
-                else
-                {
-                    if(System.IO.File.Exists(item.Name))
-                        P4Operations.AddFile(m_plugin.OutputPane, item.Name);
-                }
+				if (item.ProjectItems != null)
+				{
+					for (int i = 0; i < item.FileCount; i++)
+					{
+						string name = item.get_FileNames((short)i);
+						P4Operations.AddFile(m_plugin.OutputPane, name);
+					}
+				}
+				else
+				{
+					if(System.IO.File.Exists(item.Name))
+						P4Operations.AddFile(m_plugin.OutputPane, item.Name);
+				}
 			}
 
 			public void OnItemRemoved(ProjectItem item)

@@ -1,99 +1,56 @@
 // Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
 using System;
 using EnvDTE;
-using EnvDTE80;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.CommandBars;
 using System.ComponentModel.Design;
 using Microsoft.VisualStudio.Shell;
 
 namespace Aurora
 {
-	// Holds a dictionary between local command names and the instance that holds 
+	// Holds a dictionary between local command names and the instance that holds
 	// the logic to execute and update the command itself.
 	public class CommandRegistry
 	{
 		private Dictionary<string, CommandBase> mCommands;
-		private Dictionary<uint, CommandBase> mCommandsById;
+		private Dictionary<int, CommandBase> mCommandsById;
 		private Plugin mPlugin;
-		private CommandBar mCommandBar;
-		private Guid mPackageGuid;
 		private Guid mCmdGroupGuid;
 
-		public CommandRegistry(Plugin plugin, CommandBar commandBar, Guid packageGuid, Guid cmdGroupGuid)
+		public CommandRegistry(Plugin plugin, Guid packageGuid, Guid cmdGroupGuid)
 		{
 			mCommands = new Dictionary<string, CommandBase>();
-			mCommandsById = new Dictionary<uint, CommandBase>();
+			mCommandsById = new Dictionary<int, CommandBase>();
 			mPlugin = plugin;
-			mCommandBar = commandBar;
-			mPackageGuid = packageGuid;
 			mCmdGroupGuid = cmdGroupGuid;
 		}
 
-		public void RegisterCommand(bool doBindings, CommandBase commandHandler)
+		public void RegisterCommand(CommandBase commandHandler)
 		{
-			RegisterCommand(doBindings, commandHandler, true);
+			var command = RegisterCommandPrivate(commandHandler);
+			if (command != null)
+				mCommands.Add(commandHandler.CanonicalName, commandHandler);
 		}
 
-		public void RegisterCommand(bool doBindings, CommandBase commandHandler, bool onlyToolbar)
-		{
-			OleMenuCommand command = RegisterCommandPrivate(commandHandler, onlyToolbar);
-
-			if(command != null && doBindings)
-			{
-				try
-				{
-                    Command cmd = mPlugin.Commands.Item(commandHandler.CanonicalName, -1);
-					commandHandler.BindToKeyboard(cmd);
-				}
-				catch(ArgumentException e)
-				{
-					Log.Error("Failed to register keybindings for {0}: {1}", commandHandler.CanonicalName, e.ToString());
-				}
-			}
-
-			mCommands.Add(commandHandler.CanonicalName, commandHandler);
-		}
-		
-		private OleMenuCommand RegisterCommandPrivate(CommandBase commandHandler, bool toolbarOnly)
+		private OleMenuCommand RegisterCommandPrivate(CommandBase commandHandler)
 		{
 			OleMenuCommand vscommand = null;
-			uint cmdId = 0;
-			try
-			{
-				Command existingCmd = mPlugin.Commands.Item(commandHandler.CanonicalName, -1);
-                cmdId = (uint)existingCmd.ID;
-			}
-			catch(System.ArgumentException)
-			{
-			}
-
-			if (cmdId == 0)
-			{
-				Log.Info("Registering the command {0} from scratch", commandHandler.Name);
-				int result = mPlugin.ProfferCommands.AddNamedCommand(mPackageGuid, mCmdGroupGuid, commandHandler.CanonicalName, out cmdId, commandHandler.CanonicalName, commandHandler.CanonicalName, commandHandler.Tooltip, null, 0, (uint)commandHandler.IconIndex, 0, 0, null);
-			}
-
-			if (cmdId != 0)
+			//if (cmdId == 0)
 			{
 				OleMenuCommandService menuCommandService = mPlugin.MenuCommandService;
-				CommandID commandID = new CommandID(mCmdGroupGuid, (int)cmdId);
+				CommandID commandID = new CommandID(mCmdGroupGuid, commandHandler.CommandId);
 
 				vscommand = new OleMenuCommand(OleMenuCommandCallback, commandID);
-				vscommand.BeforeQueryStatus += this.OleMenuCommandBeforeQueryStatus;
+				vscommand.BeforeQueryStatus += this.OleMenuCommandBeforeQueryStatus; // LCTODO: this spams too much, figure out what's wrong
 				menuCommandService.AddCommand(vscommand);
-				mCommandsById[cmdId] = commandHandler;
+				mCommandsById[commandID.ID] = commandHandler;
 			}
 			// Register the graphics controls for this command as well.
 			// First let the command itself have a stab at register whatever it needs.
 			// Then by default we always register ourselves in the main toolbar of the application.
-			if(!commandHandler.RegisterGUI(vscommand, mCommandBar, toolbarOnly))
-			{
-			}
+			//commandHandler.RegisterGUI(vscommand, mCommandBar, toolbarOnly);
 
 			return vscommand;
 		}
-
 		private void OleMenuCommandBeforeQueryStatus(object sender, EventArgs e)
 		{
 
@@ -107,10 +64,12 @@ namespace Aurora
 
 					if (commandId != null)
 					{
-						if(mCommandsById.ContainsKey((uint)commandId.ID))
+						if (mCommandsById.ContainsKey(commandId.ID))
 						{
+							var bc = mCommandsById[commandId.ID];
+
 							oleMenuCommand.Supported = true;
-							oleMenuCommand.Enabled = mCommandsById[(uint)commandId.ID].IsEnabled();
+							oleMenuCommand.Enabled = mCommandsById[commandId.ID].IsEnabled();
 							oleMenuCommand.Visible = true;
 						}
 					}
@@ -133,15 +92,16 @@ namespace Aurora
 					CommandID commandId = oleMenuCommand.CommandID;
 					if (commandId != null)
 					{
-						Log.Debug("Trying to execute command id \"{0}\"", commandId.ID);
-
-						if(mCommandsById.ContainsKey((uint)commandId.ID))
+						if (mCommandsById.ContainsKey(commandId.ID))
 						{
-							bool dispatched = mCommandsById[(uint)commandId.ID].OnCommand();
-							if (dispatched)
-							{
-								Log.Debug("{0} was dispatched", commandId.ID);
-							}
+							var command = mCommandsById[commandId.ID];
+
+							bool dispatched = command.OnCommand();
+							Log.Debug($"{command.Name} (0x{commandId.ID:X}) " + (dispatched ? "was dispatched" : "fail"));
+						}
+						else
+						{
+							Log.Debug($"Couldn't find command with id 0x{commandId.ID:X}");
 						}
 					}
 				}
