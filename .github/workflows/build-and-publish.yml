@@ -38,7 +38,7 @@
 
 name: Build
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   build:
@@ -76,11 +76,6 @@ jobs:
         New-Item -Path .\.sonar\scanner -ItemType Directory
         dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
 
-    - name: Build and analyze
-      shell: powershell
-      run: |
-        .\.sonar\scanner\dotnet-sonarscanner begin /k:"belkiss_niftyplugins" /o:"belkiss-github" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Build NiftyPerforce in ${{ matrix.configuration }} and analyze
       shell: powershell
@@ -92,7 +87,6 @@ jobs:
         Configuration: ${{ matrix.configuration }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
