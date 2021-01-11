@@ -48,9 +48,11 @@ jobs:
         configuration: [Debug, Release]
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout the repo
+      uses: actions/checkout@v2
 
-    - uses: actions/cache@v2
+    - name: Setup nuget packages caching
+      uses: actions/cache@v2
       with:
         path: ${{ github.workspace }}/.nuget/packages
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
@@ -66,20 +68,11 @@ jobs:
       env:
         Configuration: ${{ matrix.configuration }}
 
-    - name: gitversion
-      id: gitversion
-      run: |
-        dir env:
-
-        echo "::set-output name=GitAssemblyInformationalVersion::$($env:GitAssemblyInformationalVersion)"
-        echo "::set-output name=GitBuildVersion::$($env:GitBuildVersion)"
-        echo "::set-output name=GitBuildVersionSimple::$($env:GitBuildVersionSimple)"
-
     - name: List everything (debug step)
       run: ls -R
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: 'NiftyPerforce-${{ matrix.configuration }}'
+        name: 'NiftyPerforce-${{ matrix.configuration }}'-${GITHUB_SHA::8}
         path: NiftyPerforce\bin\${{ matrix.configuration }}\NiftyPerforce.vsix
