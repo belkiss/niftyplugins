@@ -47,27 +47,37 @@ jobs:
       matrix:
         configuration: [Debug, Release]
 
-    env:
-      Solution_Name: NiftyPerforce/NiftyPerforce.csproj         # Replace with your solution name, i.e. MyWpfApp.sln.
-
     steps:
-    - name: Checkout the repo
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
-    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+    - uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace }}/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.0.2
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
-    - name: Build the plugin in ${{ matrix.configuration }}
-      run: msbuild -t:build -restore $env:Solution_Name /nologo /v:m /p:DeployExtension=false /p:Configuration=$env:Configuration
+    - name: Build NiftyPerforce in ${{ matrix.configuration }}
+      run: msbuild -t:build -restore NiftyPerforce/NiftyPerforce.csproj /nologo /v:m /p:DeployExtension=false /p:Configuration=$env:Configuration
       env:
         Configuration: ${{ matrix.configuration }}
+
+    - name: gitversion
+      id: gitversion
+      run: |
+        dir env:
+
+        echo "::set-output name=GitAssemblyInformationalVersion::$($env:GitAssemblyInformationalVersion)"
+        echo "::set-output name=GitBuildVersion::$($env:GitBuildVersion)"
+        echo "::set-output name=GitBuildVersionSimple::$($env:GitBuildVersionSimple)"
 
     - name: List everything (debug step)
       run: ls -R
 
-    # Upload the MSIX package: https://github.com/marketplace/actions/upload-artifact
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
       with:
