@@ -74,5 +74,5 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: 'NiftyPerforce-${{ matrix.configuration }}'-${GITHUB_SHA::8}
+        name: 'NiftyPerforce-${{ matrix.configuration }}-${GITHUB_SHA::8}'
         path: NiftyPerforce\bin\${{ matrix.configuration }}\NiftyPerforce.vsix
