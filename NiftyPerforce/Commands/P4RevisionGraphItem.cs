@@ -7,7 +7,7 @@ namespace NiftyPerforce
 {
     class P4RevisionGraphItem : ItemCommandBase
     {
-		private bool mMainLine;
+		private readonly bool mMainLine;
 
         public P4RevisionGraphItem(Plugin plugin, string canonicalName, bool mainLine)
             : base("P4RevisionGraphItem", canonicalName, plugin, true, true, mainLine ? PackageIds.NiftyRevisionGraphMain : PackageIds.NiftyRevisionGraph)

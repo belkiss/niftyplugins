@@ -10,15 +10,15 @@ namespace Aurora
 		// Handles registration and events for add/delete files and projects.
 		class AutoAddDelete : Feature
 		{
-			private ProjectItemsEvents m_projectEvents;
-			private SolutionEvents m_solutionEvents;
+			private readonly ProjectItemsEvents m_projectEvents;
+			private readonly SolutionEvents m_solutionEvents;
 
 			private _dispProjectItemsEvents_ItemAddedEventHandler _itemAddedEventHandler;
 			private _dispSolutionEvents_ProjectAddedEventHandler _projectAddedEventHandler;
 			private _dispProjectItemsEvents_ItemRemovedEventHandler _itemRemovedEventHandler;
 			private _dispSolutionEvents_ProjectRemovedEventHandler _projectRemovedEventHandler;
 
-			private Plugin m_plugin;
+			private readonly Plugin m_plugin;
 
 			public AutoAddDelete(Plugin plugin)
 				: base("AutoAddDelete", "Automatically adds and deletes files matching project add/delete")

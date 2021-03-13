@@ -8,8 +8,8 @@ namespace Aurora
 {
 	public abstract class Feature
 	{
-		private string mName;
-		private string mTooltip;
+		private readonly string mName;
+		private readonly string mTooltip;
 
 		public string Name { get { return mName; } }
 

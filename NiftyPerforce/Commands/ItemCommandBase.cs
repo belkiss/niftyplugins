@@ -7,8 +7,8 @@ namespace NiftyPerforce
     // an item command is a command associated with selected items in solution explorer
     abstract class ItemCommandBase : CommandBase
     {
-        private bool m_executeForFileItems = true;
-        private bool m_executeForProjectItems = true;
+        private readonly bool m_executeForFileItems = true;
+        private readonly bool m_executeForProjectItems = true;
 
         protected ItemCommandBase(string name, string canonicalName, Plugin plugin, bool executeForFileItems, bool executeForProjectItems, int commandId)
             : base(name, canonicalName, plugin, commandId)

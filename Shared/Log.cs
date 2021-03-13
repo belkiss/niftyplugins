@@ -126,7 +126,7 @@ namespace Aurora
 			}
 		}
 
-		private static List<Handler> mHandlers = new List<Handler>();
+		private static readonly List<Handler> mHandlers = new List<Handler>();
 		private static string mPrefix = "";
 		private static int mIndent = 0;
 	}

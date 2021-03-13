@@ -11,9 +11,9 @@ namespace Aurora
 	// the logic to execute and update the command itself.
 	public class CommandRegistry
 	{
-		private Dictionary<string, CommandBase> mCommands;
-		private Dictionary<int, CommandBase> mCommandsById;
-		private Plugin mPlugin;
+		private readonly Dictionary<string, CommandBase> mCommands;
+		private readonly Dictionary<int, CommandBase> mCommandsById;
+		private readonly Plugin mPlugin;
 		private Guid mCmdGroupGuid;
 
 		public CommandRegistry(Plugin plugin, Guid packageGuid, Guid cmdGroupGuid)

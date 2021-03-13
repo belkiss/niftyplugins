@@ -12,9 +12,9 @@ namespace Aurora
 	public class Plugin
 	{
 		private OutputWindowPane m_outputPane;
-		private string m_panelName;
+		private readonly string m_panelName;
 
-		private Dictionary<string, Feature> m_features = new Dictionary<string, Feature>();
+		private readonly Dictionary<string, Feature> m_features = new Dictionary<string, Feature>();
 
 		public OutputWindowPane OutputPane
 		{

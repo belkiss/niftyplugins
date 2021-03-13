@@ -8,7 +8,7 @@ namespace Aurora
 {
 	public static class AsyncProcess
 	{
-		private static int s_defaultTimeout = 30000; // in ms
+		private static readonly int s_defaultTimeout = 30000; // in ms
 
 		public delegate void OnDone(bool ok, object arg0);
 
@@ -80,9 +80,9 @@ namespace Aurora
 		//
 		// BEGIN INTERNALS
 		//
-		private static Mutex m_queueLock = new Mutex();
-		private static Semaphore m_startEvent = new Semaphore(0, 9999);
-		private static Queue<CommandThread> m_commandQueue = new Queue<CommandThread>();
+		private static readonly Mutex m_queueLock = new Mutex();
+		private static readonly Semaphore m_startEvent = new Semaphore(0, 9999);
+		private static readonly Queue<CommandThread> m_commandQueue = new Queue<CommandThread>();
 		private static System.Threading.Thread m_helperThread;
 
 		private static void ThreadMain()

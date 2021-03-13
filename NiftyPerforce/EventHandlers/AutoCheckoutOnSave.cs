@@ -14,7 +14,7 @@ namespace Aurora
 		// http://schmalls.com/2015/01/19/adventures-in-visual-studio-extension-development-part-2
 		internal class RunningDocTableEvents : IVsRunningDocTableEvents3
 		{
-			private AutoCheckoutOnSave autoCheckoutOnSave;
+			private readonly AutoCheckoutOnSave autoCheckoutOnSave;
 
 			public RunningDocTableEvents(AutoCheckoutOnSave autoCheckoutOnSave)
 			{

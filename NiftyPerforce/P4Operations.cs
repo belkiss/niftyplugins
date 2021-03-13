@@ -19,9 +19,9 @@ namespace NiftyPerforce
 		private static bool g_p4vc_history_supported = false;
 		private static bool g_p4vc_diffhave_supported = false;
 
-		private static Dictionary<string, bool> g_opsInFlight = new Dictionary<string, bool>();
+		private static readonly Dictionary<string, bool> g_opsInFlight = new Dictionary<string, bool>();
 
-		private static HashSet<string> g_alreadyNotified = new HashSet<string>();
+		private static readonly HashSet<string> g_alreadyNotified = new HashSet<string>();
 
 		private static bool LockOp(string token)
 		{

@@ -7,7 +7,7 @@ namespace NiftyPerforce
 {
 	class P4TimeLapseItem : ItemCommandBase
 	{
-		private bool mMainLine;
+		private readonly bool mMainLine;
 
 		public P4TimeLapseItem(Plugin plugin, string canonicalName, bool inMainLine)
 			: base("TimeLapseItem", canonicalName, plugin, true, true, inMainLine ? PackageIds.NiftyTimeLapseMain : PackageIds.NiftyTimeLapse)

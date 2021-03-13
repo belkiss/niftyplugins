@@ -5,7 +5,7 @@ namespace Aurora
 {
     public class VisualStudioLogHandler : Log.Handler
 	{
-        private Plugin mPlugin;
+        private readonly Plugin mPlugin;
 
 		public VisualStudioLogHandler(Plugin plugin)
 		{

@@ -7,7 +7,7 @@ namespace NiftyPerforce
 {
 	class P4RevertItem : ItemCommandBase
 	{
-		private bool mOnlyUnchanged;
+		private readonly bool mOnlyUnchanged;
 
 		public P4RevertItem(Plugin plugin, string canonicalName, bool onlyUnchanged)
 			: base("RevertItem", canonicalName, plugin, true, true, onlyUnchanged ? PackageIds.NiftyRevertUnchanged : PackageIds.NiftyRevert)

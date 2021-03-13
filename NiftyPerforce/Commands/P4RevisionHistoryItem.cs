@@ -7,7 +7,7 @@ namespace NiftyPerforce
 {
 	class P4RevisionHistoryItem : ItemCommandBase
 	{
-		private bool mMainLine;
+		private readonly bool mMainLine;
 
 		public P4RevisionHistoryItem(Plugin plugin, string canonicalName, bool mainLine)
 			: base("RevisionHistoryItem", canonicalName, plugin, true, true, mainLine ? PackageIds.NiftyHistoryMain : PackageIds.NiftyHistory)
