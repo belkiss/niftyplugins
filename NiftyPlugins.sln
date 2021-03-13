@@ -3,9 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiftyPerforce", "NiftyPerforce\NiftyPerforce.csproj", "{4633E0B5-D536-4FCC-988E-29D54DA113DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NiftyPerforce", "NiftyPerforce\NiftyPerforce.csproj", "{4633E0B5-D536-4FCC-988E-29D54DA113DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuroraCore", "Shared\AuroraCore.csproj", "{A2D1CBE2-C37F-46E7-BF45-FCA62A79F2EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuroraCore", "Shared\AuroraCore.csproj", "{A2D1CBE2-C37F-46E7-BF45-FCA62A79F2EE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GithubActions", "GithubActions", "{EAFAD58B-C12C-4FCE-AC50-3B04143946E6}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build-and-publish.yml = .github\workflows\build-and-publish.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
