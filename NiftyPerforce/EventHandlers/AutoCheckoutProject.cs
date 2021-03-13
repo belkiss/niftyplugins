@@ -58,8 +58,10 @@ namespace Aurora
 
 			private void OnCheckoutSelectedProjects(string Guid, int ID, object CustomIn, object CustomOut, ref bool CancelDefault)
 			{
+				Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
 				// when I get Edit.Delete :
-				if(Guid == "{5EFC7975-14BC-11CF-9B2B-00AA00573819}" && ID == 17)
+				if (Guid == "{5EFC7975-14BC-11CF-9B2B-00AA00573819}" && ID == 17)
 				{
 					// see if the active window is SolutionExplorer :
 					Window w = mPlugin.App.ActiveWindow;

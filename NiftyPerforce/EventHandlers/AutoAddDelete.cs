@@ -84,6 +84,8 @@ namespace Aurora
 
 			public void OnItemAdded(ProjectItem item)
 			{
+				Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
 				P4Operations.EditFile(m_plugin.OutputPane, item.ContainingProject.FullName);
 
 				if (item.ProjectItems != null)
@@ -103,6 +105,8 @@ namespace Aurora
 
 			public void OnItemRemoved(ProjectItem item)
 			{
+				Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
 				P4Operations.EditFile(m_plugin.OutputPane, item.ContainingProject.FullName);
 
 				for (int i = 0; i < item.FileCount; i++)
@@ -114,6 +118,8 @@ namespace Aurora
 
 			private void OnProjectAdded(Project project)
 			{
+				Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
 				P4Operations.EditFile(m_plugin.OutputPane, m_plugin.App.Solution.FullName);
 				P4Operations.AddFile(m_plugin.OutputPane, project.FullName);
 				// TODO: [jt] We should if the operation is not a add new project but rather a add existing project
@@ -123,6 +129,8 @@ namespace Aurora
 
 			private void OnProjectRemoved(Project project)
 			{
+				Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
 				P4Operations.EditFile(m_plugin.OutputPane, m_plugin.App.Solution.FullName);
 				P4Operations.DeleteFile(m_plugin.OutputPane, project.FullName);
 				// TODO: [jt] Do we want to automatically delete the items from perforce here?

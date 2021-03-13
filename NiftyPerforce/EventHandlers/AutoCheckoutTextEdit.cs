@@ -76,7 +76,9 @@ namespace Aurora
 
 			private void OnBeforeKeyPress(string Keypress, EnvDTE.TextSelection Selection, bool InStatementCompletion, ref bool CancelKeypress)
 			{
-				if(mPlugin.App.ActiveDocument != null && mPlugin.App.ActiveDocument.ReadOnly)
+				Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
+				if (mPlugin.App.ActiveDocument != null && mPlugin.App.ActiveDocument.ReadOnly)
 					P4Operations.EditFile(mPlugin.OutputPane, mPlugin.App.ActiveDocument.FullName);
 			}
 
@@ -96,7 +98,9 @@ namespace Aurora
 
 			private void OnCheckoutCurrentDocument(string Guid, int ID, object CustomIn, object CustomOut, ref bool CancelDefault)
 			{
-				if(mPlugin.App.ActiveDocument != null && mPlugin.App.ActiveDocument.ReadOnly && !mPlugin.App.ActiveDocument.Saved)
+				Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
+				if (mPlugin.App.ActiveDocument != null && mPlugin.App.ActiveDocument.ReadOnly && !mPlugin.App.ActiveDocument.Saved)
 					P4Operations.EditFile(mPlugin.OutputPane, mPlugin.App.ActiveDocument.FullName);
 			}
 

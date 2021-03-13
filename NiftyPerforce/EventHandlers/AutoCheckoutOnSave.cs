@@ -48,6 +48,7 @@ namespace Aurora
 			public AutoCheckoutOnSave(Plugin plugin)
 				: base(plugin, "AutoCheckoutOnSave", "Automatically checks out files on save")
 			{
+				ThreadHelper.ThrowIfNotOnUIThread();
 				((Config)mPlugin.Options).OnApplyEvent += RegisterEvents;
 				RegisterEvents();
 			}
@@ -56,12 +57,17 @@ namespace Aurora
 
 			private void RegisterEvents(object sender = null, EventArgs e = null)
 			{
+				ThreadHelper.ThrowIfNotOnUIThread();
+
 				if (((Config)mPlugin.Options).AutoCheckoutOnSave)
 				{
 					if (!RDTAdvised)
 					{
 						Log.Info("Adding handlers for automatically checking out dirty files when you save");
-						_sp = new Lazy<Microsoft.VisualStudio.OLE.Interop.IServiceProvider>(() => Package.GetGlobalService(typeof(Microsoft.VisualStudio.OLE.Interop.IServiceProvider)) as Microsoft.VisualStudio.OLE.Interop.IServiceProvider);
+						_sp = new Lazy<Microsoft.VisualStudio.OLE.Interop.IServiceProvider>(() => {
+							ThreadHelper.ThrowIfNotOnUIThread();
+							return Package.GetGlobalService(typeof(Microsoft.VisualStudio.OLE.Interop.IServiceProvider)) as Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
+						});
 						_rdt = new Lazy<RunningDocumentTable>(() => new RunningDocumentTable(new ServiceProvider(_sp.Value)));
 						_rdte = _rdt.Value.Advise(new RunningDocTableEvents(this));
 					}
@@ -82,7 +88,9 @@ namespace Aurora
 
 			private void EditProjectRecursive(Project p)
 			{
-				if(!p.Saved)
+				ThreadHelper.ThrowIfNotOnUIThread();
+
+				if (!p.Saved)
 					P4Operations.EditFileImmediate(mPlugin.OutputPane, p.FullName);
 
 				if(p.ProjectItems == null)

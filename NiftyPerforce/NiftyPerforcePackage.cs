@@ -188,6 +188,8 @@ namespace NiftyPerforce
 
 		private void RemoveCommand(string name, IVsProfferCommands3 profferCommands3)
 		{
+			ThreadHelper.ThrowIfNotOnUIThread();
+
 			try
 			{
 				Command cmd = m_plugin.Commands.Item(name, -1);
@@ -241,6 +243,8 @@ namespace NiftyPerforce
 		// Remove a command bar and contained controls
 		private static void RemoveCommandBar(string name, IVsProfferCommands3 profferCommands3)
 		{
+			ThreadHelper.ThrowIfNotOnUIThread();
+
 			DTE2 dte = GetGlobalService(typeof(DTE)) as DTE2;
 			CommandBars commandBars = (CommandBars)dte.CommandBars;
 			CommandBar existingCmdBar = null;

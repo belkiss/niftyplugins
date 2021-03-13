@@ -37,6 +37,7 @@ namespace Aurora
 
 		protected bool RegisterHandler(string commandName, _dispCommandEvents_BeforeExecuteEventHandler handler)
 		{
+			Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 			CommandEvents events = mPlugin.FindCommandEvents(commandName);
 			if(null == events)
 				return false;
@@ -46,6 +47,7 @@ namespace Aurora
 
 		protected void UnregisterHandler(string commandName, _dispCommandEvents_BeforeExecuteEventHandler handler)
 		{
+			Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 			CommandEvents events = mPlugin.FindCommandEvents(commandName);
 			if (null == events)
 				return;

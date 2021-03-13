@@ -25,6 +25,8 @@ namespace Aurora
 
 		public static bool Run(OutputWindowPane output, string executable, string commandline, string workingdir, OnDone callback, object callbackArg)
 		{
+			Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
 			int timeout = 1000;
 
 			if (!RunCommand(output, executable, commandline, workingdir, timeout))
@@ -123,6 +125,8 @@ namespace Aurora
 			public int timeout = 10000;
 			public void Run()
 			{
+				Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
 				bool ok = false;
 				try
 				{
@@ -140,6 +144,8 @@ namespace Aurora
 
 		private static bool RunCommand(OutputWindowPane output, string executable, string commandline, string workingdir, int timeout)
 		{
+			Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
 			try
 			{
 				System.Diagnostics.Process process = new System.Diagnostics.Process();

@@ -16,7 +16,14 @@ namespace Aurora
 
 		private Dictionary<string, Feature> m_features = new Dictionary<string, Feature>();
 
-		public OutputWindowPane OutputPane { get { return GetOutputPane(); } }
+		public OutputWindowPane OutputPane
+		{
+			get
+			{
+				ThreadHelper.ThrowIfNotOnUIThread();
+				return GetOutputPane();
+			}
+		}
 		public string Prefix { get; }
 		public DTE2 App { get; }
 		public Commands Commands { get { return App.Commands; }}
@@ -41,6 +48,8 @@ namespace Aurora
 
 		public CommandEvents FindCommandEvents(string commandName)
 		{
+			ThreadHelper.ThrowIfNotOnUIThread();
+
 			CommandEvents events = null;
 			try
 			{
@@ -56,6 +65,8 @@ namespace Aurora
 
 		private OutputWindowPane GetOutputPane()
 		{
+			ThreadHelper.ThrowIfNotOnUIThread();
+
 			if (m_outputPane != null)
 				return m_outputPane;
 			try
@@ -70,6 +81,8 @@ namespace Aurora
 
 		private static OutputWindowPane AquireOutputPane(DTE2 app, string name)
 		{
+			ThreadHelper.ThrowIfNotOnUIThread();
+
 			if(string.IsNullOrEmpty(name) || app.Windows.Count == 0)
 				return null;
 
@@ -84,7 +97,9 @@ namespace Aurora
 
 		public static OutputWindowPane FindOutputPane(DTE2 app, string name)
 		{
-			if(string.IsNullOrEmpty(name) || app?.Windows.Count == 0)
+			ThreadHelper.ThrowIfNotOnUIThread();
+
+			if(string.IsNullOrEmpty(name) ||app?.Windows?.Count == null || app.Windows.Count == 0)
 				return null;
 
 			OutputWindow outputWindow = (OutputWindow)app.Windows.Item(EnvDTE.Constants.vsWindowKindOutput).Object;
