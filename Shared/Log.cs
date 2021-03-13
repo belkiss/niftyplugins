@@ -17,7 +17,7 @@ namespace Aurora
 		}
 
 		// This needs to be implemented by all clients.
-		public interface Handler
+		public interface IHandler
 		{
 			void OnMessage(Level level, string message, string formattedLine);
 		}
@@ -37,7 +37,7 @@ namespace Aurora
 			get { return mHandlers.Count; }
 		}
 
-		public static void AddHandler(Handler handler)
+		public static void AddHandler(IHandler handler)
 		{
 			if(null == handler)
 				return;
@@ -48,7 +48,7 @@ namespace Aurora
 			}
 		}
 
-		public static void RemoveHandler(Handler handler)
+		public static void RemoveHandler(IHandler handler)
 		{
 			lock(mHandlers)
 			{
@@ -119,14 +119,14 @@ namespace Aurora
 
 			lock(mHandlers)
 			{
-				foreach(Handler handler in mHandlers)
+				foreach(IHandler handler in mHandlers)
 				{
 					handler.OnMessage(level, message, formattedLine);
 				}
 			}
 		}
 
-		private static readonly List<Handler> mHandlers = new List<Handler>();
+		private static readonly List<IHandler> mHandlers = new List<IHandler>();
 		private static string mPrefix = "";
 		private static int mIndent = 0;
 	}

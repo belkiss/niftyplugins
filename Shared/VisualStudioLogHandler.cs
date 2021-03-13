@@ -3,7 +3,7 @@ using EnvDTE;
 
 namespace Aurora
 {
-    public class VisualStudioLogHandler : Log.Handler
+    public class VisualStudioLogHandler : Log.IHandler
 	{
         private readonly Plugin mPlugin;
 

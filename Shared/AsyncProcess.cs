@@ -36,10 +36,7 @@ namespace Aurora
 			}
 			else
 			{
-				if (null != callback)
-				{
-					callback(true, callbackArg);
-				}
+				callback?.Invoke(true, callbackArg);
 			}
 
 			return true;
@@ -52,14 +49,16 @@ namespace Aurora
 
 		public static bool Schedule(OutputWindowPane output, string executable, string commandline, string workingdir, OnDone callback, object callbackArg, int timeout)
 		{
-			CommandThread cmd = new CommandThread();
-			cmd.output = output;
-			cmd.executable = executable;
-			cmd.commandline = commandline;
-			cmd.workingdir = workingdir;
-			cmd.callback = callback;
-			cmd.callbackArg = callbackArg;
-			cmd.timeout = timeout;
+			CommandThread cmd = new CommandThread
+			{
+				output = output,
+				executable = executable,
+				commandline = commandline,
+				workingdir = workingdir,
+				callback = callback,
+				callbackArg = callbackArg,
+				timeout = timeout
+			};
 
 			try
 			{
@@ -127,7 +126,7 @@ namespace Aurora
 			{
 				Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-				bool ok = false;
+				bool ok;
 				try
 				{
 					ok = RunCommand(output, executable, commandline, workingdir, timeout);

@@ -16,7 +16,7 @@ namespace Aurora
 		private readonly Plugin mPlugin;
 		private Guid mCmdGroupGuid;
 
-		public CommandRegistry(Plugin plugin, Guid packageGuid, Guid cmdGroupGuid)
+		public CommandRegistry(Plugin plugin, Guid cmdGroupGuid)
 		{
 			mCommands = new Dictionary<string, CommandBase>();
 			mCommandsById = new Dictionary<int, CommandBase>();
@@ -56,9 +56,7 @@ namespace Aurora
 
 			try
 			{
-				OleMenuCommand oleMenuCommand = sender as OleMenuCommand;
-
-				if (oleMenuCommand != null)
+				if (sender is OleMenuCommand oleMenuCommand)
 				{
 					CommandID commandId = oleMenuCommand.CommandID;
 
@@ -85,9 +83,7 @@ namespace Aurora
 		{
 			try
 			{
-				OleMenuCommand oleMenuCommand = sender as OleMenuCommand;
-
-				if (oleMenuCommand != null)
+				if (sender is OleMenuCommand oleMenuCommand)
 				{
 					CommandID commandId = oleMenuCommand.CommandID;
 					if (commandId != null)

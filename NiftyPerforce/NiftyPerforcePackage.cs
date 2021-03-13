@@ -48,7 +48,6 @@ namespace NiftyPerforce
 	//[ProvideToolsOptionsPageVisibility("Source Control", "Nifty Perforce Settings", PackageGuids.guidNiftyPerforceSccProviderString)]
 	// Declare the package guid
 	[Guid(PackageGuids.guidNiftyPerforcePackageString)]
-	[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
 	public sealed class NiftyPerforcePackage : AsyncPackage
 	{
 		private Plugin m_plugin = null;
@@ -92,7 +91,7 @@ namespace NiftyPerforce
 
 			m_plugin = new Plugin(application, oleMenuCommandService, "NiftyPerforce", "Aurora.NiftyPerforce.Connect", config);
 
-			m_commandRegistry = new CommandRegistry(m_plugin, new Guid(PackageGuids.guidNiftyPerforcePackageString), new Guid(PackageGuids.guidNiftyPerforcePackageCmdSetString));
+			m_commandRegistry = new CommandRegistry(m_plugin, new Guid(PackageGuids.guidNiftyPerforcePackageCmdSetString));
 
 			// Initialize the logging system.
 			if (Log.HandlerCount == 0)
