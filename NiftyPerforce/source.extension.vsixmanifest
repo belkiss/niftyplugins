@@ -6,6 +6,8 @@
         <Description xml:space="preserve">Simple Perforce integration for Visual Studio</Description>
         <MoreInfo>https://github.com/belkiss/niftyplugins</MoreInfo>
         <License>COPYING</License>
+        <Icon>Resources\logo.png</Icon>
+        <PreviewImage>Resources\logo.png</PreviewImage>
         <Tags>perforce</Tags>
     </Metadata>
     <Installation>
