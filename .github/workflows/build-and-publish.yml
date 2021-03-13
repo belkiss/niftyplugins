@@ -104,4 +104,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: 'NiftyPerforce-${{ matrix.configuration }}-${{github.sha}}'
-        path: NiftyPerforce\bin\${{ matrix.configuration }}\NiftyPerforce.vsix
+        path: NiftyPerforce\bin\${{ matrix.configuration }}\net472\NiftyPerforce.vsix
