@@ -7,11 +7,11 @@ namespace NiftyPerforce
 {
     internal sealed partial class Vsix
     {
-        public const string Id = "NiftyPerforce.Tilander.eb29cef1-a8b5-41b1-922d-6ba8cec91ef4";
-        public const string Name = "NiftyPerforce";
+        public const string Id = "NiftyPerforce.belkiss.3cc12a76-88f6-4e50-9ede-377ba823db79";
+        public const string Name = "Nifty Perforce - belkiss' fork";
         public const string Description = @"Simple Perforce integration for Visual Studio";
         public const string Language = "en-US";
-        public const string Version = "2.0.12";
+        public const string Version = "3.0.0";
         public const string Author = "Lambert Clara";
         public const string Tags = "perforce";
     }
