@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GithubActions", "GithubActions", "{EAFAD58B-C12C-4FCE-AC50-3B04143946E6}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\build-and-publish.yml = .github\workflows\build-and-publish.yml
+		.github\dependabot.yml = .github\dependabot.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D9887FB7-0D0E-4B27-BC6C-2E59CE41AF8D}"
