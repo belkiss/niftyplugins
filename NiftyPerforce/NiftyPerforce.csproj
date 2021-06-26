@@ -57,9 +57,6 @@
     <Content Include="Resources\Icons.png" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System.Design" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Shared\AuroraCore.csproj" />
   </ItemGroup>
   <ItemGroup>
