@@ -225,13 +225,20 @@ namespace NiftyPerforce
         {
             if (filename.Length == 0)
                 return false;
-            string token = FormatToken("history", filename);
-            if (!LockOp(token))
-                return false;
-            if (g_p4vc_history_supported)
-                return AsyncProcess.Schedule(output, g_p4vc_exename, GetUserInfoStringFull(true, dirname) + " history \"" + filename + "\"", dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
-            if (g_p4vinstalled)
-                return AsyncProcess.Schedule(output, "p4v.exe", " -win 0 " + GetUserInfoStringFull(true, dirname) + " -cmd \"history " + filename + "\"", dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
+
+            if (g_p4vc_history_supported || g_p4vinstalled)
+            {
+                string token = FormatToken("history", filename);
+                if (!LockOp(token))
+                    return false;
+
+                if (g_p4vc_history_supported)
+                    return AsyncProcess.Schedule(output, g_p4vc_exename, GetUserInfoStringFull(true, dirname) + " history \"" + filename + "\"", dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
+
+                if (g_p4vinstalled)
+                    return AsyncProcess.Schedule(output, "p4v.exe", " -win 0 " + GetUserInfoStringFull(true, dirname) + " -cmd \"history " + filename + "\"", dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
+            }
+
             return NotifyUser("could not find a supported p4vc.exe or p4v.exe installed in perforce directory");
         }
 
