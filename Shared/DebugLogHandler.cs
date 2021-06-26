@@ -6,11 +6,11 @@ using System.Diagnostics;
 
 namespace Aurora
 {
-	public class DebugLogHandler : Log.IHandler
-	{
-		public void OnMessage(Log.Level level, string message, string formattedLine)
-		{
-			Debug.Write(formattedLine);
-		}
-	}
+    public class DebugLogHandler : Log.IHandler
+    {
+        public void OnMessage(Log.Level level, string message, string formattedLine)
+        {
+            Debug.Write(formattedLine);
+        }
+    }
 }

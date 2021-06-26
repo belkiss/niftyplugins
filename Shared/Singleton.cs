@@ -3,9 +3,9 @@ using System;
 
 namespace Aurora
 {
-	public sealed class Singleton<T> where T : class, new()
-	{
-		private Singleton() {}
-		public static T Instance = new T();
-	}
+    public sealed class Singleton<T> where T : class, new()
+    {
+        private Singleton() { }
+        public static T Instance = new T();
+    }
 }
