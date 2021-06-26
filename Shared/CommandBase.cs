@@ -10,7 +10,7 @@ namespace Aurora
 		public string CanonicalName { get; }
 		public int CommandId { get; }
 
-		public CommandBase(string name, string canonicalName, Plugin plugin, int commandId)
+		protected CommandBase(string name, string canonicalName, Plugin plugin, int commandId)
 		{
 			Name = name;
 			CanonicalName = canonicalName;

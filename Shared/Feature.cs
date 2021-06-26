@@ -13,7 +13,7 @@ namespace Aurora
 
 		public string Name { get { return mName; } }
 
-		public Feature(string name, string tooltip)
+		protected Feature(string name, string tooltip)
 		{
 			mName = name;
 			mTooltip = tooltip;
@@ -29,7 +29,7 @@ namespace Aurora
 	{
 		protected Plugin mPlugin;
 
-		public PreCommandFeature(Plugin plugin, string name, string tooltip)
+		protected PreCommandFeature(Plugin plugin, string name, string tooltip)
 			: base(name, tooltip)
 		{
 			mPlugin = plugin;
