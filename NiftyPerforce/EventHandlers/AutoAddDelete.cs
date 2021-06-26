@@ -41,7 +41,7 @@ namespace Aurora
                 {
                     if (!AddFilesHandlersInstalled)
                     {
-                        Log.Info("Adding handlers for automatically add files to perforce as you add them to the project");
+                        Log.Info("Adding handlers to automatically add files to perforce as you add them to the project");
                         _itemAddedEventHandler = new _dispProjectItemsEvents_ItemAddedEventHandler(OnItemAdded);
                         m_projectEvents.ItemAdded += _itemAddedEventHandler;
 
@@ -51,7 +51,7 @@ namespace Aurora
                 }
                 else if (AddFilesHandlersInstalled)
                 {
-                    Log.Info("Removing handlers for automatically add files to perforce as you add them to the project");
+                    Log.Info("Removing handlers to automatically add files to perforce as you add them to the project");
                     m_projectEvents.ItemAdded -= _itemAddedEventHandler;
                     _itemAddedEventHandler = null;
 
@@ -63,7 +63,7 @@ namespace Aurora
                 {
                     if (!RemoveFilesHandlersInstalled)
                     {
-                        Log.Info("Adding handlers for automatically deleting files from perforce as you remove them from the project");
+                        Log.Info("Adding handlers to automatically delete files from perforce as you remove them from the project");
                         _itemRemovedEventHandler = new _dispProjectItemsEvents_ItemRemovedEventHandler(OnItemRemoved);
                         m_projectEvents.ItemRemoved += _itemRemovedEventHandler;
 
@@ -73,7 +73,7 @@ namespace Aurora
                 }
                 else if (RemoveFilesHandlersInstalled)
                 {
-                    Log.Info("Removing handlers for automatically deleting files from perforce as you remove them from the project");
+                    Log.Info("Removing handlers to automatically deleting files from perforce as you remove them from the project");
                     m_projectEvents.ItemRemoved -= _itemRemovedEventHandler;
                     _itemRemovedEventHandler = null;
 
