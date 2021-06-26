@@ -132,8 +132,7 @@
               <CommandFlag>DefaultInvisible</CommandFlag>
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node /> -->
-      <Button guid="guidNiftyPerforcePackageCmdSet" id="NiftyConfig"                 priority="0x0001" type="Button"><Parent guid="guidNiftyPerforcePackageCmdSet" id="NiftyFileOperationsCommandGroup" />      <Icon guid="ImageCatalogGuid" id="ConfigurationEditor" /><CommandFlag>DynamicVisibility</CommandFlag><CommandFlag>AllowVisibilityChangeOnToolBar</CommandFlag><CommandFlag>IconIsMoniker</CommandFlag><CommandFlag>DefaultInvisible</CommandFlag><Strings><ButtonText>Nifty Config</ButtonText>               <ToolTipText>Opens the configuration dialog</ToolTipText>                   </Strings></Button>
-      <Button guid="guidNiftyPerforcePackageCmdSet" id="NiftyEditModified"           priority="0x0002" type="Button"><Parent guid="guidNiftyPerforcePackageCmdSet" id="NiftyFileOperationsCommandGroup" />      <Icon guid="ImageCatalogGuid" id="CheckOutForEdit" />    <CommandFlag>DynamicVisibility</CommandFlag><CommandFlag>AllowVisibilityChangeOnToolBar</CommandFlag><CommandFlag>IconIsMoniker</CommandFlag>                                           <Strings><ButtonText>Nifty Checkout All Modified</ButtonText><ToolTipText>Opens all the currently modifed files for edit</ToolTipText>   </Strings></Button>
+      <Button guid="guidNiftyPerforcePackageCmdSet" id="NiftyEditModified"           priority="0x0001" type="Button"><Parent guid="guidNiftyPerforcePackageCmdSet" id="NiftyFileOperationsCommandGroup" />      <Icon guid="ImageCatalogGuid" id="CheckOutForEdit" />    <CommandFlag>DynamicVisibility</CommandFlag><CommandFlag>AllowVisibilityChangeOnToolBar</CommandFlag><CommandFlag>IconIsMoniker</CommandFlag>                                           <Strings><ButtonText>Nifty Checkout All Modified</ButtonText><ToolTipText>Opens all the currently modifed files for edit</ToolTipText>   </Strings></Button>
       <Button guid="guidNiftyPerforcePackageCmdSet" id="NiftyEdit"                   priority="0x0002" type="Button"><Parent guid="guidNiftyPerforcePackageCmdSet" id="NiftyFileOperationsCommandGroup" />      <Icon guid="ImageCatalogGuid" id="CheckOutForEdit" />    <CommandFlag>DynamicVisibility</CommandFlag><CommandFlag>AllowVisibilityChangeOnToolBar</CommandFlag><CommandFlag>IconIsMoniker</CommandFlag>                                           <Strings><ButtonText>Nifty Checkout</ButtonText>             <ToolTipText>Opens an item for edit</ToolTipText>                           </Strings></Button>
       <Button guid="guidNiftyPerforcePackageCmdSet" id="NiftyDiff"                   priority="0x0003" type="Button"><Parent guid="guidNiftyPerforcePackageCmdSet" id="NiftyFileStatusCommandGroup" />          <Icon guid="ImageCatalogGuid" id="CompareFiles" />       <CommandFlag>DynamicVisibility</CommandFlag><CommandFlag>AllowVisibilityChangeOnToolBar</CommandFlag><CommandFlag>IconIsMoniker</CommandFlag>                                           <Strings><ButtonText>Nifty Diff</ButtonText>                 <ToolTipText>Opens diff on an item</ToolTipText>                            </Strings></Button>
       <Button guid="guidNiftyPerforcePackageCmdSet" id="NiftyHistory"                priority="0x0004" type="Button"><Parent guid="guidNiftyPerforcePackageCmdSet" id="NiftyFileStatusCommandGroup" />          <Icon guid="ImageCatalogGuid" id="ShowFullHistory" />    <CommandFlag>DynamicVisibility</CommandFlag><CommandFlag>AllowVisibilityChangeOnToolBar</CommandFlag><CommandFlag>IconIsMoniker</CommandFlag>                                           <Strings><ButtonText>Nifty History</ButtonText>              <ToolTipText>Shows the revision history for an item</ToolTipText>           </Strings></Button>
@@ -215,19 +214,18 @@
       <IDSymbol name="NiftyFileTabGroup"                     value="0x3004" />
       <IDSymbol name="NiftyFileTabSubMenuGroup"              value="0x3005" />
 
-      <IDSymbol name="NiftyConfig"            value="0x0100" />
-      <IDSymbol name="NiftyEditModified"      value="0x0200" />
-      <IDSymbol name="NiftyEdit"              value="0x0300" />
-      <IDSymbol name="NiftyDiff"              value="0x0400" />
-      <IDSymbol name="NiftyHistory"           value="0x0500" />
-      <IDSymbol name="NiftyHistoryMain"       value="0x0501" />
-      <IDSymbol name="NiftyTimeLapse"         value="0x0600" />
-      <IDSymbol name="NiftyTimeLapseMain"     value="0x0601" />
-      <IDSymbol name="NiftyRevisionGraph"     value="0x0700" />
-      <IDSymbol name="NiftyRevisionGraphMain" value="0x0701" />
-      <IDSymbol name="NiftyRevert"            value="0x0800" />
-      <IDSymbol name="NiftyRevertUnchanged"   value="0x0801" />
-      <IDSymbol name="NiftyShow"              value="0x0900" />
+      <IDSymbol name="NiftyEditModified"      value="0x0100" />
+      <IDSymbol name="NiftyEdit"              value="0x0200" />
+      <IDSymbol name="NiftyDiff"              value="0x0300" />
+      <IDSymbol name="NiftyHistory"           value="0x0400" />
+      <IDSymbol name="NiftyHistoryMain"       value="0x0401" />
+      <IDSymbol name="NiftyTimeLapse"         value="0x0500" />
+      <IDSymbol name="NiftyTimeLapseMain"     value="0x0501" />
+      <IDSymbol name="NiftyRevisionGraph"     value="0x0600" />
+      <IDSymbol name="NiftyRevisionGraphMain" value="0x0601" />
+      <IDSymbol name="NiftyRevert"            value="0x0700" />
+      <IDSymbol name="NiftyRevertUnchanged"   value="0x0701" />
+      <IDSymbol name="NiftyShow"              value="0x0800" />
     </GuidSymbol>
 
 
