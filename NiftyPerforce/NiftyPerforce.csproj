@@ -33,7 +33,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="COPYING">
+    <Content Include="..\COPYING" Link="COPYING">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -64,13 +64,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="AssemblyInfo.cs" />
-    <Compile Remove="Commands\P4Edit.cs" />
-    <Compile Remove="ToolbarIcons.Designer.cs" />
-    <EmbeddedResource Remove="CommandBar.resx" />
-    <EmbeddedResource Remove="ToolbarIcons.resx" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <Import Project="$(PkgMicrosoft_VSSDK_BuildTools)\tools\VSSDK\Microsoft.VsSDK.targets" />
