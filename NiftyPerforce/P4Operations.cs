@@ -77,6 +77,9 @@ namespace NiftyPerforce
         {
             if (filename.Length == 0)
                 return false;
+
+            Log.Debug($"Delete '{filename}'");
+
             if (!g_p4installed)
                 return NotifyUser("could not find p4 exe installed in perforce directory");
 
@@ -90,12 +93,16 @@ namespace NiftyPerforce
         {
             if (filename.Length == 0)
                 return false;
+
+            Log.Debug($"Add '{filename}'");
+
             if (!g_p4installed)
                 return NotifyUser("could not find p4 exe installed in perforce directory");
 
             string token = FormatToken("add", filename);
             if (!LockOp(token))
                 return false;
+
             return AsyncProcess.Schedule(output, "p4.exe", GetUserInfoString() + "add \"" + filename + "\"", Path.GetDirectoryName(filename), new AsyncProcess.OnDone(UnlockOp), token);
         }
 
