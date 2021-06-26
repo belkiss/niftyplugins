@@ -46,12 +46,13 @@
       <Menu guid="guidNiftyPerforcePackageCmdSet" id="NiftyToolbar" type="Toolbar" >
         <CommandFlag>DefaultDocked</CommandFlag>
         <Strings>
-          <CommandName>Nifty Perforce ToolBar CommandName</CommandName>
+          <CommandName>Nifty Perforce</CommandName>
           <ButtonText>Nifty Perforce ToolBar ButtonText</ButtonText>
           <MenuText>Nifty Perforce ToolBar MenuText</MenuText>
           <ToolTipText>Nifty Perforce ToolBar ToolTipText</ToolTipText>
         </Strings>
       </Menu>
+
       <Menu guid="guidNiftyPerforcePackageCmdSet" id="TopLevelMenu" priority="0x700" type="Menu">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_MM_TOOLSADDINS" />
         <Strings>
@@ -63,7 +64,7 @@
       <Menu guid="guidNiftyPerforcePackageCmdSet" id="NiftyFileTabSubMenu" priority="0x0100" type="Menu">
         <Parent guid="guidNiftyPerforcePackageCmdSet" id="NiftyFileTabGroup"/>
         <Strings>
-          <CommandName>Nifty Perforce FileTabSubMenu CommandName</CommandName>
+          <CommandName>Nifty Perforce</CommandName>
           <ButtonText>Nifty Perforce FileTabSubMenu ButtonText</ButtonText>
           <MenuText>Nifty Perforce FileTabSubMenu MenuText</MenuText>
           <ToolTipText>Nifty Perforce FileTabSubMenu ToolTipText</ToolTipText>
@@ -73,7 +74,7 @@
       <Menu guid="guidNiftyPerforcePackageCmdSet" id="NiftyItemMenu" priority="0x0100" type="Menu">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_ITEM_SCC"/>
         <Strings>
-          <CommandName>Nifty Perforce Item CommandName</CommandName>
+          <CommandName>Nifty Perforce</CommandName>
           <ButtonText>Nifty Perforce Item ButtonText</ButtonText>
           <MenuText>Nifty Perforce Item MenuText</MenuText>
           <ToolTipText>Nifty Perforce Item ToolTipText</ToolTipText>
@@ -83,7 +84,7 @@
       <Menu guid="guidNiftyPerforcePackageCmdSet" id="NiftyProjectMenu" priority="0x0100" type="Menu">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_PROJECT_SCC"/>
         <Strings>
-          <CommandName>Nifty Perforce Project CommandName</CommandName>
+          <CommandName>Nifty Perforce</CommandName>
           <ButtonText>Nifty Perforce Project ButtonText</ButtonText>
           <MenuText>Nifty Perforce Project MenuText</MenuText>
           <ToolTipText>Nifty Perforce Project ToolTipText</ToolTipText>
@@ -93,7 +94,7 @@
             <Menu guid="guidNiftyPerforcePackageCmdSet" id="NiftySolutionMenu" priority="0x0100" type="Menu">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_SOLUTION_SCC"/>
         <Strings>
-          <CommandName>Nifty Perforce Solution CommandName</CommandName>
+          <CommandName>Nifty Perforce</CommandName>
           <ButtonText>Nifty Perforce Solution ButtonText</ButtonText>
           <MenuText>Nifty Perforce Solution MenuText</MenuText>
           <ToolTipText>Nifty Perforce Solution ToolTipText</ToolTipText>
