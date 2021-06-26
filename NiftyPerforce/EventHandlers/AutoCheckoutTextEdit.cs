@@ -1,16 +1,15 @@
-// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
-using EnvDTE;
-using EnvDTE80;
-using Microsoft.VisualStudio.Shell.Interop;
-using NiftyPerforce;
+﻿// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
 using System;
 using System.Collections.Generic;
+using EnvDTE;
+using EnvDTE80;
+using NiftyPerforce;
 
 namespace Aurora
 {
     namespace NiftyPerforce
     {
-        class AutoCheckoutTextEdit : PreCommandFeature
+        internal class AutoCheckoutTextEdit : PreCommandFeature
         {
             private EnvDTE80.TextDocumentKeyPressEvents mTextDocEvents;
             private EnvDTE.TextEditorEvents mTextEditorEvents;
@@ -103,7 +102,6 @@ namespace Aurora
                 if (mPlugin.App.ActiveDocument != null && mPlugin.App.ActiveDocument.ReadOnly && !mPlugin.App.ActiveDocument.Saved)
                     P4Operations.EditFile(mPlugin.OutputPane, mPlugin.App.ActiveDocument.FullName);
             }
-
         }
     }
 }

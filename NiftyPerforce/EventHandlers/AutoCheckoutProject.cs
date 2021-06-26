@@ -1,4 +1,4 @@
-// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
+﻿// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
 using System;
 using System.Collections.Generic;
 using EnvDTE;
@@ -8,7 +8,7 @@ namespace Aurora
 {
     namespace NiftyPerforce
     {
-        class AutoCheckoutProject : PreCommandFeature
+        internal class AutoCheckoutProject : PreCommandFeature
         {
             public AutoCheckoutProject(Plugin plugin)
                 : base(plugin, "AutoCheckoutProject", "Automatically checks out the project files")

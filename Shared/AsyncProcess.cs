@@ -1,8 +1,7 @@
-// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
-using System;
-using EnvDTE;
-using System.Threading;
+﻿// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
 using System.Collections.Generic;
+using System.Threading;
+using EnvDTE;
 
 namespace Aurora
 {
@@ -49,7 +48,7 @@ namespace Aurora
 
         public static bool Schedule(OutputWindowPane output, string executable, string commandline, string workingdir, OnDone callback, object callbackArg, int timeout)
         {
-            CommandThread cmd = new CommandThread
+            var cmd = new CommandThread
             {
                 output = output,
                 executable = executable,
@@ -103,7 +102,7 @@ namespace Aurora
 
                 try
                 {
-                    System.Threading.Thread thread = new System.Threading.Thread(new ThreadStart(cmd.Run));
+                    var thread = new System.Threading.Thread(new ThreadStart(cmd.Run));
                     thread.Start();
                 }
                 catch
@@ -111,7 +110,6 @@ namespace Aurora
                 }
             }
         }
-
 
         private class CommandThread
         {
@@ -147,7 +145,7 @@ namespace Aurora
 
             try
             {
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                var process = new System.Diagnostics.Process();
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.FileName = executable;
                 if (0 == timeout)
@@ -162,6 +160,7 @@ namespace Aurora
                     process.StartInfo.RedirectStandardOutput = true;
                     process.StartInfo.RedirectStandardError = true;
                 }
+
                 process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.WorkingDirectory = workingdir;
                 process.StartInfo.Arguments = commandline;

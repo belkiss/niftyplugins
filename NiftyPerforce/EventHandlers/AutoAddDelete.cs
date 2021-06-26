@@ -1,14 +1,14 @@
-// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
+﻿// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
+using System;
 using EnvDTE;
 using NiftyPerforce;
-using System;
 
 namespace Aurora
 {
     namespace NiftyPerforce
     {
         // Handles registration and events for add/delete files and projects.
-        class AutoAddDelete : Feature
+        internal class AutoAddDelete : Feature
         {
             private readonly ProjectItemsEvents m_projectEvents;
             private readonly SolutionEvents m_solutionEvents;
@@ -32,8 +32,8 @@ namespace Aurora
                 RegisterEvents();
             }
 
-            private bool AddFilesHandlersInstalled { get { return _itemAddedEventHandler != null || _projectAddedEventHandler != null; } } // second conditional is useless but kept for clarity
-            private bool RemoveFilesHandlersInstalled { get { return _itemRemovedEventHandler != null || _projectRemovedEventHandler != null; } } // second conditional is useless but kept for clarity
+            private bool AddFilesHandlersInstalled => _itemAddedEventHandler != null || _projectAddedEventHandler != null;  // second conditional is useless but kept for clarity
+            private bool RemoveFilesHandlersInstalled => _itemRemovedEventHandler != null || _projectRemovedEventHandler != null;  // second conditional is useless but kept for clarity
 
             private void RegisterEvents(object sender = null, EventArgs e = null)
             {

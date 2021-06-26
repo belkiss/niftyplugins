@@ -1,9 +1,9 @@
 ﻿// Copyright (C) 2006-2015 Jim Tilander. See COPYING for and README for more details.
 using System;
 using System.ComponentModel.Design;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 using Aurora;
 using Aurora.NiftyPerforce;
 using EnvDTE;
@@ -11,8 +11,6 @@ using EnvDTE80;
 using Microsoft.VisualStudio.CommandBars;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-
-using System.Threading;
 using Task = System.Threading.Tasks.Task;
 
 namespace NiftyPerforce
@@ -72,8 +70,8 @@ namespace NiftyPerforce
             await base.InitializeAsync(cancellationToken, progress);
 
             // Every plugin needs a command bar.
-            DTE2 application = await GetServiceAsync(typeof(DTE)).ConfigureAwait(false) as DTE2;
-            OleMenuCommandService oleMenuCommandService = await GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
+            var application = await GetServiceAsync(typeof(DTE)).ConfigureAwait(false) as DTE2;
+            var oleMenuCommandService = await GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
 
             // Switches to the UI thread in order to consume some services used in command initialization
             await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
@@ -122,7 +120,6 @@ namespace NiftyPerforce
             m_commandRegistry.RegisterCommand(new P4RevertItem(m_plugin, "NiftyRevertUnchanged", true));
             m_commandRegistry.RegisterCommand(new P4ShowItem(m_plugin, "NiftyShow"));
 
-
             m_plugin.AddFeature(new AutoAddDelete(m_plugin));
             m_plugin.AddFeature(new AutoCheckoutProject(m_plugin));
             m_plugin.AddFeature(new AutoCheckoutTextEdit(m_plugin));
@@ -153,7 +150,7 @@ namespace NiftyPerforce
 
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            IVsProfferCommands3 profferCommands3 = base.GetService(typeof(SVsProfferCommands)) as IVsProfferCommands3;
+            var profferCommands3 = base.GetService(typeof(SVsProfferCommands)) as IVsProfferCommands3;
             RemoveCommandBar("NiftyPerforceCmdBar", profferCommands3);
             RemoveCommandBar("NiftyPerforce", profferCommands3);
 
@@ -210,7 +207,6 @@ namespace NiftyPerforce
 
             string Absname = m_plugin.Prefix + "." + name;
 
-
             foreach (string bar in bars)
             {
                 CommandBar b = ((CommandBars)m_plugin.App.CommandBars)[bar];
@@ -232,9 +228,11 @@ namespace NiftyPerforce
                                 catch (Exception)
                                 {
                                 }
+
                                 break;
                             }
                         }
+
                         done = !found;
                     }
                 }
@@ -246,8 +244,8 @@ namespace NiftyPerforce
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            DTE2 dte = GetGlobalService(typeof(DTE)) as DTE2;
-            CommandBars commandBars = (CommandBars)dte.CommandBars;
+            var dte = GetGlobalService(typeof(DTE)) as DTE2;
+            var commandBars = (CommandBars)dte.CommandBars;
             CommandBar existingCmdBar = null;
 
             try
@@ -271,6 +269,7 @@ namespace NiftyPerforce
                     }
                 }
             }
+
             profferCommands3.RemoveCommandBar(existingCmdBar);
         }
 

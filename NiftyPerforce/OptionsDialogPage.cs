@@ -1,4 +1,4 @@
-/***************************************************************************
+﻿/***************************************************************************
 
 Copyright (c) Microsoft Corporation. All rights reserved.
 THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
@@ -38,7 +38,6 @@ namespace NiftyPerforce
 
         [Category("Operation"), Description("Try to do a p4 edit even though the file is writable. Useful if you have a git repository above your p4 workspace. Costly!")]
         public bool IgnoreReadOnlyOnEdit { get; set; } = false;
-
 
         [Category("Connection"), Description("Use config from system. Effectivly disables the settings inside this dialog for the client etc and picks up the settings from the registry/p4config environment.")]
         public bool UseSystemEnv { get; set; } = true;

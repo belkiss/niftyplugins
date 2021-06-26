@@ -1,7 +1,5 @@
-// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
-using System;
+﻿// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
 using System.Collections.Generic;
-using System.Text;
 
 namespace Aurora
 {
@@ -24,18 +22,14 @@ namespace Aurora
 
         // Helper class to keep the indent levels balanced (with the help of the using statement)
 
-
         // Log class implement below
         public static string Prefix
         {
-            get { return mPrefix; }
-            set { mPrefix = value; }
+            get => mPrefix;
+            set => mPrefix = value;
         }
 
-        public static int HandlerCount
-        {
-            get { return mHandlers.Count; }
-        }
+        public static int HandlerCount => mHandlers.Count;
 
         public static void AddHandler(IHandler handler)
         {

@@ -1,16 +1,15 @@
-// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
-using EnvDTE;
+﻿// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
 using Aurora;
+using EnvDTE;
 
 namespace NiftyPerforce
 {
-    class P4EditModified : CommandBase
+    internal class P4EditModified : CommandBase
     {
         public P4EditModified(Plugin plugin, string canonicalName)
             : base("EditModified", canonicalName, plugin, PackageIds.NiftyEditModified)
         {
         }
-
 
         public override bool OnCommand()
         {

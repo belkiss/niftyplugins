@@ -1,11 +1,11 @@
-// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
-using EnvDTE;
+﻿// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
 using Aurora;
+using EnvDTE;
 
 namespace NiftyPerforce
 {
     // an item command is a command associated with selected items in solution explorer
-    abstract class ItemCommandBase : CommandBase
+    internal abstract class ItemCommandBase : CommandBase
     {
         private readonly bool m_executeForFileItems = true;
         private readonly bool m_executeForProjectItems = true;

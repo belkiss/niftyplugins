@@ -1,4 +1,4 @@
-// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
+﻿// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
 using System;
 using EnvDTE;
 using Microsoft.VisualStudio;
@@ -39,7 +39,7 @@ namespace Aurora
             public int OnBeforeLastDocumentUnlock(uint docCookie, uint dwRDTLockType, uint dwReadLocksRemaining, uint dwEditLocksRemaining) { return VSConstants.S_OK; }
         }
 
-        class AutoCheckoutOnSave : PreCommandFeature
+        internal class AutoCheckoutOnSave : PreCommandFeature
         {
             internal Lazy<RunningDocumentTable> _rdt;
             internal uint _rdte;
@@ -53,7 +53,7 @@ namespace Aurora
                 RegisterEvents();
             }
 
-            private bool RDTAdvised { get { return _sp != null || _rdt != null; } }
+            private bool RDTAdvised => _sp != null || _rdt != null;
 
             private void RegisterEvents(object sender = null, EventArgs e = null)
             {

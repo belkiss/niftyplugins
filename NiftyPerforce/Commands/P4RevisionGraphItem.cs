@@ -1,11 +1,11 @@
-// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
-using EnvDTE;
+﻿// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
 using System.IO;
 using Aurora;
+using EnvDTE;
 
 namespace NiftyPerforce
 {
-    class P4RevisionGraphItem : ItemCommandBase
+    internal class P4RevisionGraphItem : ItemCommandBase
     {
         private readonly bool mMainLine;
 

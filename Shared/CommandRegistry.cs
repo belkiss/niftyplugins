@@ -1,6 +1,5 @@
-// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
+﻿// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
 using System;
-using EnvDTE;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using Microsoft.VisualStudio.Shell;
@@ -37,10 +36,10 @@ namespace Aurora
             //if (cmdId == 0)
             {
                 OleMenuCommandService menuCommandService = mPlugin.MenuCommandService;
-                CommandID commandID = new CommandID(mCmdGroupGuid, commandHandler.CommandId);
+                var commandID = new CommandID(mCmdGroupGuid, commandHandler.CommandId);
 
                 vscommand = new OleMenuCommand(OleMenuCommandCallback, commandID);
-                vscommand.BeforeQueryStatus += this.OleMenuCommandBeforeQueryStatus; // LCTODO: this spams too much, figure out what's wrong
+                vscommand.BeforeQueryStatus += OleMenuCommandBeforeQueryStatus; // LCTODO: this spams too much, figure out what's wrong
                 menuCommandService.AddCommand(vscommand);
                 mCommandsById[commandID.ID] = commandHandler;
             }

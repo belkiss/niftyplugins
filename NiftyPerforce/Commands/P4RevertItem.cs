@@ -1,11 +1,11 @@
-// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
+﻿// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
 using System.Windows.Forms;
-using EnvDTE;
 using Aurora;
+using EnvDTE;
 
 namespace NiftyPerforce
 {
-    class P4RevertItem : ItemCommandBase
+    internal class P4RevertItem : ItemCommandBase
     {
         private readonly bool mOnlyUnchanged;
 
@@ -25,6 +25,7 @@ namespace NiftyPerforce
                     return;
                 }
             }
+
             P4Operations.RevertFile(pane, fileName, mOnlyUnchanged);
         }
     }

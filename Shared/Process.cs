@@ -1,4 +1,4 @@
-// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
+﻿// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
 using System;
 using System.Threading;
 
@@ -44,7 +44,7 @@ namespace Aurora
 
         public static string Execute(string executable, string workingdir, string arguments, bool throwIfNonZeroExitCode = true)
         {
-            using (System.Diagnostics.Process process = new System.Diagnostics.Process())
+            using (var process = new System.Diagnostics.Process())
             {
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.FileName = executable;

@@ -1,10 +1,10 @@
-// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
-using EnvDTE;
+﻿// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
 using Aurora;
+using EnvDTE;
 
 namespace NiftyPerforce
 {
-    class P4ShowItem : ItemCommandBase
+    internal class P4ShowItem : ItemCommandBase
     {
         public P4ShowItem(Plugin plugin, string canonicalName)
             : base("ShowItem", canonicalName, plugin, true, true, PackageIds.NiftyShow)

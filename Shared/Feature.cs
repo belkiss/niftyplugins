@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using EnvDTE;
-using EnvDTE80;
+﻿using EnvDTE;
 
 namespace Aurora
 {
@@ -11,7 +7,7 @@ namespace Aurora
         private readonly string mName;
         private readonly string mTooltip;
 
-        public string Name { get { return mName; } }
+        public string Name => mName;
 
         protected Feature(string name, string tooltip)
         {

@@ -1,15 +1,15 @@
-// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
+﻿// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
 using System;
-using EnvDTE;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using Aurora;
+using EnvDTE;
 
 namespace NiftyPerforce
 {
     // Simplification wrapper around running perforce commands.
-    class P4Operations
+    internal class P4Operations
     {
         private static bool g_p4installed = false;
         private static bool g_p4vinstalled = false;
@@ -31,6 +31,7 @@ namespace NiftyPerforce
                 {
                     g_opsInFlight.Add(token, true);
                 }
+
                 Log.Debug("## Locked \"" + token + "\"");
                 return true;
             }
@@ -150,16 +151,19 @@ namespace NiftyPerforce
                 Log.Debug("EditFile failed due to empty filename");
                 return false;
             }
+
             if (!File.Exists(filename))
             {
                 Log.Debug($"EditFile '{filename}' failed due to not existing file");
                 return false;
             }
+
             if (!Singleton<NiftyPerforce.Config>.Instance.IgnoreReadOnlyOnEdit && (0 == (File.GetAttributes(filename) & FileAttributes.ReadOnly)))
             {
                 Log.Debug($"EditFile '{filename}' failed because file was not read only. If you want to force calling p4 edit, toggle IgnoreReadOnlyOnEdit in the options.");
                 return false;
             }
+
             if (!g_p4installed)
             {
                 Log.Debug($"EditFile '{filename}' failed because p4 exe was not found");
@@ -255,10 +259,10 @@ namespace NiftyPerforce
                     try
                     {
                         string output = Aurora.Process.Execute("p4", dir, $"-s -L \"{dir}\" info");
-                        Regex userpattern = new Regex(@"User name: (?<user>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
-                        Regex portpattern = new Regex(@"Server address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
-                        Regex brokerpattern = new Regex(@"Broker address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
-                        Regex clientpattern = new Regex(@"Client name: (?<client>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
+                        var userpattern = new Regex(@"User name: (?<user>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
+                        var portpattern = new Regex(@"Server address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
+                        var brokerpattern = new Regex(@"Broker address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
+                        var clientpattern = new Regex(@"Client name: (?<client>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
 
                         Match usermatch = userpattern.Match(output);
                         Match portmatch = portpattern.Match(output);
@@ -309,7 +313,6 @@ namespace NiftyPerforce
             string arguments = GetUserInfoStringFull(true, dirname);
             arguments += " tlv \"" + filename + "\"";
 
-
             string token = FormatToken("timelapse", filename);
             if (!LockOp(token))
                 return false;
@@ -341,7 +344,8 @@ namespace NiftyPerforce
                 Log.Debug("Could not find registry key " + (global ? "HKLM\\" : "HKCU\\") + key);
                 return null;
             }
-            Object regValue = hklm.GetValue(value);
+
+            object regValue = hklm.GetValue(value);
             if (null == regValue)
             {
                 Log.Debug("Could not find registry value " + value + " in " + (global ? "HKLM\\" : "HKCU\\") + key);
@@ -365,6 +369,7 @@ namespace NiftyPerforce
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -416,12 +421,14 @@ namespace NiftyPerforce
                     Log.Info("[X] p4 custom diff '{0}' from HKLM", p4diff);
                     g_p4customdiff = true;
                 }
+
                 p4diff = GetRegistryValue("SOFTWARE\\Perforce\\Environment", "P4DIFF", false);
                 if (!string.IsNullOrEmpty(p4diff))
                 {
                     Log.Info("[X] p4 custom diff '{0}' from HKCU", p4diff);
                     g_p4customdiff = true;
                 }
+
                 p4diff = Environment.GetEnvironmentVariable("P4DIFF");
                 if (null != p4diff)
                 {
@@ -494,6 +501,7 @@ namespace NiftyPerforce
                 System.Windows.Forms.MessageBox.Show(message, "NiftyPerforce Notice!", System.Windows.Forms.MessageBoxButtons.OK);
                 g_alreadyNotified.Add(message);
             }
+
             return false;
         }
 
@@ -509,7 +517,7 @@ namespace NiftyPerforce
 
             string result = Aurora.Process.Execute("p4.exe", Path.GetDirectoryName(filename), GetUserInfoString() + "integrated \"" + filename + "\"");
 
-            Regex pattern = new Regex(@"//(.*)#\d+ - .*//([^#]+)#\d+", RegexOptions.Compiled);
+            var pattern = new Regex(@"//(.*)#\d+ - .*//([^#]+)#\d+", RegexOptions.Compiled);
 
             string mainline_ = mainline.ToLowerInvariant();
 

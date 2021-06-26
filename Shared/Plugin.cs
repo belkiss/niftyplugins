@@ -1,4 +1,4 @@
-// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
+﻿// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
 using System;
 using System.Collections.Generic;
 using EnvDTE;
@@ -26,7 +26,7 @@ namespace Aurora
         }
         public string Prefix { get; }
         public DTE2 App { get; }
-        public Commands Commands { get { return App.Commands; } }
+        public Commands Commands => App.Commands;
         public OleMenuCommandService MenuCommandService { get; }
         public object Options { get; }
 
@@ -60,6 +60,7 @@ namespace Aurora
             catch
             {
             }
+
             return events;
         }
 
@@ -76,6 +77,7 @@ namespace Aurora
             catch (Exception)
             {
             }
+
             return m_outputPane;
         }
 
@@ -90,7 +92,7 @@ namespace Aurora
             if (null != result)
                 return result;
 
-            OutputWindow outputWindow = (OutputWindow)app.Windows.Item(EnvDTE.Constants.vsWindowKindOutput).Object;
+            var outputWindow = (OutputWindow)app.Windows.Item(EnvDTE.Constants.vsWindowKindOutput).Object;
             OutputWindowPanes panes = outputWindow.OutputWindowPanes;
             return panes.Add(name);
         }
@@ -102,7 +104,7 @@ namespace Aurora
             if (string.IsNullOrEmpty(name) || app?.Windows?.Count == null || app.Windows.Count == 0)
                 return null;
 
-            OutputWindow outputWindow = (OutputWindow)app.Windows.Item(EnvDTE.Constants.vsWindowKindOutput).Object;
+            var outputWindow = (OutputWindow)app.Windows.Item(EnvDTE.Constants.vsWindowKindOutput).Object;
             OutputWindowPanes panes = outputWindow.OutputWindowPanes;
 
             foreach (OutputWindowPane pane in panes)
