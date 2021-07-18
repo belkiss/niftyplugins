@@ -94,8 +94,13 @@ namespace NiftyPerforce
 
             // Show where we are and when we were compiled...
             var niftyAssembly = Assembly.GetExecutingAssembly();
+            Version version = niftyAssembly.GetName().Version;
+            string versionString = string.Join(".", version.Major, version.Minor, version.Build);
+            string informationalVersion = niftyAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+            if (informationalVersion != null)
+                versionString += " " + informationalVersion;
 
-            Log.Info("I'm running {0} compiled on {1}", niftyAssembly.Location, System.IO.File.GetLastWriteTime(niftyAssembly.Location));
+            Log.Info("I'm running {0} v{1} compiled on {2}", niftyAssembly.Location, versionString, System.IO.File.GetLastWriteTime(niftyAssembly.Location));
 
             // Now we can take care of registering ourselves and all our commands and hooks.
             Log.Debug("Booting up...");
