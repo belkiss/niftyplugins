@@ -118,7 +118,7 @@ namespace NiftyPerforce
                 }
             };
 
-            m_plugin = new Plugin(application, oleMenuCommandService, "Aurora.NiftyPerforce.Connect", config);
+            m_plugin = new Plugin(application, oleMenuCommandService, config);
 
             m_commandRegistry = new CommandRegistry(m_plugin, new Guid(PackageGuids.guidNiftyPerforcePackageCmdSetString));
 
@@ -213,7 +213,8 @@ namespace NiftyPerforce
                 "Cross Project Multi Project"
             };
 
-            string Absname = m_plugin.Prefix + "." + name;
+            const string prefix = "Aurora.NiftyPerforce.Connect";
+            string Absname = prefix + "." + name;
 
             foreach (string bar in bars)
             {

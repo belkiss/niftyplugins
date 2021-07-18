@@ -13,17 +13,13 @@ namespace Aurora
     {
         private readonly Dictionary<string, Feature> m_features = new Dictionary<string, Feature>();
 
-        public string Prefix { get; }
         public DTE2 App { get; }
         public Commands Commands => App.Commands;
         public OleMenuCommandService MenuCommandService { get; }
         public object Options { get; }
 
-        public Plugin(DTE2 application, OleMenuCommandService oleMenuCommandService, string connectPath, object options)
+        public Plugin(DTE2 application, OleMenuCommandService oleMenuCommandService, object options)
         {
-            // TODO: This can be figured out from traversing the assembly and locating the Connect class...
-            Prefix = connectPath;
-
             App = application;
             MenuCommandService = oleMenuCommandService;
             Options = options;
