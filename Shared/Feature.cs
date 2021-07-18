@@ -12,11 +12,6 @@ namespace Aurora
         {
             mName = name;
         }
-
-        public virtual bool Execute()
-        {
-            return true;
-        }
     };
 
     public abstract class PreCommandFeature : Feature
