@@ -11,6 +11,7 @@ namespace NiftyPerforce
     // Simplification wrapper around running perforce commands.
     internal class P4Operations
     {
+        private const string _p4vcBatFileName = "p4vc.bat";
         private static bool g_p4installed = false;
         private static bool g_p4vinstalled = false;
         private static bool g_p4customdiff = false;
@@ -380,9 +381,9 @@ namespace NiftyPerforce
         {
             // starting with 2021.1/2075061
             //    #105247 (Change #2069769)
-            //		The p4vc.exe executable has been removed from the Windows installers.
-            //		To start P4VC, use the p4vc.bat script.
-            foreach (var candidateName in new[] { "p4vc.bat", "p4vc.exe" })
+            //      The p4vc.exe executable has been removed from the Windows installers.
+            //      To start P4VC, use the p4vc.bat script.
+            foreach (var candidateName in new[] { _p4vcBatFileName, "p4vc.exe" })
             {
                 if (check(candidateName))
                 {
@@ -495,13 +496,17 @@ namespace NiftyPerforce
 
         private static void DetermineSupportedFeatures()
         {
-            // history was added in p4v 2019.2 update1/1883366
-            g_p4vc_history_supported = P4VCHasCommand("history");
-            Log.Info("[{0}] p4vc history", g_p4vc_history_supported ? "X" : " ");
+            bool p4vcBat = g_p4vc_exename == _p4vcBatFileName;
+            // since p4vc.bat was introduced with 2021.1/2075061, if we have it we know we have diffhave, hence history
 
             // diffhave was added in p4v 2020.1/1946989
-            g_p4vc_diffhave_supported = P4VCHasCommand("diffhave");
+            g_p4vc_diffhave_supported = p4vcBat || P4VCHasCommand("diffhave");
             Log.Info("[{0}] p4vc diffhave", g_p4vc_diffhave_supported ? "X" : " ");
+
+            // history was added in p4v 2019.2 update1/1883366
+            // so if we have diffhave we know we have history and can skip the test
+            g_p4vc_history_supported = g_p4vc_diffhave_supported || P4VCHasCommand("history");
+            Log.Info("[{0}] p4vc history", g_p4vc_history_supported ? "X" : " ");
         }
 
         private static bool P4VCHasCommand(string command)
