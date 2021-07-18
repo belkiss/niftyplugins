@@ -102,12 +102,9 @@ namespace Aurora
                 formattedLine = levelName + ": " + indent + message + "\n";
             }
 
-            lock (mHandlers)
+            foreach (IHandler handler in mHandlers)
             {
-                foreach (IHandler handler in mHandlers)
-                {
-                    handler.OnMessage(level, message, formattedLine);
-                }
+                handler.OnMessage(level, message, formattedLine);
             }
         }
 
