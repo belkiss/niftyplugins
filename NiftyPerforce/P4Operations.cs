@@ -119,23 +119,30 @@ namespace NiftyPerforce
         private static bool Internal_CheckEditFile(CheckoutCallback callback, string filename)
         {
             Log.Debug($"Edit '{filename}'");
+
             bool result = callback(filename);
+
+            void CheckoutAdditionalIfExists(string f)
+            {
+                if (File.Exists(f))
+                    callback(f);
+            }
 
             string ext = Path.GetExtension(filename).ToLowerInvariant();
             if (ext == ".vcxproj")
             {
-                callback(filename + ".filters");
+                CheckoutAdditionalIfExists(filename + ".filters");
             }
 
             if (ext == ".settings" || ext == ".resx")
             {
-                callback(Path.ChangeExtension(filename, ".Designer.cs"));
+                CheckoutAdditionalIfExists(Path.ChangeExtension(filename, ".Designer.cs"));
             }
 
             if (ext == ".cs")
             {
-                callback(Path.ChangeExtension(filename, ".Designer.cs"));
-                callback(Path.ChangeExtension(filename, ".resx"));
+                CheckoutAdditionalIfExists(Path.ChangeExtension(filename, ".Designer.cs"));
+                CheckoutAdditionalIfExists(Path.ChangeExtension(filename, ".resx"));
             }
 
             return result;
