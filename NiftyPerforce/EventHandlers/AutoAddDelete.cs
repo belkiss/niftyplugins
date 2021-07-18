@@ -82,7 +82,7 @@ namespace Aurora
                 }
             }
 
-            public void OnItemAdded(ProjectItem item)
+            private void OnItemAdded(ProjectItem item)
             {
                 Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -103,7 +103,7 @@ namespace Aurora
                 }
             }
 
-            public void OnItemRemoved(ProjectItem item)
+            private void OnItemRemoved(ProjectItem item)
             {
                 Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
