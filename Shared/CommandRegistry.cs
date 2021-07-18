@@ -52,16 +52,13 @@ namespace Aurora
                 {
                     CommandID commandId = oleMenuCommand.CommandID;
 
-                    if (commandId != null)
+                    if (commandId != null && mCommandsById.ContainsKey(commandId.ID))
                     {
-                        if (mCommandsById.ContainsKey(commandId.ID))
-                        {
-                            var bc = mCommandsById[commandId.ID];
+                        var bc = mCommandsById[commandId.ID];
 
-                            oleMenuCommand.Supported = true;
-                            oleMenuCommand.Enabled = mCommandsById[commandId.ID].IsEnabled();
-                            oleMenuCommand.Visible = true;
-                        }
+                        oleMenuCommand.Supported = true;
+                        oleMenuCommand.Enabled = bc.IsEnabled();
+                        oleMenuCommand.Visible = true;
                     }
                 }
             }
