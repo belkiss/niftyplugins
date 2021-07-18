@@ -137,83 +137,85 @@ namespace Aurora
         {
             try
             {
-                var process = new System.Diagnostics.Process();
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.FileName = executable;
-                if (0 == timeout)
+                using (var process = new System.Diagnostics.Process())
                 {
-                    // We are not for these processes reading the stdout and thus they could if they wrote more
-                    // data on the output line hang.
-                    process.StartInfo.RedirectStandardOutput = false;
-                    process.StartInfo.RedirectStandardError = false;
-                }
-                else
-                {
-                    process.StartInfo.RedirectStandardOutput = true;
-                    process.StartInfo.RedirectStandardError = true;
-                }
-
-                process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.WorkingDirectory = workingdir;
-                process.StartInfo.Arguments = commandline;
-
-                Log.Debug("executableName : " + executable);
-                Log.Debug("workingDirectory : " + workingdir);
-                Log.Debug("command : " + commandline);
-
-                if (!process.Start())
-                {
-                    Log.Error("{0}: {1} Failed to start. Is Perforce installed and in the path?\n", executable, commandline);
-                    return false;
-                }
-
-                if (0 == timeout)
-                {
-                    // Fire and forget task.
-                    return true;
-                }
-
-                bool exited = false;
-                string alloutput = "";
-                using (Process.Handler stderr = new Process.Handler(), stdout = new Process.Handler())
-                {
-                    process.OutputDataReceived += stdout.OnOutput;
-                    process.BeginOutputReadLine();
-
-                    process.ErrorDataReceived += stderr.OnOutput;
-                    process.BeginErrorReadLine();
-
-                    exited = process.WaitForExit(timeout);
-
-                    /*
-                     * This causes the plugin to unexpectedly crash, since it brings the entire thread down, and thus the entire environment?!?
-                     *
-
-                    if (0 != process.ExitCode)
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.FileName = executable;
+                    if (0 == timeout)
                     {
-                        throw new Process.Error("Failed to execute {0} {1}, exit code was {2}", executable, process.StartInfo.Arguments, process.ExitCode);
-                    }*/
-
-                    stderr.sentinel.WaitOne();
-                    stdout.sentinel.WaitOne();
-                    alloutput = stdout.buffer + "\n" + stderr.buffer;
-                }
-
-                if (!exited)
-                {
-                    Log.Info("{0}: {1} timed out ({2} ms)", executable, commandline, timeout);
-                    process.Kill();
-                    return false;
-                }
-                else
-                {
-                    Log.Info(executable + ": " + commandline);
-                    Log.Info(alloutput);
-
-                    if (0 != process.ExitCode)
+                        // We are not for these processes reading the stdout and thus they could if they wrote more
+                        // data on the output line hang.
+                        process.StartInfo.RedirectStandardOutput = false;
+                        process.StartInfo.RedirectStandardError = false;
+                    }
+                    else
                     {
-                        Log.Debug("{0}: {1} exit code {2}", executable, commandline, process.ExitCode);
+                        process.StartInfo.RedirectStandardOutput = true;
+                        process.StartInfo.RedirectStandardError = true;
+                    }
+
+                    process.StartInfo.CreateNoWindow = true;
+                    process.StartInfo.WorkingDirectory = workingdir;
+                    process.StartInfo.Arguments = commandline;
+
+                    Log.Debug("executableName : " + executable);
+                    Log.Debug("workingDirectory : " + workingdir);
+                    Log.Debug("command : " + commandline);
+
+                    if (!process.Start())
+                    {
+                        Log.Error("{0}: {1} Failed to start. Is Perforce installed and in the path?\n", executable, commandline);
                         return false;
+                    }
+
+                    if (0 == timeout)
+                    {
+                        // Fire and forget task.
+                        return true;
+                    }
+
+                    bool exited = false;
+                    string alloutput = "";
+                    using (Process.Handler stderr = new Process.Handler(), stdout = new Process.Handler())
+                    {
+                        process.OutputDataReceived += stdout.OnOutput;
+                        process.BeginOutputReadLine();
+
+                        process.ErrorDataReceived += stderr.OnOutput;
+                        process.BeginErrorReadLine();
+
+                        exited = process.WaitForExit(timeout);
+
+                        /*
+                         * This causes the plugin to unexpectedly crash, since it brings the entire thread down, and thus the entire environment?!?
+                         *
+
+                        if (0 != process.ExitCode)
+                        {
+                            throw new Process.Error("Failed to execute {0} {1}, exit code was {2}", executable, process.StartInfo.Arguments, process.ExitCode);
+                        }*/
+
+                        stderr.sentinel.WaitOne();
+                        stdout.sentinel.WaitOne();
+                        alloutput = stdout.buffer + "\n" + stderr.buffer;
+                    }
+
+                    if (!exited)
+                    {
+                        Log.Info("{0}: {1} timed out ({2} ms)", executable, commandline, timeout);
+                        process.Kill();
+                        return false;
+                    }
+                    else
+                    {
+                        Log.Info(executable + ": " + commandline);
+                        Log.Info(alloutput);
+
+                        if (0 != process.ExitCode)
+                        {
+                            Log.Debug("{0}: {1} exit code {2}", executable, commandline, process.ExitCode);
+                            return false;
+                        }
                     }
                 }
 
