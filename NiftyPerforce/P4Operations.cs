@@ -306,9 +306,9 @@ namespace NiftyPerforce
 
                         return ret;
                     }
-                    catch (Aurora.Process.Error e)
+                    catch (Aurora.ProcessException e)
                     {
-                        Log.Error("Failed to execute info string discovery: {0}", e.info);
+                        Log.Error("Failed to execute info string discovery: {0}", e.Message);
                     }
                 }
 

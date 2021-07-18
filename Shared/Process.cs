@@ -1,17 +1,12 @@
 ﻿// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
 using System;
+using System.Runtime.Serialization;
 using System.Threading;
 
 namespace Aurora
 {
     public static class Process
     {
-        public class Error : System.Exception
-        {
-            public string info;
-            public Error(string info_, params object[] vaargs_) { info = string.Format(info_, vaargs_); }
-        };
-
         // Helper class to capture output correctly and send an event once we've reached the end of the file.
         public class Handler : IDisposable
         {
@@ -56,7 +51,7 @@ namespace Aurora
 
                 if (!process.Start())
                 {
-                    throw new Error("{0}: Failed to start {1}.", executable, process.StartInfo.Arguments);
+                    throw new ProcessException("{0}: Failed to start {1}.", executable, process.StartInfo.Arguments);
                 }
 
                 using (Handler stderr = new Handler(), stdout = new Handler())
@@ -71,7 +66,7 @@ namespace Aurora
 
                     if (throwIfNonZeroExitCode && 0 != process.ExitCode)
                     {
-                        throw new Error("Failed to execute {0} {1}, exit code was {2}", executable, process.StartInfo.Arguments, process.ExitCode);
+                        throw new ProcessException("Failed to execute {0} {1}, exit code was {2}", executable, process.StartInfo.Arguments, process.ExitCode);
                     }
 
                     stderr.sentinel.WaitOne();
@@ -80,6 +75,33 @@ namespace Aurora
                     return stdout.buffer + "\n" + stderr.buffer;
                 }
             }
+        }
+    }
+
+    public class ProcessException : Exception
+    {
+        public ProcessException()
+        {
+        }
+
+        public ProcessException(string message)
+            : base(message)
+        {
+        }
+
+        public ProcessException(string info, params object[] vaargs)
+            : this(string.Format(info, vaargs))
+        {
+        }
+
+        public ProcessException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
+        protected ProcessException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
         }
     }
 }

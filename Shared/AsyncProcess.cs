@@ -192,7 +192,7 @@ namespace Aurora
 
                         if (0 != process.ExitCode)
                         {
-                            throw new Process.Error("Failed to execute {0} {1}, exit code was {2}", executable, process.StartInfo.Arguments, process.ExitCode);
+                            throw new Process.ProcessException("Failed to execute {0} {1}, exit code was {2}", executable, process.StartInfo.Arguments, process.ExitCode);
                         }*/
 
                         stderr.sentinel.WaitOne();
