@@ -134,7 +134,7 @@ namespace NiftyPerforce
             m_plugin.AddFeature(new AutoAddDelete(m_plugin));
             m_plugin.AddFeature(new AutoCheckoutProject(m_plugin));
             m_plugin.AddFeature(new AutoCheckoutTextEdit(m_plugin));
-            m_plugin.AddFeature(new AutoCheckoutOnSave(m_plugin));
+            m_plugin.AddFeature(new AutoCheckoutOnSave(m_plugin, this));
 
             P4Operations.CheckInstalledFiles();
 

@@ -43,17 +43,18 @@ namespace Aurora
         {
             internal Lazy<RunningDocumentTable> _rdt;
             internal uint _rdte;
-            internal Lazy<Microsoft.VisualStudio.OLE.Interop.IServiceProvider> _sp;
+            private IServiceProvider _serviceProvider;
 
-            public AutoCheckoutOnSave(Plugin plugin)
+            public AutoCheckoutOnSave(Plugin plugin, IServiceProvider serviceProvider)
                 : base(plugin, "AutoCheckoutOnSave", "Automatically checks out files on save")
             {
                 ThreadHelper.ThrowIfNotOnUIThread();
+                _serviceProvider = serviceProvider;
                 ((Config)mPlugin.Options).OnApplyEvent += RegisterEvents;
                 RegisterEvents();
             }
 
-            private bool RDTAdvised => _sp != null || _rdt != null;
+            private bool RDTAdvised => _rdt != null;
 
             private void RegisterEvents(object sender = null, EventArgs e = null)
             {
@@ -62,12 +63,7 @@ namespace Aurora
                     if (!RDTAdvised)
                     {
                         Log.Info("Adding handlers for automatically checking out dirty files when you save");
-                        _sp = new Lazy<Microsoft.VisualStudio.OLE.Interop.IServiceProvider>(() =>
-                        {
-                            ThreadHelper.ThrowIfNotOnUIThread();
-                            return Package.GetGlobalService(typeof(Microsoft.VisualStudio.OLE.Interop.IServiceProvider)) as Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
-                        });
-                        _rdt = new Lazy<RunningDocumentTable>(() => new RunningDocumentTable(new ServiceProvider(_sp.Value)));
+                        _rdt = new Lazy<RunningDocumentTable>(() => new RunningDocumentTable(_serviceProvider));
                         _rdte = _rdt.Value.Advise(new RunningDocTableEvents(this));
                     }
                 }
@@ -76,7 +72,6 @@ namespace Aurora
                     Log.Info("Removing handlers for automatically checking out dirty files when you save");
                     _rdt.Value.Unadvise(_rdte);
                     _rdt = null;
-                    _sp = null;
                 }
             }
 
