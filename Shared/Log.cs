@@ -90,13 +90,8 @@ namespace Aurora
         {
             string message = args.Length > 0 ? string.Format(format, args) : format;
             string formattedLine;
-            string indent = "";
+            string indent = new string(' ', mIndent * 4);
             string levelName = level.ToString().PadLeft(5, ' ');
-
-            for (int i = 0; i < mIndent; i++)
-            {
-                indent += "    ";
-            }
 
             if (Prefix.Length > 0)
             {
