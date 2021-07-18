@@ -23,11 +23,7 @@ namespace Aurora
         // Helper class to keep the indent levels balanced (with the help of the using statement)
 
         // Log class implement below
-        public static string Prefix
-        {
-            get => mPrefix;
-            set => mPrefix = value;
-        }
+        public static string Prefix { get; set; } = "";
 
         public static int HandlerCount => mHandlers.Count;
 
@@ -102,9 +98,9 @@ namespace Aurora
                 indent += "    ";
             }
 
-            if (mPrefix.Length > 0)
+            if (Prefix.Length > 0)
             {
-                formattedLine = mPrefix + " (" + levelName + "): " + indent + message + "\n";
+                formattedLine = Prefix + " (" + levelName + "): " + indent + message + "\n";
             }
             else
             {
@@ -121,7 +117,6 @@ namespace Aurora
         }
 
         private static readonly List<IHandler> mHandlers = new List<IHandler>();
-        private static string mPrefix = "";
         private static int mIndent = 0;
     }
 }
