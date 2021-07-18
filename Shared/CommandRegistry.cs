@@ -32,21 +32,13 @@ namespace Aurora
 
         private OleMenuCommand RegisterCommandPrivate(CommandBase commandHandler)
         {
-            OleMenuCommand vscommand = null;
-            //if (cmdId == 0)
-            {
-                OleMenuCommandService menuCommandService = mPlugin.MenuCommandService;
-                var commandID = new CommandID(mCmdGroupGuid, commandHandler.CommandId);
+            OleMenuCommandService menuCommandService = mPlugin.MenuCommandService;
+            var commandID = new CommandID(mCmdGroupGuid, commandHandler.CommandId);
 
-                vscommand = new OleMenuCommand(OleMenuCommandCallback, commandID);
-                vscommand.BeforeQueryStatus += OleMenuCommandBeforeQueryStatus; // LCTODO: this spams too much, figure out what's wrong
-                menuCommandService.AddCommand(vscommand);
-                mCommandsById[commandID.ID] = commandHandler;
-            }
-            // Register the graphics controls for this command as well.
-            // First let the command itself have a stab at register whatever it needs.
-            // Then by default we always register ourselves in the main toolbar of the application.
-            //commandHandler.RegisterGUI(vscommand, mCommandBar, toolbarOnly);
+            var vscommand = new OleMenuCommand(OleMenuCommandCallback, commandID);
+            vscommand.BeforeQueryStatus += OleMenuCommandBeforeQueryStatus; // LCTODO: this spams too much, figure out what's wrong
+            menuCommandService.AddCommand(vscommand);
+            mCommandsById[commandID.ID] = commandHandler;
 
             return vscommand;
         }

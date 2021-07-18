@@ -17,7 +17,6 @@ namespace Aurora
             public AutoCheckoutTextEdit(Plugin plugin)
                 : base(plugin, "AutoCheckoutTextEdit")
             {
-                //((Config)mPlugin.Options).RegisterOnApplyAction(RegisterEvents);
                 ((Config)mPlugin.Options).OnApplyEvent += RegisterEvents;
                 RegisterEvents();
             }

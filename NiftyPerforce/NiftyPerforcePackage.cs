@@ -89,7 +89,7 @@ namespace NiftyPerforce
 #if DEBUG
             Log.Info("NiftyPerforce (Debug)");
 #else
-            //Log.Info("NiftyPerforce (Release)");
+            Log.Info("NiftyPerforce (Release)");
 #endif
 
             // Show where we are and when we were compiled...

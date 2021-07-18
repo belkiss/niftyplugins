@@ -186,15 +186,6 @@ namespace Aurora
 
                         exited = process.WaitForExit(timeout);
 
-                        /*
-                         * This causes the plugin to unexpectedly crash, since it brings the entire thread down, and thus the entire environment?!?
-                         *
-
-                        if (0 != process.ExitCode)
-                        {
-                            throw new Process.ProcessException("Failed to execute {0} {1}, exit code was {2}", executable, process.StartInfo.Arguments, process.ExitCode);
-                        }*/
-
                         stderr.sentinel.WaitOne();
                         stdout.sentinel.WaitOne();
                         alloutput = stdout.buffer + "\n" + stderr.buffer;

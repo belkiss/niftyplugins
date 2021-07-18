@@ -38,7 +38,6 @@ namespace NiftyPerforce
             }
             catch (ArgumentException)
             {
-                //Log.Debug("!! Failed to lock \"" + token + "\"");
                 Log.Error(token + " already in progress");
                 return false;
             }
