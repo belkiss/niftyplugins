@@ -14,17 +14,17 @@ namespace Aurora
         // http://schmalls.com/2015/01/19/adventures-in-visual-studio-extension-development-part-2
         internal class RunningDocTableEvents : IVsRunningDocTableEvents3
         {
-            private readonly AutoCheckoutOnSave autoCheckoutOnSave;
+            private readonly AutoCheckoutOnSave _autoCheckoutOnSave;
 
             public RunningDocTableEvents(AutoCheckoutOnSave autoCheckoutOnSave)
             {
-                this.autoCheckoutOnSave = autoCheckoutOnSave;
+                _autoCheckoutOnSave = autoCheckoutOnSave;
             }
 
             public int OnBeforeSave(uint docCookie)
             {
-                RunningDocumentInfo runningDocumentInfo = autoCheckoutOnSave._rdt.Value.GetDocumentInfo(docCookie);
-                autoCheckoutOnSave.OnBeforeSave(runningDocumentInfo.Moniker);
+                RunningDocumentInfo runningDocumentInfo = _autoCheckoutOnSave._rdt.Value.GetDocumentInfo(docCookie);
+                AutoCheckoutOnSave.OnBeforeSave(runningDocumentInfo.Moniker);
                 return VSConstants.S_OK;
             }
 
@@ -43,7 +43,7 @@ namespace Aurora
         {
             internal Lazy<RunningDocumentTable> _rdt;
             internal uint _rdte;
-            private IServiceProvider _serviceProvider;
+            private readonly IServiceProvider _serviceProvider;
 
             public AutoCheckoutOnSave(Plugin plugin, IServiceProvider serviceProvider)
                 : base(plugin, "AutoCheckoutOnSave", "Automatically checks out files on save")
@@ -75,9 +75,9 @@ namespace Aurora
                 }
             }
 
-            internal void OnBeforeSave(string filename)
+            internal static bool OnBeforeSave(string filename)
             {
-                P4Operations.EditFileImmediate(filename);
+                return P4Operations.EditFileImmediate(filename);
             }
         }
     }
