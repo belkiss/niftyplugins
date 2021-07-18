@@ -7,7 +7,7 @@ namespace Aurora
 {
     public static class AsyncProcess
     {
-        private static readonly int s_defaultTimeout = 30000; // in ms
+        private const int s_defaultTimeout = 30000; // in ms
 
         public delegate void OnDone(bool ok, object arg0);
 
