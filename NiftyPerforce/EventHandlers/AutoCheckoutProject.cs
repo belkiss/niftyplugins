@@ -11,7 +11,7 @@ namespace Aurora
         internal class AutoCheckoutProject : PreCommandFeature
         {
             public AutoCheckoutProject(Plugin plugin)
-                : base(plugin, "AutoCheckoutProject", "Automatically checks out the project files")
+                : base(plugin, "AutoCheckoutProject")
             {
                 ((Config)mPlugin.Options).OnApplyEvent += RegisterEvents;
                 RegisterEvents();

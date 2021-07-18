@@ -46,7 +46,7 @@ namespace Aurora
             private readonly IServiceProvider _serviceProvider;
 
             public AutoCheckoutOnSave(Plugin plugin, IServiceProvider serviceProvider)
-                : base(plugin, "AutoCheckoutOnSave", "Automatically checks out files on save")
+                : base(plugin, "AutoCheckoutOnSave")
             {
                 ThreadHelper.ThrowIfNotOnUIThread();
                 _serviceProvider = serviceProvider;

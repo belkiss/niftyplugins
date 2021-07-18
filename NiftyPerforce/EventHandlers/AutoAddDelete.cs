@@ -21,7 +21,7 @@ namespace Aurora
             private readonly Plugin m_plugin;
 
             public AutoAddDelete(Plugin plugin)
-                : base("AutoAddDelete", "Automatically adds and deletes files matching project add/delete")
+                : base("AutoAddDelete")
             {
                 m_plugin = plugin;
 

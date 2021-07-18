@@ -5,14 +5,12 @@ namespace Aurora
     public abstract class Feature
     {
         private readonly string mName;
-        private readonly string mTooltip;
 
         public string Name => mName;
 
-        protected Feature(string name, string tooltip)
+        protected Feature(string name)
         {
             mName = name;
-            mTooltip = tooltip;
         }
 
         public virtual bool Execute()
@@ -25,8 +23,8 @@ namespace Aurora
     {
         protected Plugin mPlugin;
 
-        protected PreCommandFeature(Plugin plugin, string name, string tooltip)
-            : base(name, tooltip)
+        protected PreCommandFeature(Plugin plugin, string name)
+            : base(name)
         {
             mPlugin = plugin;
         }

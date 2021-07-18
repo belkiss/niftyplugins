@@ -15,7 +15,7 @@ namespace Aurora
             private EnvDTE.TextEditorEvents mTextEditorEvents;
 
             public AutoCheckoutTextEdit(Plugin plugin)
-                : base(plugin, "AutoCheckoutTextEdit", "Automatically checks out the text file on edits")
+                : base(plugin, "AutoCheckoutTextEdit")
             {
                 //((Config)mPlugin.Options).RegisterOnApplyAction(RegisterEvents);
                 ((Config)mPlugin.Options).OnApplyEvent += RegisterEvents;
