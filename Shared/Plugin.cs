@@ -1,5 +1,4 @@
 ﻿// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
-using System;
 using System.Collections.Generic;
 using EnvDTE;
 using EnvDTE80;
