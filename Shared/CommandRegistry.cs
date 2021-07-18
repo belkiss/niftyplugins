@@ -50,6 +50,7 @@ namespace Aurora
 
             return vscommand;
         }
+
         private void OleMenuCommandBeforeQueryStatus(object sender, EventArgs e)
         {
 

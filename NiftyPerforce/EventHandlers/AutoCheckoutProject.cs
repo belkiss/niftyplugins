@@ -27,8 +27,9 @@ namespace Aurora
                 "Project.AddNewItem",
                 "Project.AddExistingItem",
                 "Edit.Delete", // hmm : removing a file from Solution Explorer is just Edit.Delete !?
-				"File.Remove" // I don't think this actually does anything
-			};
+                "File.Remove" // I don't think this actually does anything
+            };
+
             private List<string> _registeredCommands;
 
             private void RegisterEvents(object sender = null, EventArgs e = null)
@@ -74,7 +75,7 @@ namespace Aurora
 
                 foreach (Project project in (Array)mPlugin.App.ActiveSolutionProjects)
                 {
-                    P4Operations.EditFileImmediate(mPlugin.OutputPane, project.FullName);
+                    P4Operations.EditFileImmediate(project.FullName);
                 }
             }
         }

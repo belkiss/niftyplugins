@@ -11,9 +11,9 @@ namespace NiftyPerforce
         {
         }
 
-        public override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)
+        public override void OnExecute(SelectedItem item, string fileName)
         {
-            P4Operations.EditFile(pane, fileName);
+            P4Operations.EditFile(fileName);
         }
     }
 }

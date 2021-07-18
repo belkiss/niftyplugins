@@ -22,16 +22,14 @@ namespace Aurora
             m_helperThread.Abort();
         }
 
-        public static bool Run(OutputWindowPane output, string executable, string commandline, string workingdir, OnDone callback, object callbackArg)
+        public static bool Run(string executable, string commandline, string workingdir, OnDone callback, object callbackArg)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
-
             int timeout = 1000;
 
-            if (!RunCommand(output, executable, commandline, workingdir, timeout))
+            if (!RunCommand(executable, commandline, workingdir, timeout))
             {
                 Log.Debug("Failed to run immediate (process hung?), trying again on a remote thread: " + commandline);
-                return Schedule(output, executable, commandline, workingdir, callback, callbackArg);
+                return Schedule(executable, commandline, workingdir, callback, callbackArg);
             }
             else
             {
@@ -41,16 +39,15 @@ namespace Aurora
             return true;
         }
 
-        public static bool Schedule(OutputWindowPane output, string executable, string commandline, string workingdir, OnDone callback, object callbackArg)
+        public static bool Schedule(string executable, string commandline, string workingdir, OnDone callback, object callbackArg)
         {
-            return Schedule(output, executable, commandline, workingdir, callback, callbackArg, s_defaultTimeout);
+            return Schedule(executable, commandline, workingdir, callback, callbackArg, s_defaultTimeout);
         }
 
-        public static bool Schedule(OutputWindowPane output, string executable, string commandline, string workingdir, OnDone callback, object callbackArg, int timeout)
+        public static bool Schedule(string executable, string commandline, string workingdir, OnDone callback, object callbackArg, int timeout)
         {
             var cmd = new CommandThread
             {
-                output = output,
                 executable = executable,
                 commandline = commandline,
                 workingdir = workingdir,
@@ -116,18 +113,15 @@ namespace Aurora
             public string executable = "";
             public string commandline = "";
             public string workingdir = "";
-            public OutputWindowPane output = null;
             public OnDone callback = null;
             public object callbackArg = null;
             public int timeout = 10000;
             public void Run()
             {
-                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
-
                 bool ok;
                 try
                 {
-                    ok = RunCommand(output, executable, commandline, workingdir, timeout);
+                    ok = RunCommand(executable, commandline, workingdir, timeout);
                 }
                 catch
                 {
@@ -139,10 +133,8 @@ namespace Aurora
             }
         }
 
-        private static bool RunCommand(OutputWindowPane output, string executable, string commandline, string workingdir, int timeout)
+        private static bool RunCommand(string executable, string commandline, string workingdir, int timeout)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
-
             try
             {
                 var process = new System.Diagnostics.Process();
@@ -194,13 +186,13 @@ namespace Aurora
                     exited = process.WaitForExit(timeout);
 
                     /*
-					 * This causes the plugin to unexpectedly crash, since it brings the entire thread down, and thus the entire environment?!?
-					 *
+                     * This causes the plugin to unexpectedly crash, since it brings the entire thread down, and thus the entire environment?!?
+                     *
 
-					if (0 != process.ExitCode)
-					{
-						throw new Process.Error("Failed to execute {0} {1}, exit code was {2}", executable, process.StartInfo.Arguments, process.ExitCode);
-					}*/
+                    if (0 != process.ExitCode)
+                    {
+                        throw new Process.Error("Failed to execute {0} {1}, exit code was {2}", executable, process.StartInfo.Arguments, process.ExitCode);
+                    }*/
 
                     stderr.sentinel.WaitOne();
                     stdout.sentinel.WaitOne();
@@ -215,14 +207,8 @@ namespace Aurora
                 }
                 else
                 {
-                    if (null != output)
-                    {
-                        output.OutputString(executable + ": " + commandline + "\n");
-                        output.OutputString(alloutput);
-                    }
-
-                    System.Diagnostics.Debug.WriteLine(commandline + "\n");
-                    System.Diagnostics.Debug.WriteLine(alloutput);
+                    Log.Info(executable + ": " + commandline);
+                    Log.Info(alloutput);
 
                     if (0 != process.ExitCode)
                     {

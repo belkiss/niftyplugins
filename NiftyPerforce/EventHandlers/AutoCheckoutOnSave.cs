@@ -57,8 +57,6 @@ namespace Aurora
 
             private void RegisterEvents(object sender = null, EventArgs e = null)
             {
-                ThreadHelper.ThrowIfNotOnUIThread();
-
                 if (((Config)mPlugin.Options).AutoCheckoutOnSave)
                 {
                     if (!RDTAdvised)
@@ -84,7 +82,7 @@ namespace Aurora
 
             internal void OnBeforeSave(string filename)
             {
-                P4Operations.EditFileImmediate(mPlugin.OutputPane, filename);
+                P4Operations.EditFileImmediate(filename);
             }
         }
     }

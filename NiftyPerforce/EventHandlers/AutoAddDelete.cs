@@ -86,20 +86,20 @@ namespace Aurora
             {
                 Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-                P4Operations.EditFile(m_plugin.OutputPane, item.ContainingProject.FullName);
+                P4Operations.EditFile(item.ContainingProject.FullName);
 
                 if (item.ProjectItems != null)
                 {
                     for (int i = 0; i < item.FileCount; i++)
                     {
                         string name = item.get_FileNames((short)i);
-                        P4Operations.AddFile(m_plugin.OutputPane, name);
+                        P4Operations.AddFile(name);
                     }
                 }
                 else
                 {
                     if (System.IO.File.Exists(item.Name))
-                        P4Operations.AddFile(m_plugin.OutputPane, item.Name);
+                        P4Operations.AddFile(item.Name);
                 }
             }
 
@@ -107,12 +107,12 @@ namespace Aurora
             {
                 Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-                P4Operations.EditFile(m_plugin.OutputPane, item.ContainingProject.FullName);
+                P4Operations.EditFile(item.ContainingProject.FullName);
 
                 for (int i = 0; i < item.FileCount; i++)
                 {
                     string name = item.get_FileNames((short)i);
-                    P4Operations.DeleteFile(m_plugin.OutputPane, name);
+                    P4Operations.DeleteFile(name);
                 }
             }
 
@@ -120,8 +120,8 @@ namespace Aurora
             {
                 Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-                P4Operations.EditFile(m_plugin.OutputPane, m_plugin.App.Solution.FullName);
-                P4Operations.AddFile(m_plugin.OutputPane, project.FullName);
+                P4Operations.EditFile(m_plugin.App.Solution.FullName);
+                P4Operations.AddFile(project.FullName);
                 // TODO: [jt] We should if the operation is not a add new project but rather a add existing project
                 //       step through all the project items and add them to perforce. Or maybe we want the user
                 //       to do this herself?
@@ -131,8 +131,8 @@ namespace Aurora
             {
                 Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-                P4Operations.EditFile(m_plugin.OutputPane, m_plugin.App.Solution.FullName);
-                P4Operations.DeleteFile(m_plugin.OutputPane, project.FullName);
+                P4Operations.EditFile(m_plugin.App.Solution.FullName);
+                P4Operations.DeleteFile(project.FullName);
                 // TODO: [jt] Do we want to automatically delete the items from perforce here?
             }
         }

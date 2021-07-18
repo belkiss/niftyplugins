@@ -26,15 +26,15 @@ namespace NiftyPerforce
             {
                 if (m_executeForFileItems && Plugin.App.ActiveWindow.Type == vsWindowType.vsWindowTypeDocument)
                 {
-                    OnExecute(sel, Plugin.App.ActiveDocument.FullName, Plugin.OutputPane);
+                    OnExecute(sel, Plugin.App.ActiveDocument.FullName);
                 }
                 else if (m_executeForFileItems && sel.ProjectItem != null && m_fileItemGUID == sel.ProjectItem.Kind.ToUpperInvariant())
                 {
-                    OnExecute(sel, sel.ProjectItem.get_FileNames(0), Plugin.OutputPane);
+                    OnExecute(sel, sel.ProjectItem.get_FileNames(0));
                 }
                 else if (m_executeForProjectItems && sel.Project != null)
                 {
-                    OnExecute(sel, sel.Project.FullName, Plugin.OutputPane);
+                    OnExecute(sel, sel.Project.FullName);
                 }
             }
 
@@ -47,6 +47,6 @@ namespace NiftyPerforce
             return Plugin.App.SelectedItems.Count > 0;
         }
 
-        public abstract void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane);
+        public abstract void OnExecute(SelectedItem item, string fileName);
     }
 }

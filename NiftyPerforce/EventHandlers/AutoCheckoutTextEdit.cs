@@ -78,7 +78,7 @@ namespace Aurora
                 Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
                 if (mPlugin.App.ActiveDocument != null && mPlugin.App.ActiveDocument.ReadOnly)
-                    P4Operations.EditFile(mPlugin.OutputPane, mPlugin.App.ActiveDocument.FullName);
+                    P4Operations.EditFile(mPlugin.App.ActiveDocument.FullName);
             }
 
             // [jt] This handler checks for things like paste operations. In theory we should be able to remove the handler above, but
@@ -92,7 +92,7 @@ namespace Aurora
                     (Hint != 0))
                     return;
                 if (mPlugin.App.ActiveDocument != null && mPlugin.App.ActiveDocument.ReadOnly && !mPlugin.App.ActiveDocument.Saved)
-                    P4Operations.EditFile(mPlugin.OutputPane, mPlugin.App.ActiveDocument.FullName);
+                    P4Operations.EditFile(mPlugin.App.ActiveDocument.FullName);
             }
 
             private void OnCheckoutCurrentDocument(string Guid, int ID, object CustomIn, object CustomOut, ref bool CancelDefault)
@@ -100,7 +100,7 @@ namespace Aurora
                 Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
                 if (mPlugin.App.ActiveDocument != null && mPlugin.App.ActiveDocument.ReadOnly && !mPlugin.App.ActiveDocument.Saved)
-                    P4Operations.EditFile(mPlugin.OutputPane, mPlugin.App.ActiveDocument.FullName);
+                    P4Operations.EditFile(mPlugin.App.ActiveDocument.FullName);
             }
         }
     }

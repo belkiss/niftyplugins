@@ -71,9 +71,9 @@ namespace NiftyPerforce
             return token;
         }
 
-        public delegate bool CheckoutCallback(OutputWindowPane output, string filename);
+        public delegate bool CheckoutCallback(string filename);
 
-        public static bool DeleteFile(OutputWindowPane output, string filename)
+        public static bool DeleteFile(string filename)
         {
             if (filename.Length == 0)
                 return false;
@@ -86,10 +86,10 @@ namespace NiftyPerforce
             string token = FormatToken("delete", filename);
             if (!LockOp(token))
                 return false;
-            return AsyncProcess.Schedule(output, "p4.exe", GetUserInfoString() + "delete \"" + filename + "\"", Path.GetDirectoryName(filename), new AsyncProcess.OnDone(UnlockOp), token);
+            return AsyncProcess.Schedule("p4.exe", GetUserInfoString() + "delete \"" + filename + "\"", Path.GetDirectoryName(filename), new AsyncProcess.OnDone(UnlockOp), token);
         }
 
-        public static bool AddFile(OutputWindowPane output, string filename)
+        public static bool AddFile(string filename)
         {
             if (filename.Length == 0)
                 return false;
@@ -103,55 +103,55 @@ namespace NiftyPerforce
             if (!LockOp(token))
                 return false;
 
-            return AsyncProcess.Schedule(output, "p4.exe", GetUserInfoString() + "add \"" + filename + "\"", Path.GetDirectoryName(filename), new AsyncProcess.OnDone(UnlockOp), token);
+            return AsyncProcess.Schedule("p4.exe", GetUserInfoString() + "add \"" + filename + "\"", Path.GetDirectoryName(filename), new AsyncProcess.OnDone(UnlockOp), token);
         }
 
-        public static bool EditFile(OutputWindowPane output, string filename)
+        public static bool EditFile(string filename)
         {
-            return Internal_CheckEditFile(new CheckoutCallback(Internal_EditFile), output, filename);
+            return Internal_CheckEditFile(new CheckoutCallback(Internal_EditFile), filename);
         }
 
-        public static bool EditFileImmediate(OutputWindowPane output, string filename)
+        public static bool EditFileImmediate(string filename)
         {
-            return Internal_CheckEditFile(new CheckoutCallback(Internal_EditFileImmediate), output, filename);
+            return Internal_CheckEditFile(new CheckoutCallback(Internal_EditFileImmediate), filename);
         }
 
-        private static bool Internal_CheckEditFile(CheckoutCallback callback, OutputWindowPane output, string filename)
+        private static bool Internal_CheckEditFile(CheckoutCallback callback, string filename)
         {
             Log.Debug($"Edit '{filename}'");
-            bool result = callback(output, filename);
+            bool result = callback(filename);
 
             string ext = Path.GetExtension(filename).ToLowerInvariant();
             if (ext == ".vcxproj")
             {
-                callback(output, filename + ".filters");
+                callback(filename + ".filters");
             }
 
             if (ext == ".settings" || ext == ".resx")
             {
-                callback(output, Path.ChangeExtension(filename, ".Designer.cs"));
+                callback(Path.ChangeExtension(filename, ".Designer.cs"));
             }
 
             if (ext == ".cs")
             {
-                callback(output, Path.ChangeExtension(filename, ".Designer.cs"));
-                callback(output, Path.ChangeExtension(filename, ".resx"));
+                callback(Path.ChangeExtension(filename, ".Designer.cs"));
+                callback(Path.ChangeExtension(filename, ".resx"));
             }
 
             return result;
         }
 
-        private static bool Internal_EditFile(OutputWindowPane output, string filename)
+        private static bool Internal_EditFile(string filename)
         {
-            return Internal_EditFile(output, filename, false);
+            return Internal_EditFile(filename, false);
         }
 
-        private static bool Internal_EditFileImmediate(OutputWindowPane output, string filename)
+        private static bool Internal_EditFileImmediate(string filename)
         {
-            return Internal_EditFile(output, filename, true);
+            return Internal_EditFile(filename, true);
         }
 
-        private static bool Internal_EditFile(OutputWindowPane output, string filename, bool immediate)
+        private static bool Internal_EditFile(string filename, bool immediate)
         {
             if (filename.Length == 0)
             {
@@ -183,12 +183,12 @@ namespace NiftyPerforce
                 return false;
 
             if (immediate)
-                return AsyncProcess.Run(output, "p4.exe", GetUserInfoString() + "edit \"" + filename + "\"", Path.GetDirectoryName(filename), new AsyncProcess.OnDone(UnlockOp), token);
+                return AsyncProcess.Run("p4.exe", GetUserInfoString() + "edit \"" + filename + "\"", Path.GetDirectoryName(filename), new AsyncProcess.OnDone(UnlockOp), token);
 
-            return AsyncProcess.Schedule(output, "p4.exe", GetUserInfoString() + "edit \"" + filename + "\"", Path.GetDirectoryName(filename), new AsyncProcess.OnDone(UnlockOp), token);
+            return AsyncProcess.Schedule("p4.exe", GetUserInfoString() + "edit \"" + filename + "\"", Path.GetDirectoryName(filename), new AsyncProcess.OnDone(UnlockOp), token);
         }
 
-        public static bool RevertFile(OutputWindowPane output, string filename, bool onlyUnchanged)
+        public static bool RevertFile(string filename, bool onlyUnchanged)
         {
             if (filename.Length == 0)
                 return false;
@@ -200,10 +200,10 @@ namespace NiftyPerforce
                 return false;
 
             string revertArguments = onlyUnchanged ? "-a " : string.Empty;
-            return AsyncProcess.Schedule(output, "p4.exe", GetUserInfoString() + "revert " + revertArguments + "\"" + filename + "\"", Path.GetDirectoryName(filename), new AsyncProcess.OnDone(UnlockOp), token);
+            return AsyncProcess.Schedule("p4.exe", GetUserInfoString() + "revert " + revertArguments + "\"" + filename + "\"", Path.GetDirectoryName(filename), new AsyncProcess.OnDone(UnlockOp), token);
         }
 
-        public static bool DiffFile(OutputWindowPane output, string filename)
+        public static bool DiffFile(string filename)
         {
             if (filename.Length == 0)
                 return false;
@@ -219,16 +219,16 @@ namespace NiftyPerforce
 
             // Let's figure out if the user has some custom diff tool installed. Then we just send whatever we have without any fancy options.
             if (g_p4customdiff)
-                return AsyncProcess.Schedule(output, "p4.exe", GetUserInfoString() + " diff \"" + filename + "#have\"", dirname, new AsyncProcess.OnDone(UnlockOp), token);
+                return AsyncProcess.Schedule("p4.exe", GetUserInfoString() + " diff \"" + filename + "#have\"", dirname, new AsyncProcess.OnDone(UnlockOp), token);
 
             if (g_p4vc_diffhave_supported)
-                return AsyncProcess.Schedule(output, g_p4vc_exename, GetUserInfoStringFull(true, dirname) + " diffhave \"" + filename + "\"", dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
+                return AsyncProcess.Schedule(g_p4vc_exename, GetUserInfoStringFull(true, dirname) + " diffhave \"" + filename + "\"", dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
 
             // Otherwise let's show a unified diff in the outputpane.
-            return AsyncProcess.Schedule(output, "p4.exe", GetUserInfoString() + " diff -du \"" + filename + "#have\"", dirname, new AsyncProcess.OnDone(UnlockOp), token);
+            return AsyncProcess.Schedule("p4.exe", GetUserInfoString() + " diff -du \"" + filename + "#have\"", dirname, new AsyncProcess.OnDone(UnlockOp), token);
         }
 
-        public static bool RevisionHistoryFile(OutputWindowPane output, string dirname, string filename)
+        public static bool RevisionHistoryFile(string dirname, string filename)
         {
             if (filename.Length == 0)
                 return false;
@@ -240,21 +240,21 @@ namespace NiftyPerforce
                     return false;
 
                 if (g_p4vc_history_supported)
-                    return AsyncProcess.Schedule(output, g_p4vc_exename, GetUserInfoStringFull(true, dirname) + " history \"" + filename + "\"", dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
+                    return AsyncProcess.Schedule(g_p4vc_exename, GetUserInfoStringFull(true, dirname) + " history \"" + filename + "\"", dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
 
                 if (g_p4vinstalled)
-                    return AsyncProcess.Schedule(output, "p4v.exe", " -win 0 " + GetUserInfoStringFull(true, dirname) + " -cmd \"history " + filename + "\"", dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
+                    return AsyncProcess.Schedule("p4v.exe", " -win 0 " + GetUserInfoStringFull(true, dirname) + " -cmd \"history " + filename + "\"", dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
             }
 
             return NotifyUser("could not find a supported p4vc.exe or p4v.exe installed in perforce directory");
         }
 
-        public static bool P4VShowFile(OutputWindowPane output, string filename)
+        public static bool P4VShowFile(string filename)
         {
             if (filename.Length == 0)
                 return false;
             if (g_p4vinstalled) // note that the cmd line also accepts -t to open P4V with a specific tab shown
-                return AsyncProcess.Schedule(output, "p4v.exe", " -win 0 " + GetUserInfoStringFull(true, Path.GetDirectoryName(filename)) + " -s \"" + filename + "\"", Path.GetDirectoryName(filename), null, null, 0);
+                return AsyncProcess.Schedule("p4v.exe", " -win 0 " + GetUserInfoStringFull(true, Path.GetDirectoryName(filename)) + " -s \"" + filename + "\"", Path.GetDirectoryName(filename), null, null, 0);
             return NotifyUser("could not find p4v.exe installed in perforce directory");
         }
 
@@ -319,7 +319,7 @@ namespace NiftyPerforce
             return arguments;
         }
 
-        public static bool TimeLapseView(OutputWindowPane output, string dirname, string filename)
+        public static bool TimeLapseView(string dirname, string filename)
         {
             if (string.IsNullOrEmpty(g_p4vc_exename))
                 return NotifyUser("could not find p4vc in perforce directory");
@@ -330,10 +330,10 @@ namespace NiftyPerforce
             string token = FormatToken("timelapse", filename);
             if (!LockOp(token))
                 return false;
-            return AsyncProcess.Schedule(output, g_p4vc_exename, arguments, dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
+            return AsyncProcess.Schedule(g_p4vc_exename, arguments, dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
         }
 
-        public static bool RevisionGraph(OutputWindowPane output, string dirname, string filename)
+        public static bool RevisionGraph(string dirname, string filename)
         {
             if (string.IsNullOrEmpty(g_p4vc_exename))
                 return NotifyUser("could not find p4vc in perforce directory");
@@ -344,7 +344,7 @@ namespace NiftyPerforce
             string token = FormatToken("revisiongraph", filename);
             if (!LockOp(token))
                 return false;
-            return AsyncProcess.Schedule(output, g_p4vc_exename, arguments, dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
+            return AsyncProcess.Schedule(g_p4vc_exename, arguments, dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
         }
 
         public static string GetRegistryValue(string key, string value, bool global)

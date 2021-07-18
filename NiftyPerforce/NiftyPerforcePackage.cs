@@ -76,6 +76,31 @@ namespace NiftyPerforce
             // Switches to the UI thread in order to consume some services used in command initialization
             await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
+            // Initialize the logging system.
+            if (Log.HandlerCount == 0)
+            {
+#if DEBUG
+                Log.AddHandler(new DebugLogHandler());
+#endif
+                Log.AddHandler(new VisualStudioLogHandler("NiftyPerforce", this));
+                Log.Prefix = "NiftyPerforce";
+            }
+
+#if DEBUG
+            Log.Info("NiftyPerforce (Debug)");
+#else
+            //Log.Info("NiftyPerforce (Release)");
+#endif
+
+            // Show where we are and when we were compiled...
+            var niftyAssembly = Assembly.GetExecutingAssembly();
+
+            Log.Info("I'm running {0} compiled on {1}", niftyAssembly.Location, System.IO.File.GetLastWriteTime(niftyAssembly.Location));
+
+            // Now we can take care of registering ourselves and all our commands and hooks.
+            Log.Debug("Booting up...");
+            Log.IncIndent();
+
             var config = (Config)GetDialogPage(typeof(Config));
             Singleton<Config>.Instance = config;
 
@@ -88,23 +113,9 @@ namespace NiftyPerforce
                 }
             };
 
-            m_plugin = new Plugin(application, oleMenuCommandService, "NiftyPerforce", "Aurora.NiftyPerforce.Connect", config);
+            m_plugin = new Plugin(application, oleMenuCommandService, "Aurora.NiftyPerforce.Connect", config);
 
             m_commandRegistry = new CommandRegistry(m_plugin, new Guid(PackageGuids.guidNiftyPerforcePackageCmdSetString));
-
-            // Initialize the logging system.
-            if (Log.HandlerCount == 0)
-            {
-#if DEBUG
-                Log.AddHandler(new DebugLogHandler());
-#endif
-                Log.AddHandler(new VisualStudioLogHandler(m_plugin));
-                Log.Prefix = "NiftyPerforce";
-            }
-
-            // Now we can take care of registering ourselves and all our commands and hooks.
-            Log.Debug("Booting up...");
-            Log.IncIndent();
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             m_commandRegistry.RegisterCommand(new P4EditModified(m_plugin, "NiftyEditModified"));
@@ -131,14 +142,6 @@ namespace NiftyPerforce
 
             Log.DecIndent();
             Log.Debug("Initialized...");
-
-#if DEBUG
-            Log.Info("NiftyPerforce (Debug)");
-#else
-			//Log.Info("NiftyPerforce (Release)");
-#endif
-            // Show where we are and when we were compiled...
-            Log.Info("I'm running {0} compiled on {1}", Assembly.GetExecutingAssembly().Location, System.IO.File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location));
         }
 
         /// <summary>

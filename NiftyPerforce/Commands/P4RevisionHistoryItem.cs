@@ -15,7 +15,7 @@ namespace NiftyPerforce
             mMainLine = mainLine;
         }
 
-        public override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)
+        public override void OnExecute(SelectedItem item, string fileName)
         {
             string dirname = Path.GetDirectoryName(fileName);
 
@@ -25,7 +25,7 @@ namespace NiftyPerforce
                 fileName = P4Operations.RemapToMain(fileName, options.MainLinePath);
             }
 
-            P4Operations.RevisionHistoryFile(pane, dirname, fileName);
+            P4Operations.RevisionHistoryFile(dirname, fileName);
         }
     }
 }

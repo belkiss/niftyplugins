@@ -15,7 +15,7 @@ namespace NiftyPerforce
             mOnlyUnchanged = onlyUnchanged;
         }
 
-        public override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)
+        public override void OnExecute(SelectedItem item, string fileName)
         {
             if (!mOnlyUnchanged)
             {
@@ -26,7 +26,7 @@ namespace NiftyPerforce
                 }
             }
 
-            P4Operations.RevertFile(pane, fileName, mOnlyUnchanged);
+            P4Operations.RevertFile(fileName, mOnlyUnchanged);
         }
     }
 }
