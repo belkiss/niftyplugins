@@ -86,30 +86,6 @@ namespace Aurora
             {
                 P4Operations.EditFileImmediate(mPlugin.OutputPane, filename);
             }
-
-            private void EditProjectRecursive(Project p)
-            {
-                ThreadHelper.ThrowIfNotOnUIThread();
-
-                if (!p.Saved)
-                    P4Operations.EditFileImmediate(mPlugin.OutputPane, p.FullName);
-
-                if (p.ProjectItems == null)
-                    return;
-
-                foreach (ProjectItem pi in p.ProjectItems)
-                {
-                    if (pi.SubProject != null)
-                    {
-                        EditProjectRecursive(pi.SubProject);
-                    }
-                    else if (!pi.Saved)
-                    {
-                        for (short i = 0; i <= pi.FileCount; i++)
-                            P4Operations.EditFileImmediate(mPlugin.OutputPane, pi.get_FileNames(i));
-                    }
-                }
-            }
         }
     }
 }
