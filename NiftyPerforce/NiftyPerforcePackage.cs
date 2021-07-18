@@ -136,8 +136,6 @@ namespace NiftyPerforce
             m_commandRegistry.RegisterCommand(new P4ShowItem(m_plugin, "NiftyShow"));
 
             m_plugin.AddFeature(new AutoAddDelete(m_plugin, this));
-            m_plugin.AddFeature(new AutoCheckoutProject(m_plugin));
-            m_plugin.AddFeature(new AutoCheckoutTextEdit(m_plugin));
             m_plugin.AddFeature(new AutoCheckoutOnSave(m_plugin, this));
 
             P4Operations.CheckInstalledFiles();

@@ -23,24 +23,5 @@ namespace Aurora
         {
             mPlugin = plugin;
         }
-
-        protected bool RegisterHandler(string commandName, _dispCommandEvents_BeforeExecuteEventHandler handler)
-        {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
-            CommandEvents events = mPlugin.FindCommandEvents(commandName);
-            if (null == events)
-                return false;
-            events.BeforeExecute += handler;
-            return true;
-        }
-
-        protected void UnregisterHandler(string commandName, _dispCommandEvents_BeforeExecuteEventHandler handler)
-        {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
-            CommandEvents events = mPlugin.FindCommandEvents(commandName);
-            if (null == events)
-                return;
-            events.BeforeExecute -= handler;
-        }
     };
 }

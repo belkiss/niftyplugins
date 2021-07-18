@@ -20,13 +20,6 @@ namespace NiftyPerforce
     //[Guid(PackageGuids.guidNiftyPerforceSccProviderOptionsString)]
     public class Config : DialogPage
     {
-        [Category("Operation")]
-        [Description("Controls if we automagically check out files from perforce upon keypress (loose some performance in editor)")]
-        public bool AutoCheckoutOnEdit { get; set; } = false;
-
-        [Category("Operation"), Description("Automatically check out projects on edit properties (loose some performance in editor)")]
-        public bool AutoCheckoutProject { get; set; } = false;
-
         [Category("Operation"), Description("Controls if we automagically check out files from perforce before saving")]
         public bool AutoCheckoutOnSave { get; set; } = true;
 
