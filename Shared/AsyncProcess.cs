@@ -186,9 +186,9 @@ namespace Aurora
 
                         exited = process.WaitForExit(timeout);
 
-                        stderr.sentinel.WaitOne();
-                        stdout.sentinel.WaitOne();
-                        alloutput = stdout.buffer + "\n" + stderr.buffer;
+                        stderr.Sentinel.WaitOne();
+                        stdout.Sentinel.WaitOne();
+                        alloutput = stdout.Buffer + "\n" + stderr.Buffer;
                     }
 
                     if (!exited)

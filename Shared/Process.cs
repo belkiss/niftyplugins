@@ -10,29 +10,29 @@ namespace Aurora
         // Helper class to capture output correctly and send an event once we've reached the end of the file.
         public class Handler : IDisposable
         {
-            public string buffer;
-            public ManualResetEvent sentinel;
+            public string Buffer { get; private set; }
+            public ManualResetEvent Sentinel { get; set; }
 
             public Handler()
             {
-                buffer = "";
-                sentinel = new ManualResetEvent(false);
+                Buffer = "";
+                Sentinel = new ManualResetEvent(false);
             }
 
             public void Dispose()
             {
-                sentinel.Close();
+                Sentinel.Close();
             }
 
             public void OnOutput(object sender, System.Diagnostics.DataReceivedEventArgs e)
             {
                 if (e?.Data == null)
                 {
-                    sentinel.Set();
+                    Sentinel.Set();
                 }
                 else
                 {
-                    buffer = buffer + e.Data + "\n";
+                    Buffer = Buffer + e.Data + "\n";
                 }
             }
         };
@@ -69,10 +69,10 @@ namespace Aurora
                         throw new ProcessException("Failed to execute {0} {1}, exit code was {2}", executable, process.StartInfo.Arguments, process.ExitCode);
                     }
 
-                    stderr.sentinel.WaitOne();
-                    stdout.sentinel.WaitOne();
+                    stderr.Sentinel.WaitOne();
+                    stdout.Sentinel.WaitOne();
 
-                    return stdout.buffer + "\n" + stderr.buffer;
+                    return stdout.Buffer + "\n" + stderr.Buffer;
                 }
             }
         }
