@@ -105,14 +105,14 @@ namespace NiftyPerforce
             return AsyncProcess.Schedule("p4.exe", GetUserInfoString() + "add \"" + filename + "\"", Path.GetDirectoryName(filename), new AsyncProcess.OnDone(UnlockOp), token);
         }
 
-        public static bool EditFile(string filename)
+        public static bool EditFile(string filename, bool force)
         {
-            return Internal_CheckEditFile(new CheckoutCallback(Internal_EditFile), filename);
+            return Internal_CheckEditFile(new CheckoutCallback((string f) => Internal_EditFile(f, force ? EditFileFlags.Force : EditFileFlags.None)), filename);
         }
 
         public static bool EditFileImmediate(string filename)
         {
-            return Internal_CheckEditFile(new CheckoutCallback(Internal_EditFileImmediate), filename);
+            return Internal_CheckEditFile(new CheckoutCallback((string f) => Internal_EditFile(f, EditFileFlags.Immediate)), filename);
         }
 
         private static bool Internal_CheckEditFile(CheckoutCallback callback, string filename)
@@ -147,17 +147,15 @@ namespace NiftyPerforce
             return result;
         }
 
-        private static bool Internal_EditFile(string filename)
+        [Flags]
+        private enum EditFileFlags
         {
-            return Internal_EditFile(filename, false);
+            None = 0,
+            Immediate = 1 << 0,
+            Force = 1 << 1,
         }
 
-        private static bool Internal_EditFileImmediate(string filename)
-        {
-            return Internal_EditFile(filename, true);
-        }
-
-        private static bool Internal_EditFile(string filename, bool immediate)
+        private static bool Internal_EditFile(string filename, EditFileFlags flags)
         {
             if (filename.Length == 0)
             {
@@ -171,9 +169,9 @@ namespace NiftyPerforce
                 return false;
             }
 
-            if (!Singleton<NiftyPerforce.Config>.Instance.IgnoreReadOnlyOnEdit && (0 == (File.GetAttributes(filename) & FileAttributes.ReadOnly)))
+            if (!flags.HasFlag(EditFileFlags.Force) && !Singleton<NiftyPerforce.Config>.Instance.IgnoreReadOnlyOnEdit && (0 == (File.GetAttributes(filename) & FileAttributes.ReadOnly)))
             {
-                Log.Debug($"EditFile '{filename}' failed because file was not read only. If you want to force calling p4 edit, toggle IgnoreReadOnlyOnEdit in the options.");
+                Log.Debug($"EditFile '{filename}' failed because file was not read only. If you want to force calling p4 edit, toggle {nameof(Config.IgnoreReadOnlyOnEdit)} in the options.");
                 return false;
             }
 
@@ -183,6 +181,7 @@ namespace NiftyPerforce
                 return NotifyUser("could not find p4 exe installed in perforce directory");
             }
 
+            bool immediate = flags.HasFlag(EditFileFlags.Immediate);
             Log.Debug("EditFile" + (immediate ? "Immediate " : " ") + filename);
             string token = FormatToken("edit", filename);
             if (!LockOp(token))

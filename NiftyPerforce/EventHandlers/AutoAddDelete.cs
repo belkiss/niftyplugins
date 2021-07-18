@@ -84,7 +84,7 @@ namespace NiftyPerforce
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            P4Operations.EditFile(item.ContainingProject.FullName);
+            P4Operations.EditFile(item.ContainingProject.FullName, false);
 
             if (item.ProjectItems != null)
             {
@@ -105,7 +105,7 @@ namespace NiftyPerforce
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            P4Operations.EditFile(item.ContainingProject.FullName);
+            P4Operations.EditFile(item.ContainingProject.FullName, false);
 
             for (int i = 0; i < item.FileCount; i++)
             {
@@ -118,7 +118,7 @@ namespace NiftyPerforce
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            P4Operations.EditFile(m_plugin.App.Solution.FullName);
+            P4Operations.EditFile(m_plugin.App.Solution.FullName, false);
             P4Operations.AddFile(project.FullName);
             // TODO: [jt] We should if the operation is not a add new project but rather a add existing project
             //       step through all the project items and add them to perforce. Or maybe we want the user
@@ -129,7 +129,7 @@ namespace NiftyPerforce
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            P4Operations.EditFile(m_plugin.App.Solution.FullName);
+            P4Operations.EditFile(m_plugin.App.Solution.FullName, false);
             P4Operations.DeleteFile(project.FullName);
             // TODO: [jt] Do we want to automatically delete the items from perforce here?
         }

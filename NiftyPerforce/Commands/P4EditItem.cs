@@ -13,7 +13,7 @@ namespace NiftyPerforce
 
         public override void OnExecute(SelectedItem item, string fileName)
         {
-            P4Operations.EditFile(fileName);
+            P4Operations.EditFile(fileName, true);
         }
     }
 }
