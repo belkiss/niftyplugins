@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace Aurora
@@ -18,6 +19,23 @@ namespace Aurora
             }
 
             return null;
+        }
+
+        public class StopwatchProfiler : IDisposable
+        {
+            private readonly Stopwatch _stopWatch;
+            private readonly Action<long> _disposeAction;
+
+            public StopwatchProfiler(Action<long> disposeAction)
+            {
+                _disposeAction = disposeAction;
+                _stopWatch = Stopwatch.StartNew();
+            }
+
+            public void Dispose()
+            {
+                _disposeAction(_stopWatch.ElapsedMilliseconds);
+            }
         }
     }
 }
