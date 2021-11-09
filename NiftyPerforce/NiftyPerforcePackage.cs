@@ -85,12 +85,6 @@ namespace NiftyPerforce
                 Log.Prefix = "NiftyPerforce";
             }
 
-#if DEBUG
-            Log.Info("NiftyPerforce (Debug)");
-#else
-            Log.Info("NiftyPerforce (Release)");
-#endif
-
             // Show where we are and when we were compiled...
             var niftyAssembly = Assembly.GetExecutingAssembly();
             Version version = niftyAssembly.GetName().Version;
@@ -99,7 +93,18 @@ namespace NiftyPerforce
             if (informationalVersion != null)
                 versionString += " " + informationalVersion;
 
-            Log.Info("I'm running {0} v{1} compiled on {2}", niftyAssembly.Location, versionString, System.IO.File.GetLastWriteTime(niftyAssembly.Location));
+            Log.Info(
+                "NiftyPerforce{0} v{1} compiled on {2}"
+#if DEBUG
+                , " (Debug!)"
+#else
+                , string.Empty
+#endif
+                , versionString
+                , System.IO.File.GetLastWriteTime(niftyAssembly.Location)
+            );
+
+            Log.Debug("    Location '{0}'", niftyAssembly.Location);
 
             // Now we can take care of registering ourselves and all our commands and hooks.
             Log.Debug("Booting up...");
