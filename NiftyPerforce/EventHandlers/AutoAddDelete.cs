@@ -27,6 +27,7 @@ namespace NiftyPerforce
             m_solutionEvents = ((EnvDTE80.Events2)m_plugin.App.Events).SolutionEvents;
 
             ((Config)m_plugin.Options).OnApplyEvent += RegisterEvents;
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             RegisterEvents();
         }
 
@@ -35,6 +36,8 @@ namespace NiftyPerforce
 
         private void RegisterEvents(object sender = null, EventArgs e = null)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             if (((Config)m_plugin.Options).AutoAdd)
             {
                 if (!AddFilesHandlersInstalled)

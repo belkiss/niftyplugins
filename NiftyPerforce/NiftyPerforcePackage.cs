@@ -68,8 +68,10 @@ namespace NiftyPerforce
         {
             await base.InitializeAsync(cancellationToken, progress);
 
-            // Every plugin needs a command bar.
-            var application = await GetServiceAsync(typeof(DTE)).ConfigureAwait(false) as DTE2;
+            var dteService = GetServiceAsync(typeof(DTE));
+            Microsoft.Assumes.Present(dteService);
+
+            var application = await dteService.ConfigureAwait(false) as DTE2;
             var oleMenuCommandService = await GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
 
             // Switches to the UI thread in order to consume some services used in command initialization
