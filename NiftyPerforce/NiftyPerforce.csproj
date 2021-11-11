@@ -17,6 +17,14 @@
     <CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
     <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Configurations>Debug;Release;Debug Legacy;Release Legacy</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug' OR '$(Configuration)'=='Debug Legacy'">
+    <DefineConstants>DEBUG</DefineConstants>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release' OR '$(Configuration)'=='Release Legacy'">
+    <Optimize>true</Optimize>
   </PropertyGroup>
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>
@@ -31,8 +39,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Update="source.extension.legacy.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>source.extension.legacy.vsixmanifest</DependentUpon>
+    </Compile>
     <Content Include="..\COPYING" Link="COPYING">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -41,13 +52,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <None Update="source.extension.vsixmanifest">
-      <SubType>Designer</SubType>
-      <Generator>VsixManifestGenerator</Generator>
-      <LastGenOutput>source.extension.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <VSCTCompile Include="NiftyPerforce.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
@@ -56,15 +60,45 @@
     </VSCTCompile>
     <Content Include="Resources\Icons.png" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Shared\AuroraCore.csproj" />
-  </ItemGroup>
+  <Choose>
+    <When Condition="'$(Configuration)'=='Debug' OR '$(Configuration)'=='Release'">
+      <ItemGroup>
+        <None Update="source.extension.vsixmanifest">
+          <SubType>Designer</SubType>
+          <Generator>VsixManifestGenerator</Generator>
+          <LastGenOutput>source.extension.cs</LastGenOutput>
+        </None>
+        <Compile Remove="source.extension.legacy.cs" />
+        <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.31902.203" ExcludeAssets="runtime">
+          <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <AssemblyName>NiftyPerforceLegacy</AssemblyName>
+      </PropertyGroup>
+      <ItemGroup>
+        <None Update="source.extension.legacy.vsixmanifest">
+          <SubType>Designer</SubType>
+          <Generator>VsixManifestGenerator</Generator>
+          <LastGenOutput>source.extension.legacy.cs</LastGenOutput>
+        </None>
+        <Compile Remove="source.extension.cs" />
+        <PackageReference Include="Microsoft.VisualStudio.SDK" Version="15.0.1" ExcludeAssets="runtime">
+          <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
   <ItemGroup>
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.5232">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <Reference Include="System.Design" />
   </ItemGroup>
+  <Import Project="..\Shared\AuroraCore.projitems" Label="Shared" />
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <Import Project="$(PkgMicrosoft_VSSDK_BuildTools)\tools\VSSDK\Microsoft.VsSDK.targets" />
 </Project>

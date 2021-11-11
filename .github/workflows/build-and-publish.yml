@@ -45,7 +45,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        configuration: [Debug, Release]
+        configuration: ['Debug', 'Debug Legacy', 'Release', 'Release Legacy']
 
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
@@ -105,4 +105,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: 'NiftyPerforce-${{ matrix.configuration }}-${{github.sha}}'
-        path: NiftyPerforce\bin\${{ matrix.configuration }}\net472\NiftyPerforce.vsix
+        path: NiftyPerforce\bin\${{ matrix.configuration }}\net472\NiftyPerforce*.vsix
