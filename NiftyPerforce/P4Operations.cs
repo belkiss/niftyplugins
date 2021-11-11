@@ -19,23 +19,25 @@ namespace NiftyPerforce
         private static bool g_p4vc_history_supported = false;
         private static bool g_p4vc_diffhave_supported = false;
 
-        private static readonly Dictionary<string, bool> g_opsInFlight = new Dictionary<string, bool>();
+        private static readonly object g_opsInFlightLock = new object();
+        private static readonly HashSet<string> g_opsInFlight = new HashSet<string>();
 
         private static readonly HashSet<string> g_alreadyNotified = new HashSet<string>();
 
         private static bool LockOp(string token)
         {
-            try
+            bool added = false;
+            lock (g_opsInFlightLock)
             {
-                lock (g_opsInFlight)
-                {
-                    g_opsInFlight.Add(token, true);
-                }
+                added = g_opsInFlight.Add(token);
+            }
 
+            if (added)
+            {
                 Log.Debug("## Locked \"" + token + "\"");
                 return true;
             }
-            catch (ArgumentException)
+            else
             {
                 Log.Error(token + " already in progress");
                 return false;
@@ -45,22 +47,19 @@ namespace NiftyPerforce
         private static void UnlockOp(bool ok, object token_)
         {
             string token = (string)token_;
-            try
+            bool removed = false;
+            lock (g_opsInFlightLock)
             {
-                lock (g_opsInFlight)
-                {
-                    if (g_opsInFlight.Remove(token))
-                    {
-                        Log.Debug("## Unlocked \"" + token + "\"");
-                    }
-                    else
-                    {
-                        Log.Debug("!! Failed to unlock \"" + token + "\"");
-                    }
-                }
+                removed = g_opsInFlight.Remove(token);
             }
-            catch (ArgumentNullException)
+
+            if (removed)
             {
+                Log.Debug("## Unlocked \"" + token + "\"");
+            }
+            else
+            {
+                Log.Debug("!! Failed to unlock \"" + token + "\"");
             }
         }
 
@@ -171,7 +170,7 @@ namespace NiftyPerforce
 
             if (!flags.HasFlag(EditFileFlags.Force) && !Singleton<NiftyPerforce.Config>.Instance.IgnoreReadOnlyOnEdit && (0 == (File.GetAttributes(filename) & FileAttributes.ReadOnly)))
             {
-                Log.Debug($"EditFile '{filename}' failed because file was not read only. If you want to force calling p4 edit, toggle {nameof(Config.IgnoreReadOnlyOnEdit)} in the options.");
+                Log.Info($"EditFile '{filename}' failed because file was not read only. If you want to force calling p4 edit, toggle {nameof(Config.IgnoreReadOnlyOnEdit)} in the options.");
                 return false;
             }
 
