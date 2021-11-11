@@ -170,7 +170,7 @@ namespace NiftyPerforce
 
             if (!flags.HasFlag(EditFileFlags.Force) && !Singleton<NiftyPerforce.Config>.Instance.IgnoreReadOnlyOnEdit && (0 == (File.GetAttributes(filename) & FileAttributes.ReadOnly)))
             {
-                Log.Info($"EditFile '{filename}' failed because file was not read only. If you want to force calling p4 edit, toggle {nameof(Config.IgnoreReadOnlyOnEdit)} in the options.");
+                Log.Info($"EditFile '{filename}' failed because file was not read only. If you want to force calling p4 edit, press the Checkout button in the menus or toggle {nameof(Config.IgnoreReadOnlyOnEdit)} in the options.");
                 return false;
             }
 
