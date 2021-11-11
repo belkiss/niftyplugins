@@ -56,7 +56,7 @@ namespace Aurora
                     if (_pane == null)
                     {
                         var guid = Guid.NewGuid();
-                        IVsOutputWindow output = (IVsOutputWindow)_serviceProvider.GetService(typeof(SVsOutputWindow));
+                        var output = (IVsOutputWindow)_serviceProvider.GetService(typeof(SVsOutputWindow));
                         Assumes.Present(output);
                         output.CreatePane(ref guid, _name, 1, 0);
                         output.GetPane(ref guid, out _pane);
