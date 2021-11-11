@@ -1,6 +1,11 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
-using NiftyPerforce;
+
+#if NIFTY_LEGACY
+using NiftyPerforce.Manifests.Legacy;
+#else
+using NiftyPerforce.Manifests;
+#endif
 
 [assembly: AssemblyTitle(Vsix.Name)]
 [assembly: AssemblyDescription(Vsix.Description)]

@@ -12,6 +12,12 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Task = System.Threading.Tasks.Task;
 
+#if NIFTY_LEGACY
+using NiftyPerforce.Manifests.Legacy;
+#else
+using NiftyPerforce.Manifests;
+#endif
+
 namespace NiftyPerforce
 {
     /// <summary>

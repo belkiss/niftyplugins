@@ -34,15 +34,15 @@
       <DependentUpon>NiftyPerforce.vsct</DependentUpon>
     </Compile>
     <Compile Update="OptionsDialogPage.cs" />
-    <Compile Update="source.extension.cs">
+    <Compile Update="Manifests\source.extension.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>source.extension.vsixmanifest</DependentUpon>
+      <DependentUpon>Manifests\source.extension.vsixmanifest</DependentUpon>
     </Compile>
-    <Compile Update="source.extension.legacy.cs">
+    <Compile Update="Manifests\Legacy\source.extension.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>source.extension.legacy.vsixmanifest</DependentUpon>
+      <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
     <Content Include="..\COPYING" Link="COPYING">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -63,12 +63,13 @@
   <Choose>
     <When Condition="'$(Configuration)'=='Debug' OR '$(Configuration)'=='Release'">
       <ItemGroup>
-        <None Update="source.extension.vsixmanifest">
+        <None Update="Manifests\source.extension.vsixmanifest">
           <SubType>Designer</SubType>
           <Generator>VsixManifestGenerator</Generator>
-          <LastGenOutput>source.extension.cs</LastGenOutput>
+          <LastGenOutput>Manifests\source.extension.cs</LastGenOutput>
         </None>
-        <Compile Remove="source.extension.legacy.cs" />
+        <None Remove="Manifests\Legacy\source.extension.vsixmanifest" />
+        <Compile Remove="Manifests\Legacy\source.extension.cs" />
         <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.31902.203" ExcludeAssets="runtime">
           <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -80,12 +81,13 @@
         <DefineConstants>NIFTY_LEGACY</DefineConstants>
       </PropertyGroup>
       <ItemGroup>
-        <None Update="source.extension.legacy.vsixmanifest">
+        <None Update="Manifests\Legacy\source.extension.vsixmanifest">
           <SubType>Designer</SubType>
           <Generator>VsixManifestGenerator</Generator>
-          <LastGenOutput>source.extension.legacy.cs</LastGenOutput>
+          <LastGenOutput>source.extension.cs</LastGenOutput>
         </None>
-        <Compile Remove="source.extension.cs" />
+        <None Remove="Manifests\source.extension.vsixmanifest" />
+        <Compile Remove="Manifests\source.extension.cs" />
         <PackageReference Include="Microsoft.VisualStudio.SDK" Version="15.0.1" ExcludeAssets="runtime">
           <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
