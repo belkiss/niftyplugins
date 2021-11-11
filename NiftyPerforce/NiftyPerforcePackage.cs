@@ -115,6 +115,7 @@ namespace NiftyPerforce
             var config = (Config)GetDialogPage(typeof(Config));
             Singleton<Config>.Instance = config;
 
+#if NIFTY_LEGACY
             config.OnApplyEvent += (object sender, EventArgs e) =>
             {
                 if (config.CleanLegacyNiftyCommands)
@@ -123,6 +124,7 @@ namespace NiftyPerforce
                     config.CleanLegacyNiftyCommands = false;
                 }
             };
+#endif
 
             m_plugin = new Plugin(application, oleMenuCommandService, config);
 
@@ -288,6 +290,6 @@ namespace NiftyPerforce
             profferCommands3.RemoveCommandBar(existingCmdBar);
         }
 
-        #endregion
+#endregion
     }
 }
