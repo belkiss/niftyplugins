@@ -1,14 +1,14 @@
-// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
-using EnvDTE;
+﻿// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
 using Aurora;
+using EnvDTE;
 
 namespace NiftyPerforce
 {
     // an item command is a command associated with selected items in solution explorer
-    abstract class ItemCommandBase : CommandBase
+    internal abstract class ItemCommandBase : CommandBase
     {
-        private bool m_executeForFileItems = true;
-        private bool m_executeForProjectItems = true;
+        private readonly bool m_executeForFileItems = true;
+        private readonly bool m_executeForProjectItems = true;
 
         protected ItemCommandBase(string name, string canonicalName, Plugin plugin, bool executeForFileItems, bool executeForProjectItems, int commandId)
             : base(name, canonicalName, plugin, commandId)
@@ -26,15 +26,15 @@ namespace NiftyPerforce
             {
                 if (m_executeForFileItems && Plugin.App.ActiveWindow.Type == vsWindowType.vsWindowTypeDocument)
                 {
-                    OnExecute(sel, Plugin.App.ActiveDocument.FullName, Plugin.OutputPane);
+                    OnExecute(sel, Plugin.App.ActiveDocument.FullName);
                 }
                 else if (m_executeForFileItems && sel.ProjectItem != null && m_fileItemGUID == sel.ProjectItem.Kind.ToUpperInvariant())
                 {
-                    OnExecute(sel, sel.ProjectItem.get_FileNames(0), Plugin.OutputPane);
+                    OnExecute(sel, sel.ProjectItem.get_FileNames(0));
                 }
                 else if (m_executeForProjectItems && sel.Project != null)
                 {
-                    OnExecute(sel, sel.Project.FullName, Plugin.OutputPane);
+                    OnExecute(sel, sel.Project.FullName);
                 }
             }
 
@@ -47,6 +47,6 @@ namespace NiftyPerforce
             return Plugin.App.SelectedItems.Count > 0;
         }
 
-        public abstract void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane);
+        public abstract void OnExecute(SelectedItem item, string fileName);
     }
 }

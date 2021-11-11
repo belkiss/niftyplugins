@@ -1,14 +1,16 @@
 Introduction
 ============
 
-This is a small collection of C# plugins for Visual Studio.
+This repository holds a forked version of Nifty Plugins, orginally written by Jim Tilander (and found at https://github.com/jtilander/niftyplugins)
 
-NiftyPerforce
-=============
+Note that NiftySolution was removed from this repository.
 
-Adds some automation and IDE support for common perforce operations.
-The goal of the plugin is to be very lightweight and unobtrusive.
+NiftyPerforce, belkiss' fork
+============================
 
+[![Build](https://github.com/belkiss/niftyplugins/actions/workflows/build-and-publish.yml/badge.svg)](https://github.com/belkiss/niftyplugins/actions/workflows/build-and-publish.yml)
 
-Jim Tilander
-San Francisco, 2006
+The biggest changes from the original NiftyPerforce are:
+  * support for recent Visual Studio versions, from vs2017 to vs2022
+  * proper registration of NiftyPerforce in the UI, so it can be removed without leaving anything behind
+  * CI using GithubActions

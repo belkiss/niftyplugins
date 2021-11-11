@@ -1,35 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project>
   <PropertyGroup>
-    <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFramework>net472</TargetFramework>
     <UseCodebase>true</UseCodebase>
-    <OldToolsVersion>14.0</OldToolsVersion>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-  </PropertyGroup>
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{4633E0B5-D536-4FCC-988E-29D54DA113DF}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NiftyPerforce</RootNamespace>
-    <AssemblyName>NiftyPerforce</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <StartAction>Program</StartAction>
     <StartProgram>$(DevEnvDir)\devenv.exe</StartProgram>
     <StartArguments>/rootsuffix Exp</StartArguments>
@@ -39,73 +16,42 @@
     <IncludeDebugSymbolsInLocalVSIXDeployment>true</IncludeDebugSymbolsInLocalVSIXDeployment>
     <CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
     <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Configurations>Debug;Release;Debug Legacy;Release Legacy</Configurations>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug' OR '$(Configuration)'=='Debug Legacy'">
+    <DefineConstants>DEBUG</DefineConstants>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+  <PropertyGroup Condition="'$(Configuration)'=='Release' OR '$(Configuration)'=='Release Legacy'">
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>
-    <Compile Include="Commands\ItemCommandBase.cs" />
-    <Compile Include="Commands\P4DiffItem.cs" />
-    <Compile Include="Commands\P4EditItem.cs" />
-    <Compile Include="Commands\P4EditModified.cs" />
-    <Compile Include="Commands\P4RevertItem.cs" />
-    <Compile Include="Commands\P4RevisionGraphItem.cs" />
-    <Compile Include="Commands\P4RevisionHistoryItem.cs" />
-    <Compile Include="Commands\P4ShowItem.cs" />
-    <Compile Include="Commands\P4TimeLapseItem.cs" />
-    <Compile Include="EventHandlers\AutoAddDelete.cs" />
-    <Compile Include="EventHandlers\AutoCheckoutOnSave.cs" />
-    <Compile Include="EventHandlers\AutoCheckoutProject.cs" />
-    <Compile Include="EventHandlers\AutoCheckoutTextEdit.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="NiftyPerforce.cs">
+    <Compile Update="NiftyPerforce.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>NiftyPerforce.vsct</DependentUpon>
     </Compile>
-    <Compile Include="NiftyPerforcePackage.cs" />
-    <Compile Include="OptionsDialogPage.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="P4Operations.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
+    <Compile Update="OptionsDialogPage.cs" />
+    <Compile Update="Manifests\source.extension.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
+      <DependentUpon>Manifests\source.extension.vsixmanifest</DependentUpon>
     </Compile>
-    <Compile Include="source.extension.cs">
-      <AutoGen>True</AutoGen>
+    <Compile Update="Manifests\Legacy\source.extension.cs">
       <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="COPYING">
+    <Content Include="..\COPYING" Link="COPYING">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <None Include="source.extension.vsixmanifest">
-      <SubType>Designer</SubType>
-      <Generator>VsixManifestGenerator</Generator>
-      <LastGenOutput>source.extension.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="Resources\logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <VSCTCompile Include="NiftyPerforce.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
@@ -114,42 +60,48 @@
     </VSCTCompile>
     <Content Include="Resources\Icons.png" />
   </ItemGroup>
+  <Choose>
+    <When Condition="'$(Configuration)'=='Debug' OR '$(Configuration)'=='Release'">
+      <ItemGroup>
+        <None Update="Manifests\source.extension.vsixmanifest">
+          <SubType>Designer</SubType>
+          <Generator>VsixManifestGenerator</Generator>
+          <LastGenOutput>Manifests\source.extension.cs</LastGenOutput>
+        </None>
+        <None Remove="Manifests\Legacy\source.extension.vsixmanifest" />
+        <Compile Remove="Manifests\Legacy\source.extension.cs" />
+        <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.31902.203" ExcludeAssets="runtime">
+          <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <AssemblyName>NiftyPerforceLegacy</AssemblyName>
+        <DefineConstants>NIFTY_LEGACY</DefineConstants>
+      </PropertyGroup>
+      <ItemGroup>
+        <None Update="Manifests\Legacy\source.extension.vsixmanifest">
+          <SubType>Designer</SubType>
+          <Generator>VsixManifestGenerator</Generator>
+          <LastGenOutput>source.extension.cs</LastGenOutput>
+        </None>
+        <None Remove="Manifests\source.extension.vsixmanifest" />
+        <Compile Remove="Manifests\source.extension.cs" />
+        <PackageReference Include="Microsoft.VisualStudio.SDK" Version="15.0.1" ExcludeAssets="runtime">
+          <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Design" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="VSPackage.resx">
-      <MergeWithCTO>true</MergeWithCTO>
-      <ManifestResourceName>VSPackage</ManifestResourceName>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Shared\AuroraCore.csproj">
-      <Project>{a2d1cbe2-c37f-46e7-bf45-fca62a79f2ee}</Project>
-      <Name>AuroraCore</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
-      <Version>2.9.8</Version>
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.5232">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="15.9.3" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.VisualStudio.SDK.EmbedInteropTypes" Version="15.0.27" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.4.1055" />
+    <Reference Include="System.Design" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="..\Shared\AuroraCore.projitems" Label="Shared" />
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+  <Import Project="$(PkgMicrosoft_VSSDK_BuildTools)\tools\VSSDK\Microsoft.VsSDK.targets" />
 </Project>

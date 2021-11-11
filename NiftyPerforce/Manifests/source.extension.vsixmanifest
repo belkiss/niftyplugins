@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+    <Metadata>
+        <Identity Id="NiftyPerforce.belkiss.3cc12a76-88f6-4e50-9ede-377ba823db79" Version="3.0.0" Language="en-US" Publisher="Lambert Clara" />
+        <DisplayName>Nifty Perforce - belkiss' fork</DisplayName>
+        <Description xml:space="preserve">Simple Perforce integration for Visual Studio 2022</Description>
+        <MoreInfo>https://github.com/belkiss/niftyplugins</MoreInfo>
+        <License>COPYING</License>
+        <Icon>Resources\logo.png</Icon>
+        <PreviewImage>Resources\logo.png</PreviewImage>
+        <Tags>perforce</Tags>
+    </Metadata>
+    <Installation>
+      <InstallationTarget Version="[17.0,18.0)" Id="Microsoft.VisualStudio.Community">
+        <ProductArchitecture>amd64</ProductArchitecture>
+      </InstallationTarget>
+    </Installation>
+    <Dependencies>
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.7.2,)" />
+    </Dependencies>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,)" DisplayName="Visual Studio core editor" />
+    </Prerequisites>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+    </Assets>
+</PackageManifest>
