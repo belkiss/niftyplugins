@@ -40,6 +40,7 @@ namespace NiftyPerforce
                 if (_registeredCommands == null)
                 {
                     Log.Info("Adding handlers for automatically checking out .vcproj files when you do changes to the project");
+                    _registeredCommands = new List<string>();
                     foreach (string command in _commands)
                     {
                         if (RegisterHandler(command, OnCheckoutSelectedProjects))
