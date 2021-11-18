@@ -11,7 +11,7 @@ namespace NiftyPerforce.Manifests.Legacy
         public const string Name = "Nifty Perforce (Legacy) - belkiss' fork";
         public const string Description = @"Simple Perforce integration for Visual Studio 2017/2019";
         public const string Language = "en-US";
-        public const string Version = "3.0.0";
+        public const string Version = "3.0.1";
         public const string Author = "Lambert Clara";
         public const string Tags = "perforce";
     }
