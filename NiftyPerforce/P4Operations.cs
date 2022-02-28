@@ -280,21 +280,45 @@ namespace NiftyPerforce
                         var userpattern = new Regex(@"User name: (?<user>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
                         var portpattern = new Regex(@"Server address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
                         var brokerpattern = new Regex(@"Broker address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
+                        var proxypattern = new Regex(@"Proxy address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
                         var clientpattern = new Regex(@"Client name: (?<client>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
 
                         Match usermatch = userpattern.Match(output);
                         Match portmatch = portpattern.Match(output);
                         Match brokermatch = brokerpattern.Match(output);
+                        Match proxymatch = proxypattern.Match(output);
                         Match clientmatch = clientpattern.Match(output);
 
                         string port = portmatch.Groups["port"].Value.Trim();
-                        string broker = brokermatch.Groups["port"].Value.Trim();
+                        string broker = brokermatch.Success ? brokermatch.Groups["port"].Value.Trim() : null;
+                        string proxy = proxymatch.Success ? proxymatch.Groups["port"].Value.Trim() : null;
                         string username = usermatch.Groups["user"].Value.Trim();
                         string client = clientmatch.Groups["client"].Value.Trim();
 
-                        string server = broker;
-                        if (string.IsNullOrEmpty(server))
+                        string server;
+                        Regex encryptionpattern;
+                        if (!string.IsNullOrEmpty(broker))
+                        {
+                            server = broker;
+                            encryptionpattern = new Regex(@"Broker encryption: (?<encrypted>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
+                        }
+                        else if (!string.IsNullOrEmpty(proxy))
+                        {
+                            server = proxy;
+                            encryptionpattern = new Regex(@"Proxy encryption: (?<encrypted>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
+                        }
+                        else
+                        {
                             server = port;
+                            encryptionpattern = new Regex(@"Server encryption: (?<encrypted>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
+                        }
+
+                        Match encryptionmatch = encryptionpattern.Match(output);
+                        bool encrypted = encryptionmatch.Success && encryptionmatch.Groups["encrypted"].Value.Trim() == "encrypted";
+                        if (encrypted)
+                        {
+                            server = $"ssl:{server}";
+                        }
 
                         string ret = $" -p {server} -u {username} -c {client} ";
 
