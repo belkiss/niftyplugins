@@ -72,7 +72,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
 
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'NiftyPerforce-${{ matrix.configuration }}-${{github.sha}}'
         path: NiftyPerforce\bin\${{ matrix.configuration }}\net472\NiftyPerforce*.vsix
