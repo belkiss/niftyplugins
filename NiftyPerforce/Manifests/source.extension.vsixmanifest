@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="NiftyPerforce.belkiss.3cc12a76-88f6-4e50-9ede-377ba823db79" Version="3.0.3" Language="en-US" Publisher="Lambert Clara" />
+        <Identity Id="NiftyPerforce.belkiss.3cc12a76-88f6-4e50-9ede-377ba823db79" Version="3.0.4" Language="en-US" Publisher="Lambert Clara" />
         <DisplayName>Nifty Perforce - belkiss' fork</DisplayName>
         <Description xml:space="preserve">Simple Perforce integration for Visual Studio 2022</Description>
         <MoreInfo>https://github.com/belkiss/niftyplugins</MoreInfo>
