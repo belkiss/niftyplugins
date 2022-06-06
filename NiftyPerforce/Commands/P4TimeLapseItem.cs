@@ -17,13 +17,15 @@ namespace NiftyPerforce
 
         public override void OnExecute(SelectedItem item, string fileName)
         {
+            string dirname = Path.GetDirectoryName(fileName);
+
             if (mMainLine)
             {
                 var options = (NiftyPerforce.Config)Plugin.Options;
                 fileName = P4Operations.RemapToMain(fileName, options.MainLinePath);
             }
 
-            P4Operations.TimeLapseView(fileName);
+            P4Operations.TimeLapseView(dirname, fileName);
         }
     }
 }
