@@ -70,7 +70,7 @@
         </None>
         <None Remove="Manifests\Legacy\source.extension.vsixmanifest" />
         <Compile Remove="Manifests\Legacy\source.extension.cs" />
-        <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.31902.203" ExcludeAssets="runtime">
+        <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.2.32505.173" ExcludeAssets="runtime">
           <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
       </ItemGroup>
@@ -88,7 +88,7 @@
         </None>
         <None Remove="Manifests\source.extension.vsixmanifest" />
         <Compile Remove="Manifests\source.extension.cs" />
-        <PackageReference Include="Microsoft.VisualStudio.SDK" Version="15.0.1" ExcludeAssets="runtime">
+        <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.2.32505.173" ExcludeAssets="runtime">
           <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
       </ItemGroup>
