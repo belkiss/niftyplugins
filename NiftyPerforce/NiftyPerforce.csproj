@@ -95,7 +95,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.2.2186">
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.4.1111">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
