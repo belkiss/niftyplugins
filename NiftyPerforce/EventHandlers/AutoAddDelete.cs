@@ -11,10 +11,10 @@ namespace NiftyPerforce
         private readonly ProjectItemsEvents m_projectEvents;
         private readonly SolutionEvents m_solutionEvents;
 
-        private _dispProjectItemsEvents_ItemAddedEventHandler _itemAddedEventHandler;
-        private _dispSolutionEvents_ProjectAddedEventHandler _projectAddedEventHandler;
-        private _dispProjectItemsEvents_ItemRemovedEventHandler _itemRemovedEventHandler;
-        private _dispSolutionEvents_ProjectRemovedEventHandler _projectRemovedEventHandler;
+        private _dispProjectItemsEvents_ItemAddedEventHandler? _itemAddedEventHandler;
+        private _dispSolutionEvents_ProjectAddedEventHandler? _projectAddedEventHandler;
+        private _dispProjectItemsEvents_ItemRemovedEventHandler? _itemRemovedEventHandler;
+        private _dispSolutionEvents_ProjectRemovedEventHandler? _projectRemovedEventHandler;
 
         private readonly Plugin m_plugin;
 
@@ -26,7 +26,7 @@ namespace NiftyPerforce
             m_projectEvents = ((EnvDTE80.Events2)m_plugin.App.Events).ProjectItemsEvents;
             m_solutionEvents = ((EnvDTE80.Events2)m_plugin.App.Events).SolutionEvents;
 
-            ((Config)m_plugin.Options).OnApplyEvent += RegisterEvents;
+            ((Config)m_plugin.Options).OnApplyEvent += (s, e) => RegisterEvents();
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             RegisterEvents();
         }
@@ -34,7 +34,7 @@ namespace NiftyPerforce
         private bool AddFilesHandlersInstalled => _itemAddedEventHandler != null || _projectAddedEventHandler != null;  // second conditional is useless but kept for clarity
         private bool RemoveFilesHandlersInstalled => _itemRemovedEventHandler != null || _projectRemovedEventHandler != null;  // second conditional is useless but kept for clarity
 
-        private void RegisterEvents(object sender = null, EventArgs e = null)
+        private void RegisterEvents()
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 

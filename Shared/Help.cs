@@ -5,7 +5,7 @@ namespace Aurora
 {
     public static class Help
     {
-        public static string FindFileInPath(string filename)
+        public static string? FindFileInPath(string filename)
         {
             string pathenv = Environment.GetEnvironmentVariable("PATH");
             string[] items = pathenv.Split(';');

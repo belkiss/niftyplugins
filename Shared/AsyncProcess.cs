@@ -8,7 +8,7 @@ namespace Aurora
     {
         private const int s_defaultTimeout = 30000; // in ms
 
-        public delegate void OnDone(bool ok, object arg0);
+        public delegate void OnDone(bool ok, object? arg0);
 
         public static void Init()
         {
@@ -18,10 +18,10 @@ namespace Aurora
 
         public static void Term()
         {
-            m_helperThread.Abort();
+            m_helperThread?.Abort();
         }
 
-        public static bool Run(string executable, string commandline, string workingdir, OnDone callback, object callbackArg)
+        public static bool Run(string executable, string commandline, string workingdir, OnDone? callback, object? callbackArg)
         {
             int timeout = 1000;
 
@@ -38,22 +38,21 @@ namespace Aurora
             return true;
         }
 
-        public static bool Schedule(string executable, string commandline, string workingdir, OnDone callback, object callbackArg)
+        public static bool Schedule(string executable, string commandline, string workingdir, OnDone? callback, object? callbackArg)
         {
             return Schedule(executable, commandline, workingdir, callback, callbackArg, s_defaultTimeout);
         }
 
-        public static bool Schedule(string executable, string commandline, string workingdir, OnDone callback, object callbackArg, int timeout)
+        public static bool Schedule(string executable, string commandline, string workingdir, OnDone? callback, object? callbackArg, int timeout)
         {
-            var cmd = new CommandThread
-            {
-                executable = executable,
-                commandline = commandline,
-                workingdir = workingdir,
-                callback = callback,
-                callbackArg = callbackArg,
-                timeout = timeout
-            };
+            var cmd = new CommandThread (
+                executable,
+                commandline,
+                workingdir,
+                callback,
+                callbackArg,
+                timeout
+            );
 
             try
             {
@@ -77,14 +76,14 @@ namespace Aurora
         private static readonly Mutex m_queueLock = new Mutex();
         private static readonly Semaphore m_startEvent = new Semaphore(0, 9999);
         private static readonly Queue<CommandThread> m_commandQueue = new Queue<CommandThread>();
-        private static System.Threading.Thread m_helperThread;
+        private static System.Threading.Thread? m_helperThread;
 
         private static void ThreadMain()
         {
             while (true)
             {
                 m_startEvent.WaitOne();
-                CommandThread cmd = null;
+                CommandThread? cmd = null;
 
                 try
                 {
@@ -96,25 +95,39 @@ namespace Aurora
                     m_queueLock.ReleaseMutex();
                 }
 
-                try
+                if (cmd != null)
                 {
-                    var thread = new System.Threading.Thread(new ThreadStart(cmd.Run));
-                    thread.Start();
-                }
-                catch
-                {
+                    try
+                    {
+                        var thread = new System.Threading.Thread(new ThreadStart(cmd.Run));
+                        thread.Start();
+                    }
+                    catch
+                    {
+                    }
                 }
             }
         }
 
         private class CommandThread
         {
-            public string executable = "";
-            public string commandline = "";
-            public string workingdir = "";
-            public OnDone callback = null;
-            public object callbackArg = null;
-            public int timeout = 10000;
+            public readonly string executable;
+            public readonly string commandline;
+            public readonly string workingdir;
+            public readonly OnDone? callback;
+            public readonly object? callbackArg;
+            public readonly int timeout = 10000;
+
+            public CommandThread(string executable, string commandline, string workingdir, OnDone? callback, object? callbackArg, int timeout)
+            {
+                this.executable = executable;
+                this.commandline = commandline;
+                this.workingdir = workingdir;
+                this.callback = callback;
+                this.callbackArg = callbackArg;
+                this.timeout = timeout;
+            }
+
             public void Run()
             {
                 bool ok;

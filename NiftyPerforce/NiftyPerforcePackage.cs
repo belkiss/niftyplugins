@@ -53,8 +53,8 @@ namespace NiftyPerforce
     [Guid(PackageGuids.guidNiftyPerforcePackageString)]
     public sealed class NiftyPerforcePackage : AsyncPackage
     {
-        private Plugin m_plugin = null;
-        private CommandRegistry m_commandRegistry = null;
+        private Plugin? m_plugin = null;
+        private CommandRegistry? m_commandRegistry = null;
 
         public NiftyPerforcePackage()
         {
@@ -77,8 +77,15 @@ namespace NiftyPerforce
             var dteService = GetServiceAsync(typeof(DTE));
             Microsoft.Assumes.Present(dteService);
 
-            var application = await dteService.ConfigureAwait(false) as DTE2;
-            var oleMenuCommandService = await GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
+            if (!(await dteService.ConfigureAwait(false) is DTE2 application))
+            {
+                throw new Exception("Impossible to fetch DTE2 object");
+            }
+
+            if (!(await GetServiceAsync(typeof(IMenuCommandService)) is OleMenuCommandService oleMenuCommandService))
+            {
+                throw new Exception("Impossible to fetch OleMenuCommand service");
+            }
 
             // Switches to the UI thread in order to consume some services used in command initialization
             await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
@@ -97,8 +104,8 @@ namespace NiftyPerforce
             var niftyAssembly = Assembly.GetExecutingAssembly();
             Version version = niftyAssembly.GetName().Version;
             string versionString = string.Join(".", version.Major, version.Minor, version.Build);
-            string informationalVersion = niftyAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
-            if (informationalVersion != null)
+            string? informationalVersion = niftyAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+            if (!string.IsNullOrEmpty(informationalVersion))
                 versionString += " " + informationalVersion;
 
             Log.Info(
@@ -172,7 +179,9 @@ namespace NiftyPerforce
 
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            var profferCommands3 = base.GetService(typeof(SVsProfferCommands)) as IVsProfferCommands3;
+            if (!(GetService(typeof(SVsProfferCommands)) is IVsProfferCommands3 profferCommands3))
+                return;
+
             RemoveCommandBar("NiftyPerforceCmdBar", profferCommands3);
             RemoveCommandBar("NiftyPerforce", profferCommands3);
 
@@ -211,7 +220,7 @@ namespace NiftyPerforce
 
             try
             {
-                Command cmd = m_plugin.Commands.Item(name, -1);
+                Command? cmd = m_plugin?.Commands.Item(name, -1);
                 if (cmd != null)
                 {
                     profferCommands3.RemoveNamedCommand(name);
@@ -232,7 +241,7 @@ namespace NiftyPerforce
 
             foreach (string bar in bars)
             {
-                CommandBar b = ((CommandBars)m_plugin.App.CommandBars)[bar];
+                CommandBar? b = (m_plugin?.App.CommandBars as CommandBars)?[bar];
                 if (null != b)
                 {
                     bool done = false;
@@ -268,12 +277,12 @@ namespace NiftyPerforce
             ThreadHelper.ThrowIfNotOnUIThread();
 
             var dte = GetGlobalService(typeof(DTE)) as DTE2;
-            var commandBars = (CommandBars)dte.CommandBars;
-            CommandBar existingCmdBar = null;
+            var commandBars = dte?.CommandBars as CommandBars;
+            CommandBar? existingCmdBar = null;
 
             try
             {
-                existingCmdBar = commandBars[name];
+                existingCmdBar = commandBars?[name];
             }
             catch (Exception)
             {

@@ -20,8 +20,7 @@ namespace NiftyPerforce
 
         public int OnBeforeSave(uint docCookie)
         {
-            RunningDocumentInfo runningDocumentInfo = _autoCheckoutOnSave._rdt.Value.GetDocumentInfo(docCookie);
-            AutoCheckoutOnSave.OnBeforeSave(runningDocumentInfo.Moniker);
+            _autoCheckoutOnSave.OnBeforeSave(docCookie);
             return VSConstants.S_OK;
         }
 
@@ -38,7 +37,7 @@ namespace NiftyPerforce
 
     internal class AutoCheckoutOnSave : PreCommandFeature
     {
-        internal Lazy<RunningDocumentTable> _rdt;
+        internal Lazy<RunningDocumentTable>? _rdt;
         internal uint _rdte;
         private readonly IServiceProvider _serviceProvider;
 
@@ -47,13 +46,13 @@ namespace NiftyPerforce
         {
             ThreadHelper.ThrowIfNotOnUIThread();
             _serviceProvider = serviceProvider;
-            ((Config)mPlugin.Options).OnApplyEvent += RegisterEvents;
+            ((Config)mPlugin.Options).OnApplyEvent += (s, e) => RegisterEvents();
             RegisterEvents();
         }
 
         private bool RDTAdvised => _rdt != null;
 
-        private void RegisterEvents(object sender = null, EventArgs e = null)
+        private void RegisterEvents()
         {
             if (((Config)mPlugin.Options).AutoCheckoutOnSave)
             {
@@ -67,13 +66,18 @@ namespace NiftyPerforce
             else if (RDTAdvised)
             {
                 Log.Info("Removing handlers for automatically checking out dirty files when you save");
-                _rdt.Value.Unadvise(_rdte);
+                _rdt!.Value.Unadvise(_rdte);
                 _rdt = null;
             }
         }
 
-        internal static bool OnBeforeSave(string filename)
+        internal bool OnBeforeSave(uint docCookie)
         {
+            if (!RDTAdvised)
+                return false;
+
+            RunningDocumentInfo runningDocumentInfo = _rdt!.Value.GetDocumentInfo(docCookie);
+            string filename = runningDocumentInfo.Moniker;
             return P4Operations.EditFileImmediate(filename);
         }
     }

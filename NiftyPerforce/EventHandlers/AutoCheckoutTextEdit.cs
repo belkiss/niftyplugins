@@ -9,28 +9,29 @@ namespace NiftyPerforce
 {
     internal class AutoCheckoutTextEdit : PreCommandFeature
     {
-        private EnvDTE80.TextDocumentKeyPressEvents mTextDocEvents;
-        private EnvDTE.TextEditorEvents mTextEditorEvents;
+        private EnvDTE80.TextDocumentKeyPressEvents? mTextDocEvents;
+        private EnvDTE.TextEditorEvents? mTextEditorEvents;
 
         public AutoCheckoutTextEdit(Plugin plugin)
             : base(plugin, "AutoCheckoutTextEdit")
         {
-            ((Config)mPlugin.Options).OnApplyEvent += RegisterEvents;
+            ((Config)mPlugin.Options).OnApplyEvent += (s, e) => RegisterEvents();
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             RegisterEvents();
         }
 
         private readonly string[] _commands =
         {
-                "Edit.Delete",
-                "Edit.DeleteBackwards",
-                "Edit.Paste"
-            };
-        private List<string> _registeredCommands;
-        private _dispTextDocumentKeyPressEvents_BeforeKeyPressEventHandler _beforeKeyPressEventHandler;
-        private _dispTextEditorEvents_LineChangedEventHandler _lineChangedEventHandler;
+            "Edit.Delete",
+            "Edit.DeleteBackwards",
+            "Edit.Paste"
+        };
 
-        private void RegisterEvents(object sender = null, EventArgs e = null)
+        private List<string>? _registeredCommands;
+        private _dispTextDocumentKeyPressEvents_BeforeKeyPressEventHandler? _beforeKeyPressEventHandler;
+        private _dispTextEditorEvents_LineChangedEventHandler? _lineChangedEventHandler;
+
+        private void RegisterEvents()
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -65,10 +66,10 @@ namespace NiftyPerforce
                     UnregisterHandler(command, OnCheckoutCurrentDocument);
                 _registeredCommands = null;
 
-                mTextEditorEvents.LineChanged -= _lineChangedEventHandler;
+                mTextEditorEvents!.LineChanged -= _lineChangedEventHandler;
                 mTextEditorEvents = null;
 
-                mTextDocEvents.BeforeKeyPress -= _beforeKeyPressEventHandler;
+                mTextDocEvents!.BeforeKeyPress -= _beforeKeyPressEventHandler;
                 mTextDocEvents = null;
             }
         }

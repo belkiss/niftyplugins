@@ -60,7 +60,7 @@ namespace NiftyPerforce
         public bool CleanLegacyNiftyCommands { get; set; } = false;
 #endif
 
-        public event EventHandler OnApplyEvent;
+        public event EventHandler? OnApplyEvent;
 
         protected override void OnApply(PageApplyEventArgs e)
         {

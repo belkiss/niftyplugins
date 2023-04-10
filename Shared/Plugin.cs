@@ -29,11 +29,11 @@ namespace Aurora
             m_features.Add(feature.Name, feature);
         }
 
-        public CommandEvents FindCommandEvents(string commandName)
+        public CommandEvents? FindCommandEvents(string commandName)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            CommandEvents events = null;
+            CommandEvents? events = null;
             try
             {
                 Command command = App.DTE.Commands.Item(commandName, -1);

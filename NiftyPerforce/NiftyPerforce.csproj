@@ -1,6 +1,7 @@
 ﻿<Project>
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
+    <LangVersion>8.0</LangVersion>
     <UseCodebase>true</UseCodebase>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
@@ -17,6 +18,7 @@
     <CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
     <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Nullable>enable</Nullable>
     <Configurations>Debug;Release;Debug Legacy;Release Legacy</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Debug' OR '$(Configuration)'=='Debug Legacy'">

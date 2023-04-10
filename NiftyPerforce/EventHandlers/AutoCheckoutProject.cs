@@ -11,7 +11,7 @@ namespace NiftyPerforce
         public AutoCheckoutProject(Plugin plugin)
             : base(plugin, "AutoCheckoutProject")
         {
-            ((Config)mPlugin.Options).OnApplyEvent += RegisterEvents;
+            ((Config)mPlugin.Options).OnApplyEvent += (s, e) => RegisterEvents();
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             RegisterEvents();
         }
@@ -29,9 +29,9 @@ namespace NiftyPerforce
                 "File.Remove" // I don't think this actually does anything
             };
 
-        private List<string> _registeredCommands;
+        private List<string>? _registeredCommands;
 
-        private void RegisterEvents(object sender = null, EventArgs e = null)
+        private void RegisterEvents()
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 

@@ -1,6 +1,7 @@
-// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
+﻿// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 using Aurora;
@@ -14,7 +15,7 @@ namespace NiftyPerforce
         private static bool g_p4installed = false;
         private static bool g_p4vinstalled = false;
         private static bool g_p4customdiff = false;
-        private static string g_p4vc_exename = null;
+        private static string? g_p4vc_exename = null;
 
         private static bool g_p4vc_history_supported = false;
         private static bool g_p4vc_diffhave_supported = false;
@@ -44,13 +45,15 @@ namespace NiftyPerforce
             }
         }
 
-        private static void UnlockOp(bool ok, object token_)
+        private static void UnlockOp(bool ok, object? token_)
         {
-            string token = (string)token_;
+            string? token = token_ as string;
+            Trace.Assert(token != null, $"{nameof(UnlockOp)} must be called with a string token");
+
             bool removed = false;
             lock (g_opsInFlightLock)
             {
-                removed = g_opsInFlight.Remove(token);
+                removed = g_opsInFlight.Remove(token!);
             }
 
             if (removed)
@@ -236,7 +239,7 @@ namespace NiftyPerforce
                 return AsyncProcess.Schedule("p4.exe", GetUserInfoString() + " diff \"" + EscapeP4Path(filename) + "#have\"", dirname, new AsyncProcess.OnDone(UnlockOp), token);
 
             if (g_p4vc_diffhave_supported)
-                return AsyncProcess.Schedule(g_p4vc_exename, GetUserInfoString() + " diffhave \"" + filename + "\"", dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
+                return AsyncProcess.Schedule(g_p4vc_exename!, GetUserInfoString() + " diffhave \"" + filename + "\"", dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
 
             // Otherwise let's show a unified diff in the outputpane.
             return AsyncProcess.Schedule("p4.exe", GetUserInfoString() + " diff -du \"" + EscapeP4Path(filename) + "#have\"", dirname, new AsyncProcess.OnDone(UnlockOp), token);
@@ -254,7 +257,7 @@ namespace NiftyPerforce
                     return false;
 
                 if (g_p4vc_history_supported)
-                    return AsyncProcess.Schedule(g_p4vc_exename, GetUserInfoString() + " history \"" + filename + "\"", dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
+                    return AsyncProcess.Schedule(g_p4vc_exename!, GetUserInfoString() + " history \"" + filename + "\"", dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
 
                 if (g_p4vinstalled)
                     return AsyncProcess.Schedule("p4v.exe", " -win 0 " + GetUserInfoStringFull(true, dirname) + " -cmd \"history " + EscapeP4Path(filename) + "\"", dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
@@ -300,8 +303,8 @@ namespace NiftyPerforce
                         Match clientmatch = clientpattern.Match(output);
 
                         string port = portmatch.Groups["port"].Value.Trim();
-                        string broker = brokermatch.Success ? brokermatch.Groups["port"].Value.Trim() : null;
-                        string proxy = proxymatch.Success ? proxymatch.Groups["port"].Value.Trim() : null;
+                        string? broker = brokermatch.Success ? brokermatch.Groups["port"].Value.Trim() : null;
+                        string? proxy = proxymatch.Success ? proxymatch.Groups["port"].Value.Trim() : null;
                         string username = usermatch.Groups["user"].Value.Trim();
                         string client = clientmatch.Groups["client"].Value.Trim();
 
@@ -309,12 +312,12 @@ namespace NiftyPerforce
                         Regex encryptionpattern;
                         if (!string.IsNullOrEmpty(broker))
                         {
-                            server = broker;
+                            server = broker!;
                             encryptionpattern = new Regex(@"Broker encryption: (?<encrypted>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
                         }
                         else if (!string.IsNullOrEmpty(proxy))
                         {
-                            server = proxy;
+                            server = proxy!;
                             encryptionpattern = new Regex(@"Proxy encryption: (?<encrypted>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
                         }
                         else
@@ -368,7 +371,8 @@ namespace NiftyPerforce
             string token = FormatToken("timelapse", filename);
             if (!LockOp(token))
                 return false;
-            return AsyncProcess.Schedule(g_p4vc_exename, arguments, dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
+
+            return AsyncProcess.Schedule(g_p4vc_exename!, arguments, dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
         }
 
         public static bool RevisionGraph(string dirname, string filename)
@@ -382,10 +386,11 @@ namespace NiftyPerforce
             string token = FormatToken("revisiongraph", filename);
             if (!LockOp(token))
                 return false;
-            return AsyncProcess.Schedule(g_p4vc_exename, arguments, dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
+
+            return AsyncProcess.Schedule(g_p4vc_exename!, arguments, dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
         }
 
-        public static string GetRegistryValue(string key, string value, bool global)
+        public static string? GetRegistryValue(string key, string value, bool global)
         {
             Microsoft.Win32.RegistryKey hklm = Microsoft.Win32.Registry.LocalMachine;
             if (!global)
@@ -432,11 +437,11 @@ namespace NiftyPerforce
             g_p4vinstalled = false;
             g_p4customdiff = false;
             g_p4vc_exename = null;
-            string p4diff = null;
+            string? p4diff = null;
 
             // Let's try the default 64 bit installation. Since we are in a 32 bit exe this is tricky
             // to ask the registry...
-            string installRoot = null;
+            string? installRoot = null;
             string candidate = @"C:\Program Files\Perforce";
             if (Directory.Exists(candidate) && File.Exists(Path.Combine(candidate, "p4.exe")))
             {
@@ -470,14 +475,14 @@ namespace NiftyPerforce
                 p4diff = GetRegistryValue("SOFTWARE\\Perforce\\Environment", "P4DIFF", true);
                 if (!string.IsNullOrEmpty(p4diff))
                 {
-                    Log.Info("[X] p4 custom diff '{0}' from HKLM", p4diff);
+                    Log.Info("[X] p4 custom diff '{0}' from HKLM", p4diff!);
                     g_p4customdiff = true;
                 }
 
                 p4diff = GetRegistryValue("SOFTWARE\\Perforce\\Environment", "P4DIFF", false);
                 if (!string.IsNullOrEmpty(p4diff))
                 {
-                    Log.Info("[X] p4 custom diff '{0}' from HKCU", p4diff);
+                    Log.Info("[X] p4 custom diff '{0}' from HKCU", p4diff!);
                     g_p4customdiff = true;
                 }
 
@@ -508,7 +513,7 @@ namespace NiftyPerforce
 
                 if (LookupP4VC((candidateName) => Help.FindFileInPath(candidateName) != null))
                 {
-                    Log.Info("Found {0} in path", g_p4vc_exename);
+                    Log.Info("Found {0} in path", g_p4vc_exename!);
                 }
 
                 Log.Warning("Could not find any peforce installation in the registry!!!");
@@ -544,7 +549,7 @@ namespace NiftyPerforce
             if (string.IsNullOrEmpty(g_p4vc_exename))
                 return false;
 
-            string result = Aurora.Process.Execute(g_p4vc_exename, "", $"help {command}", throwIfNonZeroExitCode: false);
+            string result = Aurora.Process.Execute(g_p4vc_exename!, "", $"help {command}", throwIfNonZeroExitCode: false);
 
             return result.IndexOf("Invalid help command request...", StringComparison.Ordinal) == -1;
 
