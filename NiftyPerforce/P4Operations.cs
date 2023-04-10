@@ -13,9 +13,10 @@ namespace NiftyPerforce
     {
         private const string _p4vcBatFileName = "p4vc.bat";
         private static bool g_p4installed = false;
-        private static bool g_p4vinstalled = false;
         private static bool g_p4customdiff = false;
         private static string? g_p4vc_exename = null;
+        private static string? g_p4v_dir = null;
+        private static string? g_p4vc_dir = null;
 
         private static bool g_p4vc_history_supported = false;
         private static bool g_p4vc_diffhave_supported = false;
@@ -239,7 +240,7 @@ namespace NiftyPerforce
                 return AsyncProcess.Schedule("p4.exe", GetUserInfoString() + " diff \"" + EscapeP4Path(filename) + "#have\"", dirname, new AsyncProcess.OnDone(UnlockOp), token);
 
             if (g_p4vc_diffhave_supported)
-                return AsyncProcess.Schedule(g_p4vc_exename!, GetUserInfoString() + " diffhave \"" + filename + "\"", dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
+                return AsyncProcess.Schedule(g_p4vc_exename!, GetUserInfoStringFull(true, dirname) + " diffhave \"" + filename + "\"", g_p4vc_dir!, new AsyncProcess.OnDone(UnlockOp), token, 0);
 
             // Otherwise let's show a unified diff in the outputpane.
             return AsyncProcess.Schedule("p4.exe", GetUserInfoString() + " diff -du \"" + EscapeP4Path(filename) + "#have\"", dirname, new AsyncProcess.OnDone(UnlockOp), token);
@@ -250,17 +251,17 @@ namespace NiftyPerforce
             if (filename.Length == 0)
                 return false;
 
-            if (g_p4vc_history_supported || g_p4vinstalled)
+            if (g_p4vc_history_supported || !string.IsNullOrEmpty(g_p4v_dir))
             {
                 string token = FormatToken("history", filename);
                 if (!LockOp(token))
                     return false;
 
                 if (g_p4vc_history_supported)
-                    return AsyncProcess.Schedule(g_p4vc_exename!, GetUserInfoString() + " history \"" + filename + "\"", dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
+                    return AsyncProcess.Schedule(g_p4vc_exename!, GetUserInfoStringFull(true, dirname) + " history \"" + filename + "\"", g_p4vc_dir!, new AsyncProcess.OnDone(UnlockOp), token, 0);
 
-                if (g_p4vinstalled)
-                    return AsyncProcess.Schedule("p4v.exe", " -win 0 " + GetUserInfoStringFull(true, dirname) + " -cmd \"history " + EscapeP4Path(filename) + "\"", dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
+                if (!string.IsNullOrEmpty(g_p4v_dir))
+                    return AsyncProcess.Schedule("p4v.exe", " -win 0 " + GetUserInfoStringFull(true, dirname) + " -cmd \"history " + EscapeP4Path(filename) + "\"", g_p4v_dir!, new AsyncProcess.OnDone(UnlockOp), token, 0);
             }
 
             return NotifyUser("could not find a supported p4vc.exe or p4v.exe installed in perforce directory");
@@ -270,8 +271,10 @@ namespace NiftyPerforce
         {
             if (filename.Length == 0)
                 return false;
-            if (g_p4vinstalled) // note that the cmd line also accepts -t to open P4V with a specific tab shown
-                return AsyncProcess.Schedule("p4v.exe", " -win 0 " + GetUserInfoStringFull(true, Path.GetDirectoryName(filename)) + " -s \"" + filename + "\"", Path.GetDirectoryName(filename), null, null, 0);
+
+            if (!string.IsNullOrEmpty(g_p4v_dir)) // note that the cmd line also accepts -t to open P4V with a specific tab shown
+                return AsyncProcess.Schedule("p4v.exe", " -win 0 " + GetUserInfoStringFull(true, Path.GetDirectoryName(filename)) + " -s \"" + filename + "\"", g_p4v_dir!, null, null, 0);
+
             return NotifyUser("could not find p4v.exe installed in perforce directory");
         }
 
@@ -365,14 +368,14 @@ namespace NiftyPerforce
             if (string.IsNullOrEmpty(g_p4vc_exename))
                 return NotifyUser("could not find p4vc in perforce directory");
 
-            string arguments = GetUserInfoString();
+            string arguments = GetUserInfoStringFull(true, dirname);
             arguments += " tlv \"" + filename + "\"";
 
             string token = FormatToken("timelapse", filename);
             if (!LockOp(token))
                 return false;
 
-            return AsyncProcess.Schedule(g_p4vc_exename!, arguments, dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
+            return AsyncProcess.Schedule(g_p4vc_exename!, arguments, g_p4vc_dir!, new AsyncProcess.OnDone(UnlockOp), token, 0);
         }
 
         public static bool RevisionGraph(string dirname, string filename)
@@ -380,14 +383,14 @@ namespace NiftyPerforce
             if (string.IsNullOrEmpty(g_p4vc_exename))
                 return NotifyUser("could not find p4vc in perforce directory");
 
-            string arguments = GetUserInfoString();
+            string arguments = GetUserInfoStringFull(true, dirname);
             arguments += " revisiongraph \"" + filename + "\"";
 
             string token = FormatToken("revisiongraph", filename);
             if (!LockOp(token))
                 return false;
 
-            return AsyncProcess.Schedule(g_p4vc_exename!, arguments, dirname, new AsyncProcess.OnDone(UnlockOp), token, 0);
+            return AsyncProcess.Schedule(g_p4vc_exename!, arguments, g_p4vc_dir!, new AsyncProcess.OnDone(UnlockOp), token, 0);
         }
 
         public static string? GetRegistryValue(string key, string value, bool global)
@@ -434,9 +437,10 @@ namespace NiftyPerforce
         {
             Log.Debug("Looking for installed files...");
             g_p4installed = false;
-            g_p4vinstalled = false;
             g_p4customdiff = false;
             g_p4vc_exename = null;
+            g_p4v_dir = null;
+            g_p4vc_dir = null;
             string? p4diff = null;
 
             // Let's try the default 64 bit installation. Since we are in a 32 bit exe this is tricky
@@ -465,11 +469,14 @@ namespace NiftyPerforce
                 Log.Info("Found perforce installation at {0}", installRoot);
 
                 g_p4installed = File.Exists(Path.Combine(installRoot, "p4.exe"));
-                g_p4vinstalled = File.Exists(Path.Combine(installRoot, "p4v.exe"));
-                LookupP4VC((candidateName) => File.Exists(Path.Combine(installRoot, candidateName)));
+                if (File.Exists(Path.Combine(installRoot, "p4v.exe")))
+                    g_p4v_dir = installRoot;
+
+                if (LookupP4VC((candidateName) => File.Exists(Path.Combine(installRoot, candidateName))))
+                    g_p4vc_dir = installRoot;
 
                 Log.Info("[{0}] p4.exe", g_p4installed ? "X" : " ");
-                Log.Info("[{0}] p4v.exe", g_p4vinstalled ? "X" : " ");
+                Log.Info("[{0}] p4v.exe", !string.IsNullOrEmpty(g_p4v_dir) ? "X" : " ");
                 Log.Info("[{0}] {1}", g_p4vc_exename != null ? "X" : " ", g_p4vc_exename ?? "p4vc(.bat|.exe)");
 
                 p4diff = GetRegistryValue("SOFTWARE\\Perforce\\Environment", "P4DIFF", true);
@@ -505,14 +512,16 @@ namespace NiftyPerforce
                     Log.Info("Found p4 in path");
                 }
 
-                if (null != Help.FindFileInPath("p4v.exe"))
+                g_p4v_dir = Help.FindFileInPath("p4v.exe");
+                if (null != g_p4v_dir)
                 {
-                    g_p4vinstalled = true;
                     Log.Info("Found p4v in path");
                 }
 
-                if (LookupP4VC((candidateName) => Help.FindFileInPath(candidateName) != null))
+                string? p4vc_dir = null;
+                if (LookupP4VC((candidateName) => (p4vc_dir = Help.FindFileInPath(candidateName)) != null))
                 {
+                    g_p4vc_dir = p4vc_dir;
                     Log.Info("Found {0} in path", g_p4vc_exename!);
                 }
 
