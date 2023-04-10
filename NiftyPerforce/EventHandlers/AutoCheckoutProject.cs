@@ -6,7 +6,7 @@ using EnvDTE;
 
 namespace NiftyPerforce
 {
-    internal class AutoCheckoutProject : PreCommandFeature
+    internal sealed class AutoCheckoutProject : PreCommandFeature
     {
         public AutoCheckoutProject(Plugin plugin)
             : base(plugin, "AutoCheckoutProject")

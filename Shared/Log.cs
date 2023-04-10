@@ -1,5 +1,6 @@
 ﻿// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Aurora
 {
@@ -88,7 +89,7 @@ namespace Aurora
 
         private static void OnMessage(Level level, string format, object[] args)
         {
-            string message = args.Length > 0 ? string.Format(format, args) : format;
+            string message = args.Length > 0 ? string.Format(CultureInfo.InvariantCulture, format, args) : format;
             string formattedLine;
             string indent = new string(' ', mIndent * 4);
             string levelName = level.ToString().PadLeft(5, ' ');
@@ -109,6 +110,6 @@ namespace Aurora
         }
 
         private static readonly List<IHandler> mHandlers = new List<IHandler>();
-        private static int mIndent = 0;
+        private static int mIndent;
     }
 }

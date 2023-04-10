@@ -6,7 +6,7 @@ using EnvDTE;
 namespace NiftyPerforce
 {
     // Handles registration and events for add/delete files and projects.
-    internal class AutoAddDelete : Feature
+    internal sealed class AutoAddDelete : Feature
     {
         private readonly ProjectItemsEvents m_projectEvents;
         private readonly SolutionEvents m_solutionEvents;

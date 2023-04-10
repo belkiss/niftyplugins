@@ -7,7 +7,7 @@ using EnvDTE80;
 
 namespace NiftyPerforce
 {
-    internal class AutoCheckoutTextEdit : PreCommandFeature
+    internal sealed class AutoCheckoutTextEdit : PreCommandFeature
     {
         private EnvDTE80.TextDocumentKeyPressEvents? mTextDocEvents;
         private EnvDTE.TextEditorEvents? mTextEditorEvents;

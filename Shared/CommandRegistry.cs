@@ -13,7 +13,7 @@ namespace Aurora
         private readonly Dictionary<string, CommandBase> mCommands;
         private readonly Dictionary<int, CommandBase> mCommandsById;
         private readonly Plugin mPlugin;
-        private Guid mCmdGroupGuid;
+        private readonly Guid mCmdGroupGuid;
 
         public CommandRegistry(Plugin plugin, Guid cmdGroupGuid)
         {
@@ -43,19 +43,17 @@ namespace Aurora
             return vscommand;
         }
 
-        private void OleMenuCommandBeforeQueryStatus(object sender, EventArgs e)
+        private void OleMenuCommandBeforeQueryStatus(object? sender, EventArgs e)
         {
 
             try
             {
                 if (sender is OleMenuCommand oleMenuCommand)
                 {
-                    CommandID commandId = oleMenuCommand.CommandID;
+                    CommandID? commandId = oleMenuCommand.CommandID;
 
-                    if (commandId != null && mCommandsById.ContainsKey(commandId.ID))
+                    if (commandId != null && mCommandsById.TryGetValue(commandId.ID, out CommandBase? bc))
                     {
-                        var bc = mCommandsById[commandId.ID];
-
                         oleMenuCommand.Supported = true;
                         oleMenuCommand.Enabled = bc.IsEnabled();
                         oleMenuCommand.Visible = true;
@@ -68,19 +66,17 @@ namespace Aurora
             }
         }
 
-        private void OleMenuCommandCallback(object sender, EventArgs e)
+        private void OleMenuCommandCallback(object? sender, EventArgs e)
         {
             try
             {
                 if (sender is OleMenuCommand oleMenuCommand)
                 {
-                    CommandID commandId = oleMenuCommand.CommandID;
+                    CommandID? commandId = oleMenuCommand.CommandID;
                     if (commandId != null)
                     {
-                        if (mCommandsById.ContainsKey(commandId.ID))
+                        if (mCommandsById.TryGetValue(commandId.ID, out CommandBase? command))
                         {
-                            var command = mCommandsById[commandId.ID];
-
                             bool dispatched = command.OnCommand();
                             Log.Debug($"{command.Name} (0x{commandId.ID:X}) " + (dispatched ? "was dispatched" : "fail"));
                         }

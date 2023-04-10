@@ -16,7 +16,7 @@ namespace Aurora
 
     public abstract class PreCommandFeature : Feature
     {
-        protected Plugin mPlugin;
+        protected Plugin mPlugin { get; private set; }
 
         protected PreCommandFeature(Plugin plugin, string name)
             : base(name)

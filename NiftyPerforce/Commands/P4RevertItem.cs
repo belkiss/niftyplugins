@@ -5,7 +5,7 @@ using EnvDTE;
 
 namespace NiftyPerforce
 {
-    internal class P4RevertItem : ItemCommandBase
+    internal sealed class P4RevertItem : ItemCommandBase
     {
         private readonly bool mOnlyUnchanged;
 

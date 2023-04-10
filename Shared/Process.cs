@@ -1,5 +1,6 @@
 ﻿// Copyright (C) 2006-2010 Jim Tilander. See COPYING for and README for more details.
 using System;
+using System.Globalization;
 using System.Runtime.Serialization;
 using System.Threading;
 
@@ -22,6 +23,7 @@ namespace Aurora
             public void Dispose()
             {
                 Sentinel.Close();
+                GC.SuppressFinalize(this);
             }
 
             public void OnOutput(object sender, System.Diagnostics.DataReceivedEventArgs e)
@@ -37,7 +39,7 @@ namespace Aurora
             }
         };
 
-        public static string Execute(string executable, string workingdir, string arguments, bool throwIfNonZeroExitCode = true)
+        public static string Execute(string executable, string? workingdir, string arguments, bool throwIfNonZeroExitCode = true)
         {
             using (var process = new System.Diagnostics.Process())
             {
@@ -46,7 +48,8 @@ namespace Aurora
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;
                 process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.WorkingDirectory = workingdir;
+                if (workingdir != null)
+                    process.StartInfo.WorkingDirectory = workingdir;
                 process.StartInfo.Arguments = arguments;
 
                 if (!process.Start())
@@ -90,7 +93,7 @@ namespace Aurora
         }
 
         public ProcessException(string info, params object[] vaargs)
-            : this(string.Format(info, vaargs))
+            : this(string.Format(CultureInfo.InvariantCulture, info, vaargs))
         {
         }
 

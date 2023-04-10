@@ -4,7 +4,7 @@ using EnvDTE;
 
 namespace NiftyPerforce
 {
-    internal class P4ShowItem : ItemCommandBase
+    internal sealed class P4ShowItem : ItemCommandBase
     {
         public P4ShowItem(Plugin plugin, string canonicalName)
             : base("ShowItem", canonicalName, plugin, true, true, PackageIds.NiftyShow)

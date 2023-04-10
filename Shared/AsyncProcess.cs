@@ -18,10 +18,12 @@ namespace Aurora
 
         public static void Term()
         {
+#pragma warning disable SYSLIB0006 // Thread.Abort is not supported
             m_helperThread?.Abort();
+#pragma warning restore SYSLIB0006 // Thread.Abort is not supported
         }
 
-        public static bool Run(string executable, string commandline, string workingdir, OnDone? callback, object? callbackArg)
+        public static bool Run(string executable, string commandline, string? workingdir, OnDone? callback, object? callbackArg)
         {
             int timeout = 1000;
 
@@ -38,12 +40,12 @@ namespace Aurora
             return true;
         }
 
-        public static bool Schedule(string executable, string commandline, string workingdir, OnDone? callback, object? callbackArg)
+        public static bool Schedule(string executable, string commandline, string? workingdir, OnDone? callback, object? callbackArg)
         {
             return Schedule(executable, commandline, workingdir, callback, callbackArg, s_defaultTimeout);
         }
 
-        public static bool Schedule(string executable, string commandline, string workingdir, OnDone? callback, object? callbackArg, int timeout)
+        public static bool Schedule(string executable, string commandline, string? workingdir, OnDone? callback, object? callbackArg, int timeout)
         {
             var cmd = new CommandThread (
                 executable,
@@ -109,16 +111,16 @@ namespace Aurora
             }
         }
 
-        private class CommandThread
+        private sealed class CommandThread
         {
             public readonly string executable;
             public readonly string commandline;
-            public readonly string workingdir;
+            public readonly string? workingdir;
             public readonly OnDone? callback;
             public readonly object? callbackArg;
             public readonly int timeout = 10000;
 
-            public CommandThread(string executable, string commandline, string workingdir, OnDone? callback, object? callbackArg, int timeout)
+            public CommandThread(string executable, string commandline, string? workingdir, OnDone? callback, object? callbackArg, int timeout)
             {
                 this.executable = executable;
                 this.commandline = commandline;
@@ -145,7 +147,7 @@ namespace Aurora
             }
         }
 
-        private static bool RunCommand(string executable, string commandline, string workingdir, int timeout)
+        private static bool RunCommand(string executable, string commandline, string? workingdir, int timeout)
         {
             try
             {
@@ -167,11 +169,12 @@ namespace Aurora
                     }
 
                     process.StartInfo.CreateNoWindow = true;
-                    process.StartInfo.WorkingDirectory = workingdir;
+                    if (workingdir != null)
+                        process.StartInfo.WorkingDirectory = workingdir;
                     process.StartInfo.Arguments = commandline;
 
                     Log.Debug("executableName : " + executable);
-                    Log.Debug("workingDirectory : " + workingdir);
+                    Log.Debug("workingDirectory : " + workingdir ?? "unset");
                     Log.Debug("command : " + commandline);
 
                     if (!process.Start())

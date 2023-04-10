@@ -4,7 +4,7 @@ using EnvDTE;
 
 namespace NiftyPerforce
 {
-    internal class P4EditItem : ItemCommandBase
+    internal sealed class P4EditItem : ItemCommandBase
     {
         public P4EditItem(Plugin plugin, string canonicalName)
             : base("EditItem", canonicalName, plugin, true, true, PackageIds.NiftyEdit)

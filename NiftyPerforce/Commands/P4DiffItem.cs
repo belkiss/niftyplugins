@@ -4,7 +4,7 @@ using EnvDTE;
 
 namespace NiftyPerforce
 {
-    internal class P4DiffItem : ItemCommandBase
+    internal sealed class P4DiffItem : ItemCommandBase
     {
         public P4DiffItem(Plugin plugin, string canonicalName)
             : base("DiffItem", canonicalName, plugin, true, true, PackageIds.NiftyDiff)

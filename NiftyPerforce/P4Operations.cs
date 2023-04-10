@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using Aurora;
@@ -9,17 +10,17 @@ using Aurora;
 namespace NiftyPerforce
 {
     // Simplification wrapper around running perforce commands.
-    internal class P4Operations
+    internal static class P4Operations
     {
         private const string _p4vcBatFileName = "p4vc.bat";
-        private static bool g_p4installed = false;
-        private static bool g_p4customdiff = false;
-        private static string? g_p4vc_exename = null;
-        private static string? g_p4v_dir = null;
-        private static string? g_p4vc_dir = null;
+        private static bool g_p4installed;
+        private static bool g_p4customdiff;
+        private static string? g_p4vc_exename;
+        private static string? g_p4v_dir;
+        private static string? g_p4vc_dir;
 
-        private static bool g_p4vc_history_supported = false;
-        private static bool g_p4vc_diffhave_supported = false;
+        private static bool g_p4vc_history_supported;
+        private static bool g_p4vc_diffhave_supported;
 
         private static readonly object g_opsInFlightLock = new object();
         private static readonly HashSet<string> g_opsInFlight = new HashSet<string>();
@@ -233,7 +234,7 @@ namespace NiftyPerforce
             if (!LockOp(token))
                 return false;
 
-            string dirname = Path.GetDirectoryName(filename);
+            string? dirname = Path.GetDirectoryName(filename);
 
             // Let's figure out if the user has some custom diff tool installed. Then we just send whatever we have without any fancy options.
             if (g_p4customdiff)
@@ -283,12 +284,12 @@ namespace NiftyPerforce
             return GetUserInfoStringFull(false, "");
         }
 
-        private static string GetUserInfoStringFull(bool lookup, string dir)
+        private static string GetUserInfoStringFull(bool lookup, string? dir)
         {
             // NOTE: This to allow the user to have a P4CONFIG variable and connect to multiple perforce servers seamlessly.
             if (Singleton<NiftyPerforce.Config>.Instance.UseSystemEnv)
             {
-                if (lookup)
+                if (lookup && dir != null)
                 {
                     try
                     {
@@ -395,7 +396,7 @@ namespace NiftyPerforce
 
         public static string? GetRegistryValue(string key, string value, bool global)
         {
-            Microsoft.Win32.RegistryKey hklm = Microsoft.Win32.Registry.LocalMachine;
+            Microsoft.Win32.RegistryKey? hklm = Microsoft.Win32.Registry.LocalMachine;
             if (!global)
                 hklm = Microsoft.Win32.Registry.CurrentUser;
             hklm = hklm.OpenSubKey(key);
@@ -405,7 +406,7 @@ namespace NiftyPerforce
                 return null;
             }
 
-            object regValue = hklm.GetValue(value);
+            object? regValue = hklm.GetValue(value);
             if (null == regValue)
             {
                 Log.Debug("Could not find registry value " + value + " in " + (global ? "HKLM\\" : "HKCU\\") + key);
@@ -582,7 +583,7 @@ namespace NiftyPerforce
             if (mainline.Length == 0)
             {
                 Log.Error("Tried to find the mainline version of {0}, but the mainline path spec is empty", filename);
-                throw new Exception(string.Format("Tried to find the mainline version of {0}, but the mainline path spec is empty", filename));
+                throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture, "Tried to find the mainline version of {0}, but the mainline path spec is empty", filename));
             }
 
             string result = Aurora.Process.Execute("p4.exe", Path.GetDirectoryName(filename), GetUserInfoString() + "integrated \"" + EscapeP4Path(filename) + "\"");

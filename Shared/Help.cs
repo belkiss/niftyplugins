@@ -7,8 +7,8 @@ namespace Aurora
     {
         public static string? FindFileInPath(string filename)
         {
-            string pathenv = Environment.GetEnvironmentVariable("PATH");
-            string[] items = pathenv.Split(';');
+            string? pathenv = Environment.GetEnvironmentVariable("PATH");
+            string[] items = pathenv?.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
 
             foreach (string item in items)
             {

@@ -9,7 +9,7 @@ namespace NiftyPerforce
 {
     // Create a class to retrieve the OnBeforeSave event from VS
     // http://schmalls.com/2015/01/19/adventures-in-visual-studio-extension-development-part-2
-    internal class RunningDocTableEvents : IVsRunningDocTableEvents3
+    internal sealed class RunningDocTableEvents : IVsRunningDocTableEvents3
     {
         private readonly AutoCheckoutOnSave _autoCheckoutOnSave;
 
@@ -35,7 +35,7 @@ namespace NiftyPerforce
         public int OnBeforeLastDocumentUnlock(uint docCookie, uint dwRDTLockType, uint dwReadLocksRemaining, uint dwEditLocksRemaining) { return VSConstants.S_OK; }
     }
 
-    internal class AutoCheckoutOnSave : PreCommandFeature
+    internal sealed class AutoCheckoutOnSave : PreCommandFeature
     {
         internal Lazy<RunningDocumentTable>? _rdt;
         internal uint _rdte;
