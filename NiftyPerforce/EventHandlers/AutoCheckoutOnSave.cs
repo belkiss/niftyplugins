@@ -43,9 +43,9 @@ namespace NiftyPerforce
 
     internal sealed class AutoCheckoutOnSave : PreCommandFeature
     {
-        internal Lazy<RunningDocumentTable>? _rdt;
-        internal uint _rdte;
         private readonly IServiceProvider _serviceProvider;
+        private Lazy<RunningDocumentTable>? _rdt;
+        private uint _rdte;
 
         public AutoCheckoutOnSave(Plugin plugin, IServiceProvider serviceProvider)
             : base(plugin, "AutoCheckoutOnSave")

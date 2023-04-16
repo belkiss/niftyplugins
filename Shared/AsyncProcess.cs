@@ -67,7 +67,7 @@ namespace Aurora
             }
 
             m_startEvent.Release();
-            Log.Info("Scheduled {0} {1}\n", cmd.executable, cmd.commandline);
+            Log.Info("Scheduled {0} {1}\n", cmd.Executable, cmd.Commandline);
             return true;
         }
 
@@ -111,12 +111,24 @@ namespace Aurora
 
         private sealed class CommandThread
         {
-            public readonly string executable;
-            public readonly string commandline;
-            public readonly string? workingdir;
-            public readonly OnDone? callback;
-            public readonly object? callbackArg;
-            public readonly int timeout = 10000;
+            private readonly string executable;
+            private readonly string commandline;
+            private readonly string? workingdir;
+            private readonly OnDone? callback;
+            private readonly object? callbackArg;
+            private readonly int timeout = 10000;
+
+            public string Executable => executable;
+
+            public string Commandline => commandline;
+
+            public string? Workingdir => workingdir;
+
+            public OnDone? Callback => callback;
+
+            public object? CallbackArg => callbackArg;
+
+            public int Timeout => timeout;
 
             public CommandThread(string executable, string commandline, string? workingdir, OnDone? callback, object? callbackArg, int timeout)
             {
@@ -133,7 +145,7 @@ namespace Aurora
                 bool ok;
                 try
                 {
-                    ok = RunCommand(executable, commandline, workingdir, timeout);
+                    ok = RunCommand(Executable, Commandline, Workingdir, Timeout);
                 }
                 catch
                 {
@@ -141,7 +153,7 @@ namespace Aurora
                     Log.Error("Caught unhandled exception in async process -- suppressing so that we don't bring down Visual Studio");
                 }
 
-                callback?.Invoke(ok, callbackArg);
+                Callback?.Invoke(ok, CallbackArg);
             }
         }
 
