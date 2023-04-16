@@ -19,9 +19,7 @@ namespace Aurora
 
         public static void Term()
         {
-#pragma warning disable SYSLIB0006 // Thread.Abort is not supported
             m_helperThread?.Abort();
-#pragma warning restore SYSLIB0006 // Thread.Abort is not supported
         }
 
         public static bool Run(string executable, string commandline, string? workingdir, OnDone? callback, object? callbackArg)

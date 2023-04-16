@@ -59,12 +59,12 @@ namespace NiftyPerforce
             }
         }
 
-        private void OnCheckoutSelectedProjects(string Guid, int ID, object CustomIn, object CustomOut, ref bool CancelDefault)
+        private void OnCheckoutSelectedProjects(string guid, int id, object customIn, object customOut, ref bool cancelDefault)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
             // when I get Edit.Delete :
-            if (Guid == Microsoft.VisualStudio.VSConstants.CMDSETID.StandardCommandSet97_string && ID == 17)
+            if (guid == Microsoft.VisualStudio.VSConstants.CMDSETID.StandardCommandSet97_string && id == 17)
             {
                 // see if the active window is SolutionExplorer :
                 Window w = mPlugin.App.ActiveWindow;

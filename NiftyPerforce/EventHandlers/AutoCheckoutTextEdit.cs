@@ -73,7 +73,7 @@ namespace NiftyPerforce
             }
         }
 
-        private void OnBeforeKeyPress(string Keypress, EnvDTE.TextSelection Selection, bool InStatementCompletion, ref bool CancelKeypress)
+        private void OnBeforeKeyPress(string keypress, EnvDTE.TextSelection selection, bool inStatementCompletion, ref bool cancelKeypress)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -83,19 +83,19 @@ namespace NiftyPerforce
 
         // [jt] This handler checks for things like paste operations. In theory we should be able to remove the handler above, but
         // I can't get this one to fire reliably... Wonder how much these handlers will slow down the IDE?
-        private void OnLineChanged(TextPoint StartPoint, TextPoint EndPoint, int Hint)
+        private void OnLineChanged(TextPoint startPoint, TextPoint endPoint, int hint)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
-            if ((Hint & (int)vsTextChanged.vsTextChangedNewline) == 0 &&
-                (Hint & (int)vsTextChanged.vsTextChangedMultiLine) == 0 &&
-                (Hint & (int)vsTextChanged.vsTextChangedNewline) == 0 &&
-                (Hint != 0))
+            if ((hint & (int)vsTextChanged.vsTextChangedNewline) == 0 &&
+                (hint & (int)vsTextChanged.vsTextChangedMultiLine) == 0 &&
+                (hint & (int)vsTextChanged.vsTextChangedNewline) == 0 &&
+                (hint != 0))
                 return;
             if (mPlugin.App.ActiveDocument != null && mPlugin.App.ActiveDocument.ReadOnly && !mPlugin.App.ActiveDocument.Saved)
                 P4Operations.EditFile(mPlugin.App.ActiveDocument.FullName, false);
         }
 
-        private void OnCheckoutCurrentDocument(string Guid, int ID, object CustomIn, object CustomOut, ref bool CancelDefault)
+        private void OnCheckoutCurrentDocument(string guid, int id, object customIn, object customOut, ref bool cancelDefault)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
