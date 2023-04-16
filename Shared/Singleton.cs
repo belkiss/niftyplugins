@@ -9,8 +9,6 @@ namespace Aurora
         {
         }
 
-        private static T instance = new T();
-
-        public static T Instance { get => instance; set => instance = value; }
+        public static T Instance { get; set; } = new T();
     }
 }

@@ -7,17 +7,17 @@ namespace NiftyPerforce
 {
     internal sealed class P4RevertItem : ItemCommandBase
     {
-        private readonly bool mOnlyUnchanged;
+        private readonly bool _onlyUnchanged;
 
         public P4RevertItem(Plugin plugin, string canonicalName, bool onlyUnchanged)
             : base("RevertItem", canonicalName, plugin, true, true, onlyUnchanged ? PackageIds.NiftyRevertUnchanged : PackageIds.NiftyRevert)
         {
-            mOnlyUnchanged = onlyUnchanged;
+            _onlyUnchanged = onlyUnchanged;
         }
 
         public override void OnExecute(SelectedItem item, string fileName)
         {
-            if (!mOnlyUnchanged)
+            if (!_onlyUnchanged)
             {
                 string message = "You are about to revert the file '" + fileName + "'. Do you want to do this?";
                 if (MessageBox.Show(message, "Revert File?", MessageBoxButtons.YesNo) != DialogResult.Yes)
@@ -26,7 +26,7 @@ namespace NiftyPerforce
                 }
             }
 
-            P4Operations.RevertFile(fileName, mOnlyUnchanged);
+            P4Operations.RevertFile(fileName, _onlyUnchanged);
         }
     }
 }

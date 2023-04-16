@@ -7,9 +7,9 @@ namespace NiftyPerforce
     // Handles registration and events for add/delete files and projects.
     internal sealed class AutoAddDelete : Feature
     {
-        private readonly ProjectItemsEvents m_projectEvents;
-        private readonly SolutionEvents m_solutionEvents;
-        private readonly Plugin m_plugin;
+        private readonly ProjectItemsEvents _projectEvents;
+        private readonly SolutionEvents _solutionEvents;
+        private readonly Plugin _plugin;
 
         private _dispProjectItemsEvents_ItemAddedEventHandler? _itemAddedEventHandler;
         private _dispSolutionEvents_ProjectAddedEventHandler? _projectAddedEventHandler;
@@ -19,12 +19,12 @@ namespace NiftyPerforce
         public AutoAddDelete(Plugin plugin)
             : base("AutoAddDelete")
         {
-            m_plugin = plugin;
+            _plugin = plugin;
 
-            m_projectEvents = ((EnvDTE80.Events2)m_plugin.App.Events).ProjectItemsEvents;
-            m_solutionEvents = ((EnvDTE80.Events2)m_plugin.App.Events).SolutionEvents;
+            _projectEvents = ((EnvDTE80.Events2)_plugin.App.Events).ProjectItemsEvents;
+            _solutionEvents = ((EnvDTE80.Events2)_plugin.App.Events).SolutionEvents;
 
-            ((OptionsDialogPage)m_plugin.Options).OnApplyEvent += (s, e) => RegisterEvents();
+            ((OptionsDialogPage)_plugin.Options).OnApplyEvent += (s, e) => RegisterEvents();
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             RegisterEvents();
         }
@@ -37,47 +37,47 @@ namespace NiftyPerforce
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            if (((OptionsDialogPage)m_plugin.Options).AutoAdd)
+            if (((OptionsDialogPage)_plugin.Options).AutoAdd)
             {
                 if (!AddFilesHandlersInstalled)
                 {
                     Log.Info("Adding handlers to automatically add files to perforce as you add them to the project");
                     _itemAddedEventHandler = new _dispProjectItemsEvents_ItemAddedEventHandler(OnItemAdded);
-                    m_projectEvents.ItemAdded += _itemAddedEventHandler;
+                    _projectEvents.ItemAdded += _itemAddedEventHandler;
 
                     _projectAddedEventHandler = new _dispSolutionEvents_ProjectAddedEventHandler(OnProjectAdded);
-                    m_solutionEvents.ProjectAdded += _projectAddedEventHandler;
+                    _solutionEvents.ProjectAdded += _projectAddedEventHandler;
                 }
             }
             else if (AddFilesHandlersInstalled)
             {
                 Log.Info("Removing handlers to automatically add files to perforce as you add them to the project");
-                m_projectEvents.ItemAdded -= _itemAddedEventHandler;
+                _projectEvents.ItemAdded -= _itemAddedEventHandler;
                 _itemAddedEventHandler = null;
 
-                m_solutionEvents.ProjectAdded -= _projectAddedEventHandler;
+                _solutionEvents.ProjectAdded -= _projectAddedEventHandler;
                 _projectAddedEventHandler = null;
             }
 
-            if (((OptionsDialogPage)m_plugin.Options).AutoDelete)
+            if (((OptionsDialogPage)_plugin.Options).AutoDelete)
             {
                 if (!RemoveFilesHandlersInstalled)
                 {
                     Log.Info("Adding handlers to automatically delete files from perforce as you remove them from the project");
                     _itemRemovedEventHandler = new _dispProjectItemsEvents_ItemRemovedEventHandler(OnItemRemoved);
-                    m_projectEvents.ItemRemoved += _itemRemovedEventHandler;
+                    _projectEvents.ItemRemoved += _itemRemovedEventHandler;
 
                     _projectRemovedEventHandler = new _dispSolutionEvents_ProjectRemovedEventHandler(OnProjectRemoved);
-                    m_solutionEvents.ProjectRemoved += _projectRemovedEventHandler;
+                    _solutionEvents.ProjectRemoved += _projectRemovedEventHandler;
                 }
             }
             else if (RemoveFilesHandlersInstalled)
             {
                 Log.Info("Removing handlers to automatically deleting files from perforce as you remove them from the project");
-                m_projectEvents.ItemRemoved -= _itemRemovedEventHandler;
+                _projectEvents.ItemRemoved -= _itemRemovedEventHandler;
                 _itemRemovedEventHandler = null;
 
-                m_solutionEvents.ProjectRemoved -= _projectRemovedEventHandler;
+                _solutionEvents.ProjectRemoved -= _projectRemovedEventHandler;
                 _projectRemovedEventHandler = null;
             }
         }
@@ -120,7 +120,7 @@ namespace NiftyPerforce
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            P4Operations.EditFile(m_plugin.App.Solution.FullName, false);
+            P4Operations.EditFile(_plugin.App.Solution.FullName, false);
             P4Operations.AddFile(project.FullName);
 
             // TODO: [jt] We should if the operation is not a add new project but rather a add existing project
@@ -132,7 +132,7 @@ namespace NiftyPerforce
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            P4Operations.EditFile(m_plugin.App.Solution.FullName, false);
+            P4Operations.EditFile(_plugin.App.Solution.FullName, false);
             P4Operations.DeleteFile(project.FullName);
 
             // TODO: [jt] Do we want to automatically delete the items from perforce here?

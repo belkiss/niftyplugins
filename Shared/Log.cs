@@ -27,43 +27,43 @@ namespace Aurora
         // Log class implement below
         public static string Prefix { get; set; } = string.Empty;
 
-        public static int HandlerCount => mHandlers.Count;
+        public static int HandlerCount => s_handlers.Count;
 
         public static void AddHandler(IHandler handler)
         {
             if (handler == null)
                 return;
 
-            lock (mHandlers)
+            lock (s_handlers)
             {
-                mHandlers.Add(handler);
+                s_handlers.Add(handler);
             }
         }
 
         public static void RemoveHandler(IHandler handler)
         {
-            lock (mHandlers)
+            lock (s_handlers)
             {
-                mHandlers.Remove(handler);
+                s_handlers.Remove(handler);
             }
         }
 
         public static void ClearHandlers()
         {
-            lock (mHandlers)
+            lock (s_handlers)
             {
-                mHandlers.Clear();
+                s_handlers.Clear();
             }
         }
 
         public static void IncIndent()
         {
-            mIndent++;
+            s_indent++;
         }
 
         public static void DecIndent()
         {
-            mIndent--;
+            s_indent--;
         }
 
         public static void Debug(string message, params object[] args)
@@ -92,7 +92,7 @@ namespace Aurora
         {
             string message = args.Length > 0 ? string.Format(CultureInfo.InvariantCulture, format, args) : format;
             string formattedLine;
-            string indent = new string(' ', mIndent * 4);
+            string indent = new string(' ', s_indent * 4);
             string levelName = level.ToString().PadLeft(5, ' ');
 
             if (Prefix.Length > 0)
@@ -104,13 +104,13 @@ namespace Aurora
                 formattedLine = levelName + ": " + indent + message + "\n";
             }
 
-            foreach (IHandler handler in mHandlers)
+            foreach (IHandler handler in s_handlers)
             {
                 handler.OnMessage(level, message, formattedLine);
             }
         }
 
-        private static readonly List<IHandler> mHandlers = new List<IHandler>();
-        private static int mIndent;
+        private static readonly List<IHandler> s_handlers = new List<IHandler>();
+        private static int s_indent;
     }
 }

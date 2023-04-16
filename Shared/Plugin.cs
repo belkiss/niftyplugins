@@ -11,7 +11,7 @@ namespace Aurora
     // Interfaces with visual studio and handles the dispatch.
     public class Plugin
     {
-        private readonly Dictionary<string, Feature> m_features = new Dictionary<string, Feature>();
+        private readonly Dictionary<string, Feature> _features = new Dictionary<string, Feature>();
 
         public DTE2 App { get; }
 
@@ -30,7 +30,7 @@ namespace Aurora
 
         public void AddFeature(Feature feature)
         {
-            m_features.Add(feature.Name, feature);
+            _features.Add(feature.Name, feature);
         }
 
         public CommandEvents? FindCommandEvents(string commandName)

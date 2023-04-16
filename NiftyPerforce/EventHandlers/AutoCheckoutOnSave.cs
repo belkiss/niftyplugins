@@ -18,7 +18,7 @@ namespace NiftyPerforce
         {
             ThreadHelper.ThrowIfNotOnUIThread();
             _serviceProvider = serviceProvider;
-            ((OptionsDialogPage)mPlugin.Options).OnApplyEvent += (s, e) => RegisterEvents();
+            ((OptionsDialogPage)Plugin.Options).OnApplyEvent += (s, e) => RegisterEvents();
             RegisterEvents();
         }
 
@@ -26,7 +26,7 @@ namespace NiftyPerforce
 
         private void RegisterEvents()
         {
-            if (((OptionsDialogPage)mPlugin.Options).AutoCheckoutOnSave)
+            if (((OptionsDialogPage)Plugin.Options).AutoCheckoutOnSave)
             {
                 if (!RDTAdvised)
                 {

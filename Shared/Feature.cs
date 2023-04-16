@@ -15,18 +15,18 @@ namespace Aurora
 
     public abstract class PreCommandFeature : Feature
     {
-        protected Plugin mPlugin { get; private set; }
+        protected Plugin Plugin { get; private set; }
 
         protected PreCommandFeature(Plugin plugin, string name)
             : base(name)
         {
-            mPlugin = plugin;
+            Plugin = plugin;
         }
 
         protected bool RegisterHandler(string commandName, _dispCommandEvents_BeforeExecuteEventHandler handler)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
-            CommandEvents? events = mPlugin.FindCommandEvents(commandName);
+            CommandEvents? events = Plugin.FindCommandEvents(commandName);
             if (events == null)
                 return false;
             events.BeforeExecute += handler;
@@ -36,7 +36,7 @@ namespace Aurora
         protected void UnregisterHandler(string commandName, _dispCommandEvents_BeforeExecuteEventHandler handler)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
-            CommandEvents? events = mPlugin.FindCommandEvents(commandName);
+            CommandEvents? events = Plugin.FindCommandEvents(commandName);
             if (events == null)
                 return;
             events.BeforeExecute -= handler;

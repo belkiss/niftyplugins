@@ -11,35 +11,35 @@ namespace Aurora
     // the logic to execute and update the command itself.
     public class CommandRegistry
     {
-        private readonly Dictionary<string, CommandBase> mCommands;
-        private readonly Dictionary<int, CommandBase> mCommandsById;
-        private readonly Plugin mPlugin;
-        private readonly Guid mCmdGroupGuid;
+        private readonly Dictionary<string, CommandBase> _commands;
+        private readonly Dictionary<int, CommandBase> _commandsById;
+        private readonly Plugin _plugin;
+        private readonly Guid _cmdGroupGuid;
 
         public CommandRegistry(Plugin plugin, Guid cmdGroupGuid)
         {
-            mCommands = new Dictionary<string, CommandBase>();
-            mCommandsById = new Dictionary<int, CommandBase>();
-            mPlugin = plugin;
-            mCmdGroupGuid = cmdGroupGuid;
+            _commands = new Dictionary<string, CommandBase>();
+            _commandsById = new Dictionary<int, CommandBase>();
+            _plugin = plugin;
+            _cmdGroupGuid = cmdGroupGuid;
         }
 
         public void RegisterCommand(CommandBase commandHandler)
         {
             OleMenuCommand command = RegisterCommandPrivate(commandHandler);
             if (command != null)
-                mCommands.Add(commandHandler.CanonicalName, commandHandler);
+                _commands.Add(commandHandler.CanonicalName, commandHandler);
         }
 
         private OleMenuCommand RegisterCommandPrivate(CommandBase commandHandler)
         {
-            OleMenuCommandService menuCommandService = mPlugin.MenuCommandService;
-            var commandID = new CommandID(mCmdGroupGuid, commandHandler.CommandId);
+            OleMenuCommandService menuCommandService = _plugin.MenuCommandService;
+            var commandID = new CommandID(_cmdGroupGuid, commandHandler.CommandId);
 
             var vscommand = new OleMenuCommand(OleMenuCommandCallback, commandID);
             vscommand.BeforeQueryStatus += OleMenuCommandBeforeQueryStatus; // LCTODO: this spams too much, figure out what's wrong
             menuCommandService.AddCommand(vscommand);
-            mCommandsById[commandID.ID] = commandHandler;
+            _commandsById[commandID.ID] = commandHandler;
 
             return vscommand;
         }
@@ -52,7 +52,7 @@ namespace Aurora
                 {
                     CommandID? commandId = oleMenuCommand.CommandID;
 
-                    if (commandId != null && mCommandsById.TryGetValue(commandId.ID, out CommandBase? bc))
+                    if (commandId != null && _commandsById.TryGetValue(commandId.ID, out CommandBase? bc))
                     {
                         oleMenuCommand.Supported = true;
                         oleMenuCommand.Enabled = bc.IsEnabled();
@@ -75,7 +75,7 @@ namespace Aurora
                     CommandID? commandId = oleMenuCommand.CommandID;
                     if (commandId != null)
                     {
-                        if (mCommandsById.TryGetValue(commandId.ID, out CommandBase? command))
+                        if (_commandsById.TryGetValue(commandId.ID, out CommandBase? command))
                         {
                             bool dispatched = command.OnCommand();
                             Log.Debug($"{command.Name} (0x{commandId.ID:X}) " + (dispatched ? "was dispatched" : "fail"));

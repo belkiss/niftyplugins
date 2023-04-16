@@ -8,13 +8,13 @@ namespace NiftyPerforce
 {
     internal sealed class AutoCheckoutTextEdit : PreCommandFeature
     {
-        private EnvDTE80.TextDocumentKeyPressEvents? mTextDocEvents;
-        private EnvDTE.TextEditorEvents? mTextEditorEvents;
+        private EnvDTE80.TextDocumentKeyPressEvents? _textDocEvents;
+        private EnvDTE.TextEditorEvents? _textEditorEvents;
 
         public AutoCheckoutTextEdit(Plugin plugin)
             : base(plugin, "AutoCheckoutTextEdit")
         {
-            ((OptionsDialogPage)mPlugin.Options).OnApplyEvent += (s, e) => RegisterEvents();
+            ((OptionsDialogPage)Plugin.Options).OnApplyEvent += (s, e) => RegisterEvents();
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             RegisterEvents();
         }
@@ -34,20 +34,20 @@ namespace NiftyPerforce
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            if (((OptionsDialogPage)mPlugin.Options).AutoCheckoutOnEdit)
+            if (((OptionsDialogPage)Plugin.Options).AutoCheckoutOnEdit)
             {
                 if (_registeredCommands == null)
                 {
                     Log.Info("Adding handlers for automatically checking out text files as you edit them");
                     _registeredCommands = new List<string>();
-                    var events = (EnvDTE80.Events2)mPlugin.App.Events;
-                    mTextDocEvents = events.get_TextDocumentKeyPressEvents(null);
+                    var events = (EnvDTE80.Events2)Plugin.App.Events;
+                    _textDocEvents = events.get_TextDocumentKeyPressEvents(null);
                     _beforeKeyPressEventHandler = new _dispTextDocumentKeyPressEvents_BeforeKeyPressEventHandler(OnBeforeKeyPress);
-                    mTextDocEvents.BeforeKeyPress += _beforeKeyPressEventHandler;
+                    _textDocEvents.BeforeKeyPress += _beforeKeyPressEventHandler;
 
-                    mTextEditorEvents = events.get_TextEditorEvents(null);
+                    _textEditorEvents = events.get_TextEditorEvents(null);
                     _lineChangedEventHandler = new _dispTextEditorEvents_LineChangedEventHandler(OnLineChanged);
-                    mTextEditorEvents.LineChanged += _lineChangedEventHandler;
+                    _textEditorEvents.LineChanged += _lineChangedEventHandler;
 
                     foreach (string command in _commands)
                     {
@@ -65,11 +65,11 @@ namespace NiftyPerforce
                     UnregisterHandler(command, OnCheckoutCurrentDocument);
                 _registeredCommands = null;
 
-                mTextEditorEvents!.LineChanged -= _lineChangedEventHandler;
-                mTextEditorEvents = null;
+                _textEditorEvents!.LineChanged -= _lineChangedEventHandler;
+                _textEditorEvents = null;
 
-                mTextDocEvents!.BeforeKeyPress -= _beforeKeyPressEventHandler;
-                mTextDocEvents = null;
+                _textDocEvents!.BeforeKeyPress -= _beforeKeyPressEventHandler;
+                _textDocEvents = null;
             }
         }
 
@@ -77,8 +77,8 @@ namespace NiftyPerforce
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            if (mPlugin.App.ActiveDocument != null && mPlugin.App.ActiveDocument.ReadOnly)
-                P4Operations.EditFile(mPlugin.App.ActiveDocument.FullName, false);
+            if (Plugin.App.ActiveDocument != null && Plugin.App.ActiveDocument.ReadOnly)
+                P4Operations.EditFile(Plugin.App.ActiveDocument.FullName, false);
         }
 
         // [jt] This handler checks for things like paste operations. In theory we should be able to remove the handler above, but
@@ -91,16 +91,16 @@ namespace NiftyPerforce
                 (hint & (int)vsTextChanged.vsTextChangedNewline) == 0 &&
                 (hint != 0))
                 return;
-            if (mPlugin.App.ActiveDocument != null && mPlugin.App.ActiveDocument.ReadOnly && !mPlugin.App.ActiveDocument.Saved)
-                P4Operations.EditFile(mPlugin.App.ActiveDocument.FullName, false);
+            if (Plugin.App.ActiveDocument != null && Plugin.App.ActiveDocument.ReadOnly && !Plugin.App.ActiveDocument.Saved)
+                P4Operations.EditFile(Plugin.App.ActiveDocument.FullName, false);
         }
 
         private void OnCheckoutCurrentDocument(string guid, int id, object customIn, object customOut, ref bool cancelDefault)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            if (mPlugin.App.ActiveDocument != null && mPlugin.App.ActiveDocument.ReadOnly && !mPlugin.App.ActiveDocument.Saved)
-                P4Operations.EditFile(mPlugin.App.ActiveDocument.FullName, false);
+            if (Plugin.App.ActiveDocument != null && Plugin.App.ActiveDocument.ReadOnly && !Plugin.App.ActiveDocument.Saved)
+                P4Operations.EditFile(Plugin.App.ActiveDocument.FullName, false);
         }
     }
 }

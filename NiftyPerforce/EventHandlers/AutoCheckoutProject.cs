@@ -11,7 +11,7 @@ namespace NiftyPerforce
         public AutoCheckoutProject(Plugin plugin)
             : base(plugin, "AutoCheckoutProject")
         {
-            ((OptionsDialogPage)mPlugin.Options).OnApplyEvent += (s, e) => RegisterEvents();
+            ((OptionsDialogPage)Plugin.Options).OnApplyEvent += (s, e) => RegisterEvents();
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             RegisterEvents();
         }
@@ -35,7 +35,7 @@ namespace NiftyPerforce
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            if (((OptionsDialogPage)mPlugin.Options).AutoCheckoutProject)
+            if (((OptionsDialogPage)Plugin.Options).AutoCheckoutProject)
             {
                 if (_registeredCommands == null)
                 {
@@ -67,7 +67,7 @@ namespace NiftyPerforce
             if (guid == Microsoft.VisualStudio.VSConstants.CMDSETID.StandardCommandSet97_string && id == 17)
             {
                 // see if the active window is SolutionExplorer :
-                Window w = mPlugin.App.ActiveWindow;
+                Window w = Plugin.App.ActiveWindow;
                 if (w.Type != EnvDTE.vsWindowType.vsWindowTypeSolutionExplorer)
                 {
                     // it's just a delete in the text window, get out !
@@ -75,7 +75,7 @@ namespace NiftyPerforce
                 }
             }
 
-            foreach (Project project in (Array)mPlugin.App.ActiveSolutionProjects)
+            foreach (Project project in (Array)Plugin.App.ActiveSolutionProjects)
             {
                 P4Operations.EditFileImmediate(project.FullName);
             }
