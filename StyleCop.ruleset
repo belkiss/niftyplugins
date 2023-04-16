@@ -47,35 +47,35 @@
         <Rule Id="SA1107"  Action="Warning" />          <!-- Code should not contain multiple statements on one line -->
         <Rule Id="SA1108"  Action="Warning" />          <!-- Block statements should not contain embedded comments -->
         <Rule Id="SA1109"  Action="None" />             <!-- Block statements should not contain embedded regions -->
-        <Rule Id="SA1110"  Action="None" />          <!-- Opening parenthesis or bracket should be on declaration line -->
-        <Rule Id="SA1111"  Action="None" />          <!-- Closing parenthesis should be on line of last parameter -->
-        <Rule Id="SA1112"  Action="None" />          <!-- Closing parenthesis should be on line of opening parenthesis -->
-        <Rule Id="SA1113"  Action="None" />          <!-- Comma should be on the same line as previous parameter -->
-        <Rule Id="SA1114"  Action="None" />          <!-- Parameter list should follow declaration -->
-        <Rule Id="SA1115"  Action="None" />          <!-- Parameter should follow comma -->
-        <Rule Id="SA1116"  Action="None" />          <!-- Split parameters should start on line after declaration -->
-        <Rule Id="SA1117"  Action="None" />          <!-- Parameters should be on same line or separate lines -->
-        <Rule Id="SA1118"  Action="None" />          <!-- Parameter should not span multiple lines -->
-        <Rule Id="SA1120"  Action="None" />          <!-- Comments should contain text -->
-        <Rule Id="SA1121"  Action="None" />          <!-- Use built-in type alias -->
-        <Rule Id="SA1122"  Action="None" />          <!-- Use string.Empty for empty strings -->
-        <Rule Id="SA1123"  Action="None" />          <!-- Do not place regions within elements -->
-        <Rule Id="SA1124"  Action="None" />          <!-- Do not use regions -->
-        <Rule Id="SA1125"  Action="None" />          <!-- Use shorthand for nullable types -->
+        <Rule Id="SA1110"  Action="Warning" />          <!-- Opening parenthesis or bracket should be on declaration line -->
+        <Rule Id="SA1111"  Action="Warning" />          <!-- Closing parenthesis should be on line of last parameter -->
+        <Rule Id="SA1112"  Action="Warning" />          <!-- Closing parenthesis should be on line of opening parenthesis -->
+        <Rule Id="SA1113"  Action="Warning" />          <!-- Comma should be on the same line as previous parameter -->
+        <Rule Id="SA1114"  Action="Warning" />          <!-- Parameter list should follow declaration -->
+        <Rule Id="SA1115"  Action="Warning" />          <!-- Parameter should follow comma -->
+        <Rule Id="SA1116"  Action="Warning" />          <!-- Split parameters should start on line after declaration -->
+        <Rule Id="SA1117"  Action="Warning" />          <!-- Parameters should be on same line or separate lines -->
+        <Rule Id="SA1118"  Action="Warning" />          <!-- Parameter should not span multiple lines -->
+        <Rule Id="SA1120"  Action="Warning" />          <!-- Comments should contain text -->
+        <Rule Id="SA1121"  Action="Warning" />          <!-- Use built-in type alias -->
+        <Rule Id="SA1122"  Action="Warning" />          <!-- Use string.Empty for empty strings -->
+        <Rule Id="SA1123"  Action="Warning" />          <!-- Do not place regions within elements -->
+        <Rule Id="SA1124"  Action="Warning" />          <!-- Do not use regions -->
+        <Rule Id="SA1125"  Action="Warning" />          <!-- Use shorthand for nullable types -->
         <Rule Id="SA1126"  Action="None" />             <!-- Prefix calls correctly -->
-        <Rule Id="SA1127"  Action="None" />          <!-- Generic type constraints should be on their own line -->
-        <Rule Id="SA1128"  Action="None" />          <!-- Put constructor initializers on their own line -->
-        <Rule Id="SA1129"  Action="None" />          <!-- Do not use default value type constructor -->
-        <Rule Id="SA1130"  Action="None" />          <!-- Use lambda syntax -->
-        <Rule Id="SA1131"  Action="None" />          <!-- Use readable conditions -->
-        <Rule Id="SA1132"  Action="None" />          <!-- Do not combine fields -->
-        <Rule Id="SA1133"  Action="None" />          <!-- Do not combine attributes -->
-        <Rule Id="SA1134"  Action="None" />          <!-- Attributes should not share line -->
-        <Rule Id="SA1135"  Action="None" />          <!-- Using directives should be qualified -->
-        <Rule Id="SA1136"  Action="None" />          <!-- Enum values should be on separate lines -->
-        <Rule Id="SA1137"  Action="None" />          <!-- Elements should have the same indentation -->
-        <Rule Id="SA1139"  Action="None" />          <!-- Use literal suffix notation instead of casting -->
-        <Rule Id="SX1101"  Action="None" />          <!-- Do not prefix local calls with 'this.' -->
+        <Rule Id="SA1127"  Action="Warning" />          <!-- Generic type constraints should be on their own line -->
+        <Rule Id="SA1128"  Action="Warning" />          <!-- Put constructor initializers on their own line -->
+        <Rule Id="SA1129"  Action="Warning" />          <!-- Do not use default value type constructor -->
+        <Rule Id="SA1130"  Action="Warning" />          <!-- Use lambda syntax -->
+        <Rule Id="SA1131"  Action="Warning" />          <!-- Use readable conditions -->
+        <Rule Id="SA1132"  Action="Warning" />          <!-- Do not combine fields -->
+        <Rule Id="SA1133"  Action="Warning" />          <!-- Do not combine attributes -->
+        <Rule Id="SA1134"  Action="Warning" />          <!-- Attributes should not share line -->
+        <Rule Id="SA1135"  Action="Warning" />          <!-- Using directives should be qualified -->
+        <Rule Id="SA1136"  Action="Warning" />          <!-- Enum values should be on separate lines -->
+        <Rule Id="SA1137"  Action="Warning" />          <!-- Elements should have the same indentation -->
+        <Rule Id="SA1139"  Action="Warning" />          <!-- Use literal suffix notation instead of casting -->
+        <Rule Id="SX1101"  Action="Warning" />          <!-- Do not prefix local calls with 'this.' -->
     </Rules>
 	
     <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers.OrderingRules">

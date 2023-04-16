@@ -183,7 +183,7 @@ namespace NiftyPerforce
                 return false;
             }
 
-            if (!flags.HasFlag(EditFileFlags.Force) && !Singleton<NiftyPerforce.Config>.Instance.IgnoreReadOnlyOnEdit && (0 == (File.GetAttributes(filename) & FileAttributes.ReadOnly)))
+            if (!flags.HasFlag(EditFileFlags.Force) && !Singleton<NiftyPerforce.Config>.Instance.IgnoreReadOnlyOnEdit && ((File.GetAttributes(filename) & FileAttributes.ReadOnly) == 0))
             {
                 Log.Info($"EditFile '{filename}' failed because file was not read only. If you want to force calling p4 edit, press the Checkout button in the menus or toggle {nameof(Config.IgnoreReadOnlyOnEdit)} in the options.");
                 return false;
@@ -281,7 +281,7 @@ namespace NiftyPerforce
 
         private static string GetUserInfoString()
         {
-            return GetUserInfoStringFull(false, "");
+            return GetUserInfoStringFull(false, string.Empty);
         }
 
         private static string GetUserInfoStringFull(bool lookup, string? dir)
@@ -349,11 +349,11 @@ namespace NiftyPerforce
                     }
                 }
 
-                return "";
+                return string.Empty;
             }
 
             Config config = Singleton<NiftyPerforce.Config>.Instance;
-            string arguments = "";
+            string arguments = string.Empty;
             arguments += " -p " + config.Port;
             arguments += " -u " + config.Username;
             arguments += " -c " + config.Client;
@@ -400,14 +400,14 @@ namespace NiftyPerforce
             if (!global)
                 hklm = Microsoft.Win32.Registry.CurrentUser;
             hklm = hklm.OpenSubKey(key);
-            if (null == hklm)
+            if (hklm == null)
             {
                 Log.Debug("Could not find registry key " + (global ? "HKLM\\" : "HKCU\\") + key);
                 return null;
             }
 
             object? regValue = hklm.GetValue(value);
-            if (null == regValue)
+            if (regValue == null)
             {
                 Log.Debug("Could not find registry value " + value + " in " + (global ? "HKLM\\" : "HKCU\\") + key);
                 return null;
@@ -453,11 +453,11 @@ namespace NiftyPerforce
                 installRoot = candidate;
             }
 
-            if (null == installRoot)
+            if (installRoot == null)
             {
                 installRoot = GetRegistryValue("SOFTWARE\\Perforce\\Environment", "P4INSTROOT", true);
 
-                if (null == installRoot)
+                if (installRoot == null)
                 {
                     // Perhaps it's an older installation?
                     // http://code.google.com/p/niftyplugins/issues/detail?id=47&can=1&q=path
@@ -465,7 +465,7 @@ namespace NiftyPerforce
                 }
             }
 
-            if (null != installRoot)
+            if (installRoot != null)
             {
                 Log.Info("Found perforce installation at {0}", installRoot);
 
@@ -495,7 +495,7 @@ namespace NiftyPerforce
                 }
 
                 p4diff = Environment.GetEnvironmentVariable("P4DIFF");
-                if (null != p4diff)
+                if (p4diff != null)
                 {
                     Log.Info("[X] p4 custom diff '{0}' from P4DIFF env var", p4diff);
                     g_p4customdiff = true;
@@ -507,14 +507,14 @@ namespace NiftyPerforce
             else
             {
                 // Let's try to find the executables through the path variable instead.
-                if (null != Help.FindFileInPath("p4.exe"))
+                if (Help.FindFileInPath("p4.exe") != null)
                 {
                     g_p4installed = true;
                     Log.Info("Found p4 in path");
                 }
 
                 g_p4v_dir = Help.FindFileInPath("p4v.exe");
-                if (null != g_p4v_dir)
+                if (g_p4v_dir != null)
                 {
                     Log.Info("Found p4v in path");
                 }
@@ -529,7 +529,7 @@ namespace NiftyPerforce
                 Log.Warning("Could not find any peforce installation in the registry!!!");
 
                 p4diff = Environment.GetEnvironmentVariable("P4DIFF");
-                if (null != p4diff)
+                if (p4diff != null)
                 {
                     Log.Info("Found p4 custom diff");
                     g_p4customdiff = true;
@@ -559,7 +559,7 @@ namespace NiftyPerforce
             if (string.IsNullOrEmpty(g_p4vc_exename))
                 return false;
 
-            string result = Aurora.Process.Execute(g_p4vc_exename!, "", $"help {command}", throwIfNonZeroExitCode: false);
+            string result = Aurora.Process.Execute(g_p4vc_exename!, string.Empty, $"help {command}", throwIfNonZeroExitCode: false);
 
             return result.IndexOf("Invalid help command request...", StringComparison.Ordinal) == -1;
 

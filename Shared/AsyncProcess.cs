@@ -71,9 +71,7 @@ namespace Aurora
         }
 
         // ---------------------------------------------------------------------------------------------------------------------------------------------
-        //
         // BEGIN INTERNALS
-        //
         private static readonly Mutex m_queueLock = new Mutex();
         private static readonly Semaphore m_startEvent = new Semaphore(0, 9999);
         private static readonly Queue<CommandThread> m_commandQueue = new Queue<CommandThread>();
@@ -154,7 +152,7 @@ namespace Aurora
                 {
                     process.StartInfo.UseShellExecute = false;
                     process.StartInfo.FileName = executable;
-                    if (0 == timeout)
+                    if (timeout == 0)
                     {
                         // We are not for these processes reading the stdout and thus they could if they wrote more
                         // data on the output line hang.
@@ -182,14 +180,14 @@ namespace Aurora
                         return false;
                     }
 
-                    if (0 == timeout)
+                    if (timeout == 0)
                     {
                         // Fire and forget task.
                         return true;
                     }
 
                     bool exited = false;
-                    string alloutput = "";
+                    string alloutput = string.Empty;
                     using (Process.Handler stderr = new Process.Handler(), stdout = new Process.Handler())
                     {
                         process.OutputDataReceived += stdout.OnOutput;
@@ -216,7 +214,7 @@ namespace Aurora
                         Log.Info(executable + ": " + commandline);
                         Log.Info(alloutput);
 
-                        if (0 != process.ExitCode)
+                        if (process.ExitCode != 0)
                         {
                             Log.Debug("{0}: {1} exit code {2}", executable, commandline, process.ExitCode);
                             return false;
@@ -233,9 +231,7 @@ namespace Aurora
             }
         }
 
-        //
         // END INTERNALS
-        //
         // ---------------------------------------------------------------------------------------------------------------------------------------------
     }
 }

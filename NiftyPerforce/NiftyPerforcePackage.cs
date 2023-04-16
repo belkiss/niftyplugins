@@ -65,8 +65,6 @@ namespace NiftyPerforce
             // initialization is the Initialize method.
         }
 
-        #region Package Members
-
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
         /// where you can put all the initialization code that rely on services provided by VisualStudio.
@@ -104,7 +102,7 @@ namespace NiftyPerforce
             // Show where we are and when we were compiled...
             var niftyAssembly = Assembly.GetExecutingAssembly();
             Version? version = niftyAssembly?.GetName().Version;
-            string versionString = "";
+            string versionString = string.Empty;
             if (version != null)
             {
                 versionString = string.Join(".", version.Major, version.Minor, version.Build);
@@ -254,7 +252,7 @@ namespace NiftyPerforce
             foreach (string bar in bars)
             {
                 CommandBar? b = (_plugin?.App.CommandBars as CommandBars)?[bar];
-                if (null != b)
+                if (b != null)
                 {
                     bool done = false;
                     while (!done)
@@ -316,7 +314,5 @@ namespace NiftyPerforce
 
             profferCommands3.RemoveCommandBar(existingCmdBar);
         }
-
-        #endregion
     }
 }

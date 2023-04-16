@@ -26,7 +26,7 @@ namespace Aurora
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             CommandEvents? events = mPlugin.FindCommandEvents(commandName);
-            if (null == events)
+            if (events == null)
                 return false;
             events.BeforeExecute += handler;
             return true;
@@ -36,7 +36,7 @@ namespace Aurora
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             CommandEvents? events = mPlugin.FindCommandEvents(commandName);
-            if (null == events)
+            if (events == null)
                 return;
             events.BeforeExecute -= handler;
         }

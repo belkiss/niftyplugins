@@ -24,13 +24,13 @@ namespace Aurora
         // Helper class to keep the indent levels balanced (with the help of the using statement)
 
         // Log class implement below
-        public static string Prefix { get; set; } = "";
+        public static string Prefix { get; set; } = string.Empty;
 
         public static int HandlerCount => mHandlers.Count;
 
         public static void AddHandler(IHandler handler)
         {
-            if (null == handler)
+            if (handler == null)
                 return;
 
             lock (mHandlers)

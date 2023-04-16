@@ -2,7 +2,8 @@
 
 namespace Aurora
 {
-    public sealed class Singleton<T> where T : class, new()
+    public sealed class Singleton<T>
+        where T : class, new()
     {
         private Singleton() { }
 

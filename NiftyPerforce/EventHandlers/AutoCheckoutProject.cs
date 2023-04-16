@@ -18,16 +18,16 @@ namespace NiftyPerforce
 
         private readonly string[] _commands =
         {
-                "ClassViewContextMenus.ClassViewProject.Properties",
-                "ClassViewContextMenus.ClassViewMultiselectProjectreferencesItems.Properties",
-                "File.Properties",
-                "View.PropertiesWindow",
-                "Project.Properties",
-                "Project.AddNewItem",
-                "Project.AddExistingItem",
-                "Edit.Delete", // hmm : removing a file from Solution Explorer is just Edit.Delete !?
-                "File.Remove" // I don't think this actually does anything
-            };
+            "ClassViewContextMenus.ClassViewProject.Properties",
+            "ClassViewContextMenus.ClassViewMultiselectProjectreferencesItems.Properties",
+            "File.Properties",
+            "View.PropertiesWindow",
+            "Project.Properties",
+            "Project.AddNewItem",
+            "Project.AddExistingItem",
+            "Edit.Delete", // hmm : removing a file from Solution Explorer is just Edit.Delete !?
+            "File.Remove" // I don't think this actually does anything
+        };
 
         private List<string>? _registeredCommands;
 

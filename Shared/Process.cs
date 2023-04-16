@@ -16,7 +16,7 @@ namespace Aurora
 
             public Handler()
             {
-                Buffer = "";
+                Buffer = string.Empty;
                 Sentinel = new ManualResetEvent(false);
             }
 
@@ -67,7 +67,7 @@ namespace Aurora
 
             process.WaitForExit();
 
-            if (throwIfNonZeroExitCode && 0 != process.ExitCode)
+            if (throwIfNonZeroExitCode && process.ExitCode != 0)
             {
                 throw new ProcessException("Failed to execute {0} {1}, exit code was {2}", executable, process.StartInfo.Arguments, process.ExitCode);
             }
