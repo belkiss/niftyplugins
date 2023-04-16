@@ -2,7 +2,7 @@
 using Aurora;
 using EnvDTE;
 
-namespace NiftyPerforce
+namespace NiftyPerforce.EventHandlers
 {
     // Handles registration and events for add/delete files and projects.
     internal sealed class AutoAddDelete : Feature

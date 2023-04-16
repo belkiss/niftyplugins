@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using Aurora;
 using EnvDTE;
 
-namespace NiftyPerforce
+namespace NiftyPerforce.Commands
 {
     internal sealed class P4RevertItem : ItemCommandBase
     {
@@ -21,9 +21,7 @@ namespace NiftyPerforce
             {
                 string message = "You are about to revert the file '" + fileName + "'. Do you want to do this?";
                 if (MessageBox.Show(message, "Revert File?", MessageBoxButtons.YesNo) != DialogResult.Yes)
-                {
                     return;
-                }
             }
 
             P4Operations.RevertFile(fileName, _onlyUnchanged);

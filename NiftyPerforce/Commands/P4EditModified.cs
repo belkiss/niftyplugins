@@ -2,7 +2,7 @@
 using Aurora;
 using EnvDTE;
 
-namespace NiftyPerforce
+namespace NiftyPerforce.Commands
 {
     internal sealed class P4EditModified : CommandBase
     {

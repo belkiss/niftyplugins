@@ -2,7 +2,7 @@
 using Aurora;
 using EnvDTE;
 
-namespace NiftyPerforce
+namespace NiftyPerforce.Commands
 {
     internal sealed class P4RevisionHistoryItem : ItemCommandBase
     {
@@ -21,7 +21,7 @@ namespace NiftyPerforce
 
             if (_mMainLine)
             {
-                var options = (NiftyPerforce.OptionsDialogPage)Plugin.Options;
+                var options = (OptionsDialogPage)Plugin.Options;
                 fileName = P4Operations.RemapToMain(fileName, options.MainLinePath);
             }
 

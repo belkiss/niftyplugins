@@ -5,7 +5,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace NiftyPerforce
+namespace NiftyPerforce.EventHandlers
 {
     internal sealed class AutoCheckoutOnSave : PreCommandFeature
     {

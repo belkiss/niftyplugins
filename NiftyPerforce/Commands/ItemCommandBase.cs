@@ -3,7 +3,7 @@ using System.IO;
 using Aurora;
 using EnvDTE;
 
-namespace NiftyPerforce
+namespace NiftyPerforce.Commands
 {
     // an item command is a command associated with selected items in solution explorer
     internal abstract class ItemCommandBase : CommandBase

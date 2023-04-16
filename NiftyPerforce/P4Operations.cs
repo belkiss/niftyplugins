@@ -458,12 +458,9 @@ namespace NiftyPerforce
             {
                 installRoot = GetRegistryValue("SOFTWARE\\Perforce\\Environment", "P4INSTROOT", true);
 
-                if (installRoot == null)
-                {
-                    // Perhaps it's an older installation?
-                    // http://code.google.com/p/niftyplugins/issues/detail?id=47&can=1&q=path
-                    installRoot = GetRegistryValue("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths", "p4.exe", true);
-                }
+                // Perhaps it's an older installation?
+                // http://code.google.com/p/niftyplugins/issues/detail?id=47&can=1&q=path
+                installRoot ??= GetRegistryValue("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths", "p4.exe", true);
             }
 
             if (installRoot != null)

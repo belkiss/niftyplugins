@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Aurora;
 using EnvDTE;
 
-namespace NiftyPerforce
+namespace NiftyPerforce.EventHandlers
 {
     internal sealed class AutoCheckoutProject : PreCommandFeature
     {
@@ -68,7 +68,7 @@ namespace NiftyPerforce
             {
                 // see if the active window is SolutionExplorer :
                 Window w = Plugin.App.ActiveWindow;
-                if (w.Type != EnvDTE.vsWindowType.vsWindowTypeSolutionExplorer)
+                if (w.Type != vsWindowType.vsWindowTypeSolutionExplorer)
                 {
                     // it's just a delete in the text window, get out !
                     return;

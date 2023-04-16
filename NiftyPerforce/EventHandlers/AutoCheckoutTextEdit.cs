@@ -4,12 +4,12 @@ using Aurora;
 using EnvDTE;
 using EnvDTE80;
 
-namespace NiftyPerforce
+namespace NiftyPerforce.EventHandlers
 {
     internal sealed class AutoCheckoutTextEdit : PreCommandFeature
     {
-        private EnvDTE80.TextDocumentKeyPressEvents? _textDocEvents;
-        private EnvDTE.TextEditorEvents? _textEditorEvents;
+        private TextDocumentKeyPressEvents? _textDocEvents;
+        private TextEditorEvents? _textEditorEvents;
 
         public AutoCheckoutTextEdit(Plugin plugin)
             : base(plugin, "AutoCheckoutTextEdit")
@@ -40,7 +40,7 @@ namespace NiftyPerforce
                 {
                     Log.Info("Adding handlers for automatically checking out text files as you edit them");
                     _registeredCommands = new List<string>();
-                    var events = (EnvDTE80.Events2)Plugin.App.Events;
+                    var events = (Events2)Plugin.App.Events;
                     _textDocEvents = events.get_TextDocumentKeyPressEvents(null);
                     _beforeKeyPressEventHandler = new _dispTextDocumentKeyPressEvents_BeforeKeyPressEventHandler(OnBeforeKeyPress);
                     _textDocEvents.BeforeKeyPress += _beforeKeyPressEventHandler;
@@ -73,7 +73,7 @@ namespace NiftyPerforce
             }
         }
 
-        private void OnBeforeKeyPress(string keypress, EnvDTE.TextSelection selection, bool inStatementCompletion, ref bool cancelKeypress)
+        private void OnBeforeKeyPress(string keypress, TextSelection selection, bool inStatementCompletion, ref bool cancelKeypress)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -89,7 +89,7 @@ namespace NiftyPerforce
             if ((hint & (int)vsTextChanged.vsTextChangedNewline) == 0 &&
                 (hint & (int)vsTextChanged.vsTextChangedMultiLine) == 0 &&
                 (hint & (int)vsTextChanged.vsTextChangedNewline) == 0 &&
-                (hint != 0))
+                hint != 0)
                 return;
             if (Plugin.App.ActiveDocument != null && Plugin.App.ActiveDocument.ReadOnly && !Plugin.App.ActiveDocument.Saved)
                 P4Operations.EditFile(Plugin.App.ActiveDocument.FullName, false);

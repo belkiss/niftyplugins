@@ -140,10 +140,10 @@ namespace NiftyPerforce
 
             InitCommandRegistry();
 
-            _plugin.AddFeature(new AutoAddDelete(_plugin));
-            _plugin.AddFeature(new AutoCheckoutProject(_plugin));
-            _plugin.AddFeature(new AutoCheckoutTextEdit(_plugin));
-            _plugin.AddFeature(new AutoCheckoutOnSave(_plugin, this));
+            _plugin.AddFeature(new EventHandlers.AutoAddDelete(_plugin));
+            _plugin.AddFeature(new EventHandlers.AutoCheckoutProject(_plugin));
+            _plugin.AddFeature(new EventHandlers.AutoCheckoutTextEdit(_plugin));
+            _plugin.AddFeature(new EventHandlers.AutoCheckoutOnSave(_plugin, this));
 
             P4Operations.CheckInstalledFiles();
 
@@ -161,18 +161,18 @@ namespace NiftyPerforce
             _commandRegistry = new CommandRegistry(_plugin!, new Guid(PackageGuids.guidNiftyPerforcePackageCmdSetString));
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
-            _commandRegistry.RegisterCommand(new P4EditModified(_plugin!, "NiftyEditModified"));
-            _commandRegistry.RegisterCommand(new P4EditItem(_plugin!, "NiftyEdit"));
-            _commandRegistry.RegisterCommand(new P4DiffItem(_plugin!, "NiftyDiff"));
-            _commandRegistry.RegisterCommand(new P4RevisionHistoryItem(_plugin!, "NiftyHistory", false));
-            _commandRegistry.RegisterCommand(new P4RevisionHistoryItem(_plugin!, "NiftyHistoryMain", true));
-            _commandRegistry.RegisterCommand(new P4TimeLapseItem(_plugin!, "NiftyTimeLapse", false));
-            _commandRegistry.RegisterCommand(new P4TimeLapseItem(_plugin!, "NiftyTimeLapseMain", true));
-            _commandRegistry.RegisterCommand(new P4RevisionGraphItem(_plugin!, "NiftyRevisionGraph", false));
-            _commandRegistry.RegisterCommand(new P4RevisionGraphItem(_plugin!, "NiftyRevisionGraphMain", true));
-            _commandRegistry.RegisterCommand(new P4RevertItem(_plugin!, "NiftyRevert", false));
-            _commandRegistry.RegisterCommand(new P4RevertItem(_plugin!, "NiftyRevertUnchanged", true));
-            _commandRegistry.RegisterCommand(new P4ShowItem(_plugin!, "NiftyShow"));
+            _commandRegistry.RegisterCommand(new Commands.P4EditModified(_plugin!, "NiftyEditModified"));
+            _commandRegistry.RegisterCommand(new Commands.P4EditItem(_plugin!, "NiftyEdit"));
+            _commandRegistry.RegisterCommand(new Commands.P4DiffItem(_plugin!, "NiftyDiff"));
+            _commandRegistry.RegisterCommand(new Commands.P4RevisionHistoryItem(_plugin!, "NiftyHistory", false));
+            _commandRegistry.RegisterCommand(new Commands.P4RevisionHistoryItem(_plugin!, "NiftyHistoryMain", true));
+            _commandRegistry.RegisterCommand(new Commands.P4TimeLapseItem(_plugin!, "NiftyTimeLapse", false));
+            _commandRegistry.RegisterCommand(new Commands.P4TimeLapseItem(_plugin!, "NiftyTimeLapseMain", true));
+            _commandRegistry.RegisterCommand(new Commands.P4RevisionGraphItem(_plugin!, "NiftyRevisionGraph", false));
+            _commandRegistry.RegisterCommand(new Commands.P4RevisionGraphItem(_plugin!, "NiftyRevisionGraphMain", true));
+            _commandRegistry.RegisterCommand(new Commands.P4RevertItem(_plugin!, "NiftyRevert", false));
+            _commandRegistry.RegisterCommand(new Commands.P4RevertItem(_plugin!, "NiftyRevertUnchanged", true));
+            _commandRegistry.RegisterCommand(new Commands.P4ShowItem(_plugin!, "NiftyShow"));
         }
 
         /// <summary>
