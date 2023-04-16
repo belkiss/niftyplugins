@@ -46,7 +46,7 @@ namespace NiftyPerforce
     [ProvideAutoLoad(Microsoft.VisualStudio.VSConstants.UICONTEXT.NoSolution_string, PackageAutoLoadFlags.BackgroundLoad)] // Note: the package must be loaded on startup to create and bind commands
                                                                                                                            // Register the resource ID of the CTMENU section (generated from compiling the VSCT file), so the IDE will know how to merge this package's menus with the rest of the IDE when "devenv /setup" is run
                                                                                                                            // The menu resource ID needs to match the ResourceName number defined in the csproj project file in the VSCTCompile section
-                                                                                                                           // Everytime the version number changes VS will automatically update the menus on startup; if the version doesn't change, you will need to run manually "devenv /setup /rootsuffix:Exp" to see VSCT changes reflected in IDE
+                                                                                                                           // Every time the version number changes VS will automatically update the menus on startup; if the version doesn't change, you will need to run manually "devenv /setup /rootsuffix:Exp" to see VSCT changes reflected in IDE
     [ProvideMenuResource("Menus.ctmenu", 1)]
     // Register a sample options page visible as Tools/Options/SourceControl/NiftyPerforceSettings when the provider is active
     [ProvideOptionPage(typeof(Config), "Source Control", Vsix.Name, 106, 107, false)]

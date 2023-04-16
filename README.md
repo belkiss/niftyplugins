@@ -1,7 +1,7 @@
 Introduction
 ============
 
-This repository holds a forked version of Nifty Plugins, orginally written by Jim Tilander (and found at https://github.com/jtilander/niftyplugins)
+This repository holds a forked version of Nifty Plugins, originally written by Jim Tilander (and found at https://github.com/jtilander/niftyplugins)
 
 Note that NiftySolution was removed from this repository.
 

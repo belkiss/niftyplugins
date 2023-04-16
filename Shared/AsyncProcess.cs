@@ -140,7 +140,7 @@ namespace Aurora
                 catch
                 {
                     ok = false;
-                    Log.Error("Caught unhandled exception in async process -- supressing so that we don't bring down Visual Studio");
+                    Log.Error("Caught unhandled exception in async process -- suppressing so that we don't bring down Visual Studio");
                 }
 
                 callback?.Invoke(ok, callbackArg);
