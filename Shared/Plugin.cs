@@ -13,8 +13,11 @@ namespace Aurora
         private readonly Dictionary<string, Feature> m_features = new Dictionary<string, Feature>();
 
         public DTE2 App { get; }
+
         public Commands Commands => App.Commands;
+
         public OleMenuCommandService MenuCommandService { get; }
+
         public object Options { get; }
 
         public Plugin(DTE2 application, OleMenuCommandService oleMenuCommandService, object options)

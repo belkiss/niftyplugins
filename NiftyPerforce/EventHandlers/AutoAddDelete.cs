@@ -31,6 +31,7 @@ namespace NiftyPerforce
         }
 
         private bool AddFilesHandlersInstalled => _itemAddedEventHandler != null || _projectAddedEventHandler != null;  // second conditional is useless but kept for clarity
+
         private bool RemoveFilesHandlersInstalled => _itemRemovedEventHandler != null || _projectRemovedEventHandler != null;  // second conditional is useless but kept for clarity
 
         private void RegisterEvents()
@@ -122,6 +123,7 @@ namespace NiftyPerforce
 
             P4Operations.EditFile(m_plugin.App.Solution.FullName, false);
             P4Operations.AddFile(project.FullName);
+
             // TODO: [jt] We should if the operation is not a add new project but rather a add existing project
             //       step through all the project items and add them to perforce. Or maybe we want the user
             //       to do this herself?
@@ -133,6 +135,7 @@ namespace NiftyPerforce
 
             P4Operations.EditFile(m_plugin.App.Solution.FullName, false);
             P4Operations.DeleteFile(project.FullName);
+
             // TODO: [jt] Do we want to automatically delete the items from perforce here?
         }
     }

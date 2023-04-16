@@ -12,6 +12,7 @@ namespace Aurora
         public class Handler : IDisposable
         {
             public string Buffer { get; private set; }
+
             public ManualResetEvent Sentinel { get; set; }
 
             public Handler()
@@ -106,4 +107,3 @@ namespace Aurora
         }
     }
 }
-

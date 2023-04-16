@@ -41,16 +41,10 @@ namespace NiftyPerforce
     /// </remarks>
     // Declare that resources for the package are to be found in the managed assembly resources, and not in a satellite dll
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-    // Register the product to be listed in About box
-    [InstalledProductRegistration("#110", "#112", Vsix.Version, IconResourceID = 400)]
-    [ProvideAutoLoad(Microsoft.VisualStudio.VSConstants.UICONTEXT.NoSolution_string, PackageAutoLoadFlags.BackgroundLoad)] // Note: the package must be loaded on startup to create and bind commands
-                                                                                                                           // Register the resource ID of the CTMENU section (generated from compiling the VSCT file), so the IDE will know how to merge this package's menus with the rest of the IDE when "devenv /setup" is run
-                                                                                                                           // The menu resource ID needs to match the ResourceName number defined in the csproj project file in the VSCTCompile section
-                                                                                                                           // Every time the version number changes VS will automatically update the menus on startup; if the version doesn't change, you will need to run manually "devenv /setup /rootsuffix:Exp" to see VSCT changes reflected in IDE
+    [InstalledProductRegistration("#110", "#112", Vsix.Version, IconResourceID = 400)] // Register the product to be listed in About box
+    [ProvideAutoLoad(Microsoft.VisualStudio.VSConstants.UICONTEXT.NoSolution_string, PackageAutoLoadFlags.BackgroundLoad)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    // Register a sample options page visible as Tools/Options/SourceControl/NiftyPerforceSettings when the provider is active
     [ProvideOptionPage(typeof(Config), "Source Control", Vsix.Name, 106, 107, false)]
-    // Declare the package guid
     [Guid(PackageGuids.guidNiftyPerforcePackageString)]
     public sealed class NiftyPerforcePackage : AsyncPackage
     {
@@ -236,9 +230,12 @@ namespace NiftyPerforce
                     profferCommands3.RemoveNamedCommand(name);
                 }
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+            }
 
-            string[] bars = {
+            string[] bars =
+            {
                 "Project",
                 "Item",
                 "Easy MDI Document Window",
@@ -301,7 +298,6 @@ namespace NiftyPerforce
             if (existingCmdBar != null)
             {
                 // Remove all buttons
-
                 while (existingCmdBar.Controls.Count > 0)
                 {
                     foreach (CommandBarControl ctrl in existingCmdBar.Controls)

@@ -2,12 +2,14 @@
 
 namespace Aurora
 {
-
     public abstract class CommandBase
     {
         public Plugin Plugin { get; }
+
         public string Name { get; }
+
         public string CanonicalName { get; }
+
         public int CommandId { get; }
 
         protected CommandBase(string name, string canonicalName, Plugin plugin, int commandId)
@@ -19,6 +21,7 @@ namespace Aurora
         }
 
         public abstract bool OnCommand();   // returns if the command was dispatched or not.
+
         public abstract bool IsEnabled();   // is the command active?
     }
 }

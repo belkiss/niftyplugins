@@ -542,6 +542,7 @@ namespace NiftyPerforce
         private static void DetermineSupportedFeatures()
         {
             bool p4vcBat = g_p4vc_exename == _p4vcBatFileName;
+
             // since p4vc.bat was introduced with 2021.1/2075061, if we have it we know we have diffhave, hence history
 
             // diffhave was added in p4v 2020.1/1946989
@@ -562,7 +563,6 @@ namespace NiftyPerforce
             string result = Aurora.Process.Execute(g_p4vc_exename!, string.Empty, $"help {command}", throwIfNonZeroExitCode: false);
 
             return result.IndexOf("Invalid help command request...", StringComparison.Ordinal) == -1;
-
         }
 
         private static bool NotifyUser(string message)

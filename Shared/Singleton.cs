@@ -5,7 +5,9 @@ namespace Aurora
     public sealed class Singleton<T>
         where T : class, new()
     {
-        private Singleton() { }
+        private Singleton()
+        {
+        }
 
         private static T instance = new T();
 

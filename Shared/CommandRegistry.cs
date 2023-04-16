@@ -45,7 +45,6 @@ namespace Aurora
 
         private void OleMenuCommandBeforeQueryStatus(object? sender, EventArgs e)
         {
-
             try
             {
                 if (sender is OleMenuCommand oleMenuCommand)
