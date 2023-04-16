@@ -8,6 +8,8 @@ namespace NiftyPerforce
     // an item command is a command associated with selected items in solution explorer
     internal abstract class ItemCommandBase : CommandBase
     {
+        private const string FileItemGUID = "{6BB5F8EE-4483-11D3-8BCF-00C04F8EC28C}";
+
         private readonly bool _executeForFileItems = true;
         private readonly bool _executeForProjectItems = true;
 
@@ -17,8 +19,6 @@ namespace NiftyPerforce
             _executeForFileItems = executeForFileItems;
             _executeForProjectItems = executeForProjectItems;
         }
-
-        private const string FileItemGUID = "{6BB5F8EE-4483-11D3-8BCF-00C04F8EC28C}";
 
         public override bool OnCommand()
         {

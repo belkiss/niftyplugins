@@ -82,20 +82,20 @@
         <Rule Id="SA1200"  Action="None" />          <!-- Using directives should be placed correctly -->
         <Rule Id="SA1201"  Action="None" />          <!-- Elements should appear in the correct order -->
         <Rule Id="SA1202"  Action="None" />          <!-- Elements should be ordered by access -->
-        <Rule Id="SA1203"  Action="None" />          <!-- Constants should appear before fields -->
+        <Rule Id="SA1203"  Action="Warning" />          <!-- Constants should appear before fields -->
         <Rule Id="SA1204"  Action="None" />          <!-- Static elements should appear before instance elements -->
-        <Rule Id="SA1205"  Action="None" />          <!-- Partial elements should declare access -->
-        <Rule Id="SA1206"  Action="None" />          <!-- Declaration keywords should follow order -->
-        <Rule Id="SA1207"  Action="None" />          <!-- Protected should come before internal -->
-        <Rule Id="SA1208"  Action="None" />          <!-- System using directives should be placed before other using directives -->
-        <Rule Id="SA1209"  Action="None" />          <!-- Using alias directives should be placed after other using directives -->
-        <Rule Id="SA1210"  Action="None" />          <!-- Using directives should be ordered alphabetically by namespace -->
-        <Rule Id="SA1211"  Action="None" />          <!-- Using alias directives should be ordered alphabetically by alias name -->
-        <Rule Id="SA1212"  Action="None" />          <!-- Property accessors should follow order -->
-        <Rule Id="SA1213"  Action="None" />          <!-- Event accessors should follow order -->
+        <Rule Id="SA1205"  Action="Warning" />          <!-- Partial elements should declare access -->
+        <Rule Id="SA1206"  Action="Warning" />          <!-- Declaration keywords should follow order -->
+        <Rule Id="SA1207"  Action="Warning" />          <!-- Protected should come before internal -->
+        <Rule Id="SA1208"  Action="Warning" />          <!-- System using directives should be placed before other using directives -->
+        <Rule Id="SA1209"  Action="Warning" />          <!-- Using alias directives should be placed after other using directives -->
+        <Rule Id="SA1210"  Action="Warning" />          <!-- Using directives should be ordered alphabetically by namespace -->
+        <Rule Id="SA1211"  Action="Warning" />          <!-- Using alias directives should be ordered alphabetically by alias name -->
+        <Rule Id="SA1212"  Action="Warning" />          <!-- Property accessors should follow order -->
+        <Rule Id="SA1213"  Action="Warning" />          <!-- Event accessors should follow order -->
         <Rule Id="SA1214"  Action="None" />          <!-- Readonly fields should appear before non-readonly fields -->
-        <Rule Id="SA1216"  Action="None" />          <!-- Using static directives should be placed at the correct location -->
-        <Rule Id="SA1217"  Action="None" />          <!-- Using static directives should be ordered alphabetically -->
+        <Rule Id="SA1216"  Action="Warning" />          <!-- Using static directives should be placed at the correct location -->
+        <Rule Id="SA1217"  Action="Warning" />          <!-- Using static directives should be ordered alphabetically -->
     </Rules>
 
     <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers.NamingRules">

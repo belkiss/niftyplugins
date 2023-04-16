@@ -1,18 +1,18 @@
 ﻿// Copyright (C) 2006-2015 Jim Tilander. See COPYING for and README for more details.
 using System;
 using System.ComponentModel.Design;
+using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Aurora;
 using EnvDTE;
 using EnvDTE80;
+using Microsoft;
 using Microsoft.VisualStudio.CommandBars;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Task = System.Threading.Tasks.Task;
-using Microsoft;
-using System.Diagnostics;
 
 #if NIFTY_LEGACY
 using NiftyPerforce.Manifests.Legacy;
