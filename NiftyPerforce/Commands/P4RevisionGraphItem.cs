@@ -21,7 +21,7 @@ namespace NiftyPerforce
 
             if (_mMainLine)
             {
-                var options = (NiftyPerforce.Config)Plugin.Options;
+                var options = (NiftyPerforce.OptionsDialogPage)Plugin.Options;
                 fileName = P4Operations.RemapToMain(fileName, options.MainLinePath);
             }
 

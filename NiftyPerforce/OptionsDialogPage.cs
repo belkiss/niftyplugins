@@ -19,7 +19,7 @@ namespace NiftyPerforce
     /// <summary>
     /// Summary description for SccProviderOptions.
     /// </summary>
-    public class Config : DialogPage
+    public class OptionsDialogPage : DialogPage
     {
         [Category("Operation")]
         [Description("Controls if we automagically check out files from perforce upon keypress (loose some performance in editor)")]

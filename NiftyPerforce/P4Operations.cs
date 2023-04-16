@@ -184,9 +184,9 @@ namespace NiftyPerforce
                 return false;
             }
 
-            if (!flags.HasFlag(EditFileFlags.Force) && !Singleton<NiftyPerforce.Config>.Instance.IgnoreReadOnlyOnEdit && ((File.GetAttributes(filename) & FileAttributes.ReadOnly) == 0))
+            if (!flags.HasFlag(EditFileFlags.Force) && !Singleton<NiftyPerforce.OptionsDialogPage>.Instance.IgnoreReadOnlyOnEdit && ((File.GetAttributes(filename) & FileAttributes.ReadOnly) == 0))
             {
-                Log.Info($"EditFile '{filename}' failed because file was not read only. If you want to force calling p4 edit, press the Checkout button in the menus or toggle {nameof(Config.IgnoreReadOnlyOnEdit)} in the options.");
+                Log.Info($"EditFile '{filename}' failed because file was not read only. If you want to force calling p4 edit, press the Checkout button in the menus or toggle {nameof(OptionsDialogPage.IgnoreReadOnlyOnEdit)} in the options.");
                 return false;
             }
 
@@ -288,7 +288,7 @@ namespace NiftyPerforce
         private static string GetUserInfoStringFull(bool lookup, string? dir)
         {
             // NOTE: This to allow the user to have a P4CONFIG variable and connect to multiple perforce servers seamlessly.
-            if (Singleton<NiftyPerforce.Config>.Instance.UseSystemEnv)
+            if (Singleton<NiftyPerforce.OptionsDialogPage>.Instance.UseSystemEnv)
             {
                 if (lookup && dir != null)
                 {
@@ -353,7 +353,7 @@ namespace NiftyPerforce
                 return string.Empty;
             }
 
-            Config config = Singleton<NiftyPerforce.Config>.Instance;
+            OptionsDialogPage config = Singleton<NiftyPerforce.OptionsDialogPage>.Instance;
             string arguments = string.Empty;
             arguments += " -p " + config.Port;
             arguments += " -u " + config.Username;

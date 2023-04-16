@@ -14,7 +14,7 @@ namespace NiftyPerforce
         public AutoCheckoutTextEdit(Plugin plugin)
             : base(plugin, "AutoCheckoutTextEdit")
         {
-            ((Config)mPlugin.Options).OnApplyEvent += (s, e) => RegisterEvents();
+            ((OptionsDialogPage)mPlugin.Options).OnApplyEvent += (s, e) => RegisterEvents();
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             RegisterEvents();
         }
@@ -34,7 +34,7 @@ namespace NiftyPerforce
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            if (((Config)mPlugin.Options).AutoCheckoutOnEdit)
+            if (((OptionsDialogPage)mPlugin.Options).AutoCheckoutOnEdit)
             {
                 if (_registeredCommands == null)
                 {

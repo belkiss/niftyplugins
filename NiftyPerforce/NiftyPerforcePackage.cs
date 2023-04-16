@@ -45,7 +45,7 @@ namespace NiftyPerforce
     [InstalledProductRegistration("#110", "#112", Vsix.Version, IconResourceID = 400)] // Register the product to be listed in About box
     [ProvideAutoLoad(Microsoft.VisualStudio.VSConstants.UICONTEXT.NoSolution_string, PackageAutoLoadFlags.BackgroundLoad)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideOptionPage(typeof(Config), "Source Control", Vsix.Name, 106, 107, false)]
+    [ProvideOptionPage(typeof(OptionsDialogPage), "Source Control", Vsix.Name, 106, 107, false)]
     [Guid(PackageGuids.guidNiftyPerforcePackageString)]
     public sealed class NiftyPerforcePackage : AsyncPackage
     {
@@ -122,8 +122,8 @@ namespace NiftyPerforce
             Log.Debug("Booting up...");
             Log.IncIndent();
 
-            var config = (Config)GetDialogPage(typeof(Config));
-            Singleton<Config>.Instance = config;
+            var config = (OptionsDialogPage)GetDialogPage(typeof(OptionsDialogPage));
+            Singleton<OptionsDialogPage>.Instance = config;
 
 #if NIFTY_LEGACY
             config.OnApplyEvent += (object sender, EventArgs e) =>

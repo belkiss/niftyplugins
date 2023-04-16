@@ -24,7 +24,7 @@ namespace NiftyPerforce
             m_projectEvents = ((EnvDTE80.Events2)m_plugin.App.Events).ProjectItemsEvents;
             m_solutionEvents = ((EnvDTE80.Events2)m_plugin.App.Events).SolutionEvents;
 
-            ((Config)m_plugin.Options).OnApplyEvent += (s, e) => RegisterEvents();
+            ((OptionsDialogPage)m_plugin.Options).OnApplyEvent += (s, e) => RegisterEvents();
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             RegisterEvents();
         }
@@ -37,7 +37,7 @@ namespace NiftyPerforce
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            if (((Config)m_plugin.Options).AutoAdd)
+            if (((OptionsDialogPage)m_plugin.Options).AutoAdd)
             {
                 if (!AddFilesHandlersInstalled)
                 {
@@ -59,7 +59,7 @@ namespace NiftyPerforce
                 _projectAddedEventHandler = null;
             }
 
-            if (((Config)m_plugin.Options).AutoDelete)
+            if (((OptionsDialogPage)m_plugin.Options).AutoDelete)
             {
                 if (!RemoveFilesHandlersInstalled)
                 {

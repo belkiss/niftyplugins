@@ -7,6 +7,53 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace NiftyPerforce
 {
+    internal sealed class AutoCheckoutOnSave : PreCommandFeature
+    {
+        private readonly IServiceProvider _serviceProvider;
+        private Lazy<RunningDocumentTable>? _rdt;
+        private uint _rdte;
+
+        public AutoCheckoutOnSave(Plugin plugin, IServiceProvider serviceProvider)
+            : base(plugin, "AutoCheckoutOnSave")
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+            _serviceProvider = serviceProvider;
+            ((OptionsDialogPage)mPlugin.Options).OnApplyEvent += (s, e) => RegisterEvents();
+            RegisterEvents();
+        }
+
+        private bool RDTAdvised => _rdt != null;
+
+        private void RegisterEvents()
+        {
+            if (((OptionsDialogPage)mPlugin.Options).AutoCheckoutOnSave)
+            {
+                if (!RDTAdvised)
+                {
+                    Log.Info("Adding handlers for automatically checking out dirty files when you save");
+                    _rdt = new Lazy<RunningDocumentTable>(() => new RunningDocumentTable(_serviceProvider));
+                    _rdte = _rdt.Value.Advise(new RunningDocTableEvents(this));
+                }
+            }
+            else if (RDTAdvised)
+            {
+                Log.Info("Removing handlers for automatically checking out dirty files when you save");
+                _rdt!.Value.Unadvise(_rdte);
+                _rdt = null;
+            }
+        }
+
+        internal bool OnBeforeSave(uint docCookie)
+        {
+            if (!RDTAdvised)
+                return false;
+
+            RunningDocumentInfo runningDocumentInfo = _rdt!.Value.GetDocumentInfo(docCookie);
+            string filename = runningDocumentInfo.Moniker;
+            return P4Operations.EditFileImmediate(filename);
+        }
+    }
+
     // Create a class to retrieve the OnBeforeSave event from VS
     // http://schmalls.com/2015/01/19/adventures-in-visual-studio-extension-development-part-2
     internal sealed class RunningDocTableEvents : IVsRunningDocTableEvents3
@@ -39,52 +86,5 @@ namespace NiftyPerforce
         public int OnBeforeDocumentWindowShow(uint docCookie, int fFirstShow, IVsWindowFrame pFrame) => VSConstants.S_OK;
 
         public int OnBeforeLastDocumentUnlock(uint docCookie, uint dwRDTLockType, uint dwReadLocksRemaining, uint dwEditLocksRemaining) => VSConstants.S_OK;
-    }
-
-    internal sealed class AutoCheckoutOnSave : PreCommandFeature
-    {
-        private readonly IServiceProvider _serviceProvider;
-        private Lazy<RunningDocumentTable>? _rdt;
-        private uint _rdte;
-
-        public AutoCheckoutOnSave(Plugin plugin, IServiceProvider serviceProvider)
-            : base(plugin, "AutoCheckoutOnSave")
-        {
-            ThreadHelper.ThrowIfNotOnUIThread();
-            _serviceProvider = serviceProvider;
-            ((Config)mPlugin.Options).OnApplyEvent += (s, e) => RegisterEvents();
-            RegisterEvents();
-        }
-
-        private bool RDTAdvised => _rdt != null;
-
-        private void RegisterEvents()
-        {
-            if (((Config)mPlugin.Options).AutoCheckoutOnSave)
-            {
-                if (!RDTAdvised)
-                {
-                    Log.Info("Adding handlers for automatically checking out dirty files when you save");
-                    _rdt = new Lazy<RunningDocumentTable>(() => new RunningDocumentTable(_serviceProvider));
-                    _rdte = _rdt.Value.Advise(new RunningDocTableEvents(this));
-                }
-            }
-            else if (RDTAdvised)
-            {
-                Log.Info("Removing handlers for automatically checking out dirty files when you save");
-                _rdt!.Value.Unadvise(_rdte);
-                _rdt = null;
-            }
-        }
-
-        internal bool OnBeforeSave(uint docCookie)
-        {
-            if (!RDTAdvised)
-                return false;
-
-            RunningDocumentInfo runningDocumentInfo = _rdt!.Value.GetDocumentInfo(docCookie);
-            string filename = runningDocumentInfo.Moniker;
-            return P4Operations.EditFileImmediate(filename);
-        }
     }
 }
