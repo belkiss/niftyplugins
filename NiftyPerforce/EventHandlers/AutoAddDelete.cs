@@ -9,13 +9,12 @@ namespace NiftyPerforce
     {
         private readonly ProjectItemsEvents m_projectEvents;
         private readonly SolutionEvents m_solutionEvents;
+        private readonly Plugin m_plugin;
 
         private _dispProjectItemsEvents_ItemAddedEventHandler? _itemAddedEventHandler;
         private _dispSolutionEvents_ProjectAddedEventHandler? _projectAddedEventHandler;
         private _dispProjectItemsEvents_ItemRemovedEventHandler? _itemRemovedEventHandler;
         private _dispSolutionEvents_ProjectRemovedEventHandler? _projectRemovedEventHandler;
-
-        private readonly Plugin m_plugin;
 
         public AutoAddDelete(Plugin plugin)
             : base("AutoAddDelete")

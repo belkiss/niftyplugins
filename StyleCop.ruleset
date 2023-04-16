@@ -46,7 +46,7 @@
         <Rule Id="SA1106"  Action="Warning" />          <!-- Code should not contain empty statements -->
         <Rule Id="SA1107"  Action="Warning" />          <!-- Code should not contain multiple statements on one line -->
         <Rule Id="SA1108"  Action="Warning" />          <!-- Block statements should not contain embedded comments -->
-        <Rule Id="SA1109"  Action="None" />             <!-- Block statements should not contain embedded regions -->
+        <Rule Id="SA1109"  Action="Warning" />          <!-- Block statements should not contain embedded regions -->
         <Rule Id="SA1110"  Action="Warning" />          <!-- Opening parenthesis or bracket should be on declaration line -->
         <Rule Id="SA1111"  Action="Warning" />          <!-- Closing parenthesis should be on line of last parameter -->
         <Rule Id="SA1112"  Action="Warning" />          <!-- Closing parenthesis should be on line of opening parenthesis -->
@@ -62,7 +62,7 @@
         <Rule Id="SA1123"  Action="Warning" />          <!-- Do not place regions within elements -->
         <Rule Id="SA1124"  Action="Warning" />          <!-- Do not use regions -->
         <Rule Id="SA1125"  Action="Warning" />          <!-- Use shorthand for nullable types -->
-        <Rule Id="SA1126"  Action="None" />             <!-- Prefix calls correctly -->
+        <Rule Id="SA1126"  Action="Warning" />          <!-- Prefix calls correctly -->
         <Rule Id="SA1127"  Action="Warning" />          <!-- Generic type constraints should be on their own line -->
         <Rule Id="SA1128"  Action="Warning" />          <!-- Put constructor initializers on their own line -->
         <Rule Id="SA1129"  Action="Warning" />          <!-- Do not use default value type constructor -->
@@ -77,7 +77,7 @@
         <Rule Id="SA1139"  Action="Warning" />          <!-- Use literal suffix notation instead of casting -->
         <Rule Id="SX1101"  Action="Warning" />          <!-- Do not prefix local calls with 'this.' -->
     </Rules>
-  
+
     <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers.OrderingRules">
         <Rule Id="SA1200"  Action="None" />          <!-- Using directives should be placed correctly -->
         <Rule Id="SA1201"  Action="None" />          <!-- Elements should appear in the correct order -->
@@ -93,7 +93,7 @@
         <Rule Id="SA1211"  Action="Warning" />          <!-- Using alias directives should be ordered alphabetically by alias name -->
         <Rule Id="SA1212"  Action="Warning" />          <!-- Property accessors should follow order -->
         <Rule Id="SA1213"  Action="Warning" />          <!-- Event accessors should follow order -->
-        <Rule Id="SA1214"  Action="None" />          <!-- Readonly fields should appear before non-readonly fields -->
+        <Rule Id="SA1214"  Action="Warning" />          <!-- Readonly fields should appear before non-readonly fields -->
         <Rule Id="SA1216"  Action="Warning" />          <!-- Using static directives should be placed at the correct location -->
         <Rule Id="SA1217"  Action="Warning" />          <!-- Using static directives should be ordered alphabetically -->
     </Rules>
@@ -135,7 +135,7 @@
         <Rule Id="SA1412"  Action="None"    />          <!-- Store files as UTF-8 with byte order mark -->
         <Rule Id="SA1413"  Action="Warning" />          <!-- Use trailing comma in multi-line initializers -->
     </Rules>
-  
+
     <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers.LayoutRules">
         <Rule Id="SA1500"  Action="Warning" />          <!-- Braces for multi-line statements should not share line -->
         <Rule Id="SA1501"  Action="Warning" />          <!-- Statement should not be on a single line -->
@@ -159,7 +159,7 @@
         <Rule Id="SA1519"  Action="Warning" />          <!-- Braces should not be omitted from multi-line child statement -->
         <Rule Id="SA1520"  Action="Warning" />          <!-- Use braces consistently -->
     </Rules>
-  
+
     <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers.DocumentationRules">
         <Rule Id="SA1600"  Action="None" />          <!-- Elements should be documented -->
         <Rule Id="SA1601"  Action="None" />          <!-- Partial elements should be documented -->

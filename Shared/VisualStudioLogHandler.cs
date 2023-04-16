@@ -11,9 +11,9 @@ namespace Aurora
     public class VisualStudioLogHandler : Log.IHandler
     {
         private readonly IServiceProvider _serviceProvider;
-        private IVsOutputWindowPane? _pane;
         private readonly object _lock = new object();
         private readonly string _name;
+        private IVsOutputWindowPane? _pane;
 
         public VisualStudioLogHandler(string name, IServiceProvider serviceProvider)
         {

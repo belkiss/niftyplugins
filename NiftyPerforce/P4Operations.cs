@@ -14,6 +14,11 @@ namespace NiftyPerforce
     internal static class P4Operations
     {
         private const string _p4vcBatFileName = "p4vc.bat";
+
+        private static readonly object g_opsInFlightLock = new object();
+        private static readonly HashSet<string> g_opsInFlight = new HashSet<string>();
+        private static readonly HashSet<string> g_alreadyNotified = new HashSet<string>();
+
         private static bool g_p4installed;
         private static bool g_p4customdiff;
         private static string? g_p4vc_exename;
@@ -22,11 +27,6 @@ namespace NiftyPerforce
 
         private static bool g_p4vc_history_supported;
         private static bool g_p4vc_diffhave_supported;
-
-        private static readonly object g_opsInFlightLock = new object();
-        private static readonly HashSet<string> g_opsInFlight = new HashSet<string>();
-
-        private static readonly HashSet<string> g_alreadyNotified = new HashSet<string>();
 
         private static bool LockOp(string token)
         {
