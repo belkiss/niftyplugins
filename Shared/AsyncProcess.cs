@@ -47,7 +47,7 @@ namespace Aurora
 
         public static bool Schedule(string executable, string commandline, string? workingdir, OnDone? callback, object? callbackArg, int timeout)
         {
-            var cmd = new CommandThread (
+            var cmd = new CommandThread(
                 executable,
                 commandline,
                 workingdir,

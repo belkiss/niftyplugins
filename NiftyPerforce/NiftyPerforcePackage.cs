@@ -319,6 +319,6 @@ namespace NiftyPerforce
             profferCommands3.RemoveCommandBar(existingCmdBar);
         }
 
-#endregion
+        #endregion
     }
 }
