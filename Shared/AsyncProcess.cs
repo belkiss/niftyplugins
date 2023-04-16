@@ -53,8 +53,7 @@ namespace Aurora
                 workingdir,
                 callback,
                 callbackArg,
-                timeout
-            );
+                timeout);
 
             try
             {

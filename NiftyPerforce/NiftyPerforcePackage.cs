@@ -50,7 +50,6 @@ namespace NiftyPerforce
     [ProvideMenuResource("Menus.ctmenu", 1)]
     // Register a sample options page visible as Tools/Options/SourceControl/NiftyPerforceSettings when the provider is active
     [ProvideOptionPage(typeof(Config), "Source Control", Vsix.Name, 106, 107, false)]
-    //[ProvideToolsOptionsPageVisibility("Source Control", "Nifty Perforce Settings", PackageGuids.guidNiftyPerforceSccProviderString)]
     // Declare the package guid
     [Guid(PackageGuids.guidNiftyPerforcePackageString)]
     public sealed class NiftyPerforcePackage : AsyncPackage
@@ -115,15 +114,14 @@ namespace NiftyPerforce
             }
 
             Log.Info(
-                "NiftyPerforce{0} v{1} compiled on {2}"
+                "NiftyPerforce{0} v{1} compiled on {2}",
 #if DEBUG
-                , " (Debug!)"
+                " (Debug!)",
 #else
-                , string.Empty
+                string.Empty,
 #endif
-                , versionString
-                , niftyAssembly != null ? System.IO.File.GetLastWriteTime(niftyAssembly.Location).ToString() : "unknown"
-            );
+                versionString,
+                niftyAssembly != null ? System.IO.File.GetLastWriteTime(niftyAssembly.Location).ToString() : "unknown");
 
             Log.Debug("    Location '{0}'", niftyAssembly?.Location ?? "unknown");
 

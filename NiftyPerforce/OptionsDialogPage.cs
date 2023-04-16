@@ -17,7 +17,6 @@ namespace NiftyPerforce
     /// <summary>
     /// Summary description for SccProviderOptions.
     /// </summary>
-    //[Guid(PackageGuids.guidNiftyPerforceSccProviderOptionsString)]
     public class Config : DialogPage
     {
         [Category("Operation")]
