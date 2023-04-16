@@ -37,15 +37,15 @@
     </Rules>
 
     <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers.ReadabilityRules">
-        <Rule Id="SA1100"  Action="None" />          <!-- Do not prefix calls with base unless local implementation exists -->
+        <Rule Id="SA1100"  Action="Warning" />          <!-- Do not prefix calls with base unless local implementation exists -->
         <Rule Id="SA1101"  Action="None" />             <!-- Prefix local calls with this -->
-        <Rule Id="SA1102"  Action="None" />          <!-- Query clause should follow previous clause -->
-        <Rule Id="SA1103"  Action="None" />          <!-- Query clauses should be on separate lines or all on one line -->
-        <Rule Id="SA1104"  Action="None" />          <!-- Query clause should begin on new line when previous clause spans multiple lines -->
-        <Rule Id="SA1105"  Action="None" />          <!-- Query clauses spanning multiple lines should begin on own line -->
-        <Rule Id="SA1106"  Action="None" />          <!-- Code should not contain empty statements -->
-        <Rule Id="SA1107"  Action="None" />          <!-- Code should not contain multiple statements on one line -->
-        <Rule Id="SA1108"  Action="None" />          <!-- Block statements should not contain embedded comments -->
+        <Rule Id="SA1102"  Action="Warning" />          <!-- Query clause should follow previous clause -->
+        <Rule Id="SA1103"  Action="Warning" />          <!-- Query clauses should be on separate lines or all on one line -->
+        <Rule Id="SA1104"  Action="Warning" />          <!-- Query clause should begin on new line when previous clause spans multiple lines -->
+        <Rule Id="SA1105"  Action="Warning" />          <!-- Query clauses spanning multiple lines should begin on own line -->
+        <Rule Id="SA1106"  Action="Warning" />          <!-- Code should not contain empty statements -->
+        <Rule Id="SA1107"  Action="Warning" />          <!-- Code should not contain multiple statements on one line -->
+        <Rule Id="SA1108"  Action="Warning" />          <!-- Block statements should not contain embedded comments -->
         <Rule Id="SA1109"  Action="None" />             <!-- Block statements should not contain embedded regions -->
         <Rule Id="SA1110"  Action="None" />          <!-- Opening parenthesis or bracket should be on declaration line -->
         <Rule Id="SA1111"  Action="None" />          <!-- Closing parenthesis should be on line of last parameter -->

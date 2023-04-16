@@ -37,7 +37,7 @@ namespace Aurora
                     Buffer = Buffer + e.Data + "\n";
                 }
             }
-        };
+        }
 
         public static string Execute(string executable, string? workingdir, string arguments, bool throwIfNonZeroExitCode = true)
         {

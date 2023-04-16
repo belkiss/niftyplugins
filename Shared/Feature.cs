@@ -10,7 +10,7 @@ namespace Aurora
         {
             Name = name;
         }
-    };
+    }
 
     public abstract class PreCommandFeature : Feature
     {
@@ -40,5 +40,5 @@ namespace Aurora
                 return;
             events.BeforeExecute -= handler;
         }
-    };
+    }
 }
