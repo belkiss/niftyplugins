@@ -23,7 +23,7 @@ namespace NiftyPerforce
         {
             "Edit.Delete",
             "Edit.DeleteBackwards",
-            "Edit.Paste"
+            "Edit.Paste",
         };
 
         private List<string>? _registeredCommands;

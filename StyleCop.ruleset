@@ -119,21 +119,21 @@
     </Rules>
 
     <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers.MaintainabilityRules">
-        <Rule Id="SA1119"  Action="None" />          <!-- Statement should not use unnecessary parenthesis -->
-        <Rule Id="SA1400"  Action="None" />          <!-- Access modifier should be declared -->
+        <Rule Id="SA1119"  Action="Warning" />          <!-- Statement should not use unnecessary parenthesis -->
+        <Rule Id="SA1400"  Action="Warning" />          <!-- Access modifier should be declared -->
         <Rule Id="SA1401"  Action="None" />          <!-- Fields should be private -->
         <Rule Id="SA1402"  Action="None" />          <!-- File may only contain a single type -->
-        <Rule Id="SA1403"  Action="None" />          <!-- File may only contain a single namespace -->
-        <Rule Id="SA1404"  Action="None" />          <!-- Code analysis suppression should have justification -->
-        <Rule Id="SA1405"  Action="None" />          <!-- Debug.Assert should provide message text -->
-        <Rule Id="SA1406"  Action="None" />          <!-- Debug.Fail should provide message text -->
-        <Rule Id="SA1407"  Action="None" />          <!-- Arithmetic expressions should declare precedence -->
-        <Rule Id="SA1408"  Action="None" />          <!-- Conditional expressions should declare precedence -->
+        <Rule Id="SA1403"  Action="Warning" />          <!-- File may only contain a single namespace -->
+        <Rule Id="SA1404"  Action="Warning" />          <!-- Code analysis suppression should have justification -->
+        <Rule Id="SA1405"  Action="Warning" />          <!-- Debug.Assert should provide message text -->
+        <Rule Id="SA1406"  Action="Warning" />          <!-- Debug.Fail should provide message text -->
+        <Rule Id="SA1407"  Action="Warning" />          <!-- Arithmetic expressions should declare precedence -->
+        <Rule Id="SA1408"  Action="Warning" />          <!-- Conditional expressions should declare precedence -->
         <Rule Id="SA1409"  Action="None"    />          <!-- Remove unnecessary code -->
-        <Rule Id="SA1410"  Action="None" />          <!-- Remove delegate parenthesis when possible -->
-        <Rule Id="SA1411"  Action="None" />          <!-- Attribute constructor should not use unnecessary parenthesis -->
+        <Rule Id="SA1410"  Action="Warning" />          <!-- Remove delegate parenthesis when possible -->
+        <Rule Id="SA1411"  Action="Warning" />          <!-- Attribute constructor should not use unnecessary parenthesis -->
         <Rule Id="SA1412"  Action="None"    />          <!-- Store files as UTF-8 with byte order mark -->
-        <Rule Id="SA1413"  Action="None" />          <!-- Use trailing comma in multi-line initializers -->
+        <Rule Id="SA1413"  Action="Warning" />          <!-- Use trailing comma in multi-line initializers -->
     </Rules>
 	
     <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers.LayoutRules">

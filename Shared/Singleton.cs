@@ -7,8 +7,8 @@ namespace Aurora
     {
         private Singleton() { }
 
-#pragma warning disable CA2211 // Non-constant fields should not be visible
-        public static T Instance = new T();
-#pragma warning restore CA2211 // Non-constant fields should not be visible
+        private static T instance = new T();
+
+        public static T Instance { get => instance; set => instance = value; }
     }
 }

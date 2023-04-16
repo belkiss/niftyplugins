@@ -243,7 +243,7 @@ namespace NiftyPerforce
                 "Item",
                 "Easy MDI Document Window",
                 "Cross Project Multi Item",
-                "Cross Project Multi Project"
+                "Cross Project Multi Project",
             };
 
             const string Prefix = "Aurora.NiftyPerforce.Connect";
