@@ -4,13 +4,11 @@ namespace Aurora
 {
     public abstract class Feature
     {
-        private readonly string mName;
-
-        public string Name => mName;
+        public string Name { get; }
 
         protected Feature(string name)
         {
-            mName = name;
+            Name = name;
         }
     };
 

@@ -25,7 +25,7 @@ namespace Aurora
 
         public void RegisterCommand(CommandBase commandHandler)
         {
-            var command = RegisterCommandPrivate(commandHandler);
+            OleMenuCommand command = RegisterCommandPrivate(commandHandler);
             if (command != null)
                 mCommands.Add(commandHandler.CanonicalName, commandHandler);
         }

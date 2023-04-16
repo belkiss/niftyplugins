@@ -352,7 +352,7 @@ namespace NiftyPerforce
                 return "";
             }
 
-            var config = Singleton<NiftyPerforce.Config>.Instance;
+            Config config = Singleton<NiftyPerforce.Config>.Instance;
             string arguments = "";
             arguments += " -p " + config.Port;
             arguments += " -u " + config.Username;
@@ -422,7 +422,7 @@ namespace NiftyPerforce
             //    #105247 (Change #2069769)
             //      The p4vc.exe executable has been removed from the Windows installers.
             //      To start P4VC, use the p4vc.bat script.
-            foreach (var candidateName in new[] { _p4vcBatFileName, "p4vc.exe" })
+            foreach (string? candidateName in new[] { _p4vcBatFileName, "p4vc.exe" })
             {
                 if (check(candidateName))
                 {

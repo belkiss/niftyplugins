@@ -76,7 +76,7 @@ namespace NiftyPerforce
         {
             await base.InitializeAsync(cancellationToken, progress);
 
-            var dteService = GetServiceAsync(typeof(DTE));
+            System.Threading.Tasks.Task<object> dteService = GetServiceAsync(typeof(DTE));
             Microsoft.Assumes.Present(dteService);
 
             if (!(await dteService.ConfigureAwait(false) is DTE2 application))
@@ -104,7 +104,7 @@ namespace NiftyPerforce
 
             // Show where we are and when we were compiled...
             var niftyAssembly = Assembly.GetExecutingAssembly();
-            var version = niftyAssembly?.GetName().Version;
+            Version? version = niftyAssembly?.GetName().Version;
             string versionString = "";
             if (version != null)
             {

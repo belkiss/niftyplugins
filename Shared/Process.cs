@@ -41,43 +41,41 @@ namespace Aurora
 
         public static string Execute(string executable, string? workingdir, string arguments, bool throwIfNonZeroExitCode = true)
         {
-            using (var process = new System.Diagnostics.Process())
+            using var process = new System.Diagnostics.Process();
+
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.FileName = executable;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.CreateNoWindow = true;
+            if (workingdir != null)
+                process.StartInfo.WorkingDirectory = workingdir;
+            process.StartInfo.Arguments = arguments;
+
+            if (!process.Start())
             {
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.FileName = executable;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardError = true;
-                process.StartInfo.CreateNoWindow = true;
-                if (workingdir != null)
-                    process.StartInfo.WorkingDirectory = workingdir;
-                process.StartInfo.Arguments = arguments;
-
-                if (!process.Start())
-                {
-                    throw new ProcessException("{0}: Failed to start {1}.", executable, process.StartInfo.Arguments);
-                }
-
-                using (Handler stderr = new Handler(), stdout = new Handler())
-                {
-                    process.OutputDataReceived += stdout.OnOutput;
-                    process.BeginOutputReadLine();
-
-                    process.ErrorDataReceived += stderr.OnOutput;
-                    process.BeginErrorReadLine();
-
-                    process.WaitForExit();
-
-                    if (throwIfNonZeroExitCode && 0 != process.ExitCode)
-                    {
-                        throw new ProcessException("Failed to execute {0} {1}, exit code was {2}", executable, process.StartInfo.Arguments, process.ExitCode);
-                    }
-
-                    stderr.Sentinel.WaitOne();
-                    stdout.Sentinel.WaitOne();
-
-                    return stdout.Buffer + "\n" + stderr.Buffer;
-                }
+                throw new ProcessException("{0}: Failed to start {1}.", executable, process.StartInfo.Arguments);
             }
+
+            using Handler stderr = new Handler(), stdout = new Handler();
+
+            process.OutputDataReceived += stdout.OnOutput;
+            process.BeginOutputReadLine();
+
+            process.ErrorDataReceived += stderr.OnOutput;
+            process.BeginErrorReadLine();
+
+            process.WaitForExit();
+
+            if (throwIfNonZeroExitCode && 0 != process.ExitCode)
+            {
+                throw new ProcessException("Failed to execute {0} {1}, exit code was {2}", executable, process.StartInfo.Arguments, process.ExitCode);
+            }
+
+            stderr.Sentinel.WaitOne();
+            stdout.Sentinel.WaitOne();
+
+            return stdout.Buffer + "\n" + stderr.Buffer;
         }
     }
 

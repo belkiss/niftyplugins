@@ -16,7 +16,7 @@ namespace NiftyPerforce
 
         public override void OnExecute(SelectedItem item, string fileName)
         {
-            if (!TryGetDirectoryName(fileName, out var dirname))
+            if (!TryGetDirectoryName(fileName, out string? dirname))
                 return;
 
             if (_mMainLine)
