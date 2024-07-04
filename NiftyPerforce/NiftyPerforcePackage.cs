@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using Aurora;
 using EnvDTE;
 using EnvDTE80;
@@ -60,6 +61,8 @@ namespace NiftyPerforce
             // initialization is the Initialize method.
         }
 
+        private async Task<TReturnType> GetServiceAsync<TServiceType, TReturnType>() => (TReturnType)await GetServiceAsync(typeof(TServiceType));
+
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
         /// where you can put all the initialization code that rely on services provided by VisualStudio.
@@ -68,13 +71,7 @@ namespace NiftyPerforce
         {
             await base.InitializeAsync(cancellationToken, progress);
 
-            System.Threading.Tasks.Task<object> dteService = GetServiceAsync(typeof(DTE));
-            Microsoft.Assumes.Present(dteService);
-
-            if (!(await dteService.ConfigureAwait(false) is DTE2 application))
-            {
-                throw new ArgumentException("Impossible to fetch DTE2 object");
-            }
+            DTE2 dte2Service = await GetServiceAsync<DTE, DTE2>();
 
             if (!(await GetServiceAsync(typeof(IMenuCommandService)) is OleMenuCommandService oleMenuCommandService))
             {
@@ -136,7 +133,7 @@ namespace NiftyPerforce
             };
 #endif
 
-            _plugin = new Plugin(application, oleMenuCommandService, config);
+            _plugin = new Plugin(dte2Service, oleMenuCommandService, config);
 
             InitCommandRegistry();
 
