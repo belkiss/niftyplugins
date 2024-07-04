@@ -21,11 +21,12 @@ namespace NiftyPerforce.EventHandlers
         {
             _plugin = plugin;
 
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             _projectEvents = ((EnvDTE80.Events2)_plugin.App.Events).ProjectItemsEvents;
             _solutionEvents = ((EnvDTE80.Events2)_plugin.App.Events).SolutionEvents;
 
             ((OptionsDialogPage)_plugin.Options).OnApplyEvent += (s, e) => RegisterEvents();
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             RegisterEvents();
         }
 

@@ -15,7 +15,14 @@ namespace Aurora
 
         public DTE2 App { get; }
 
-        public Commands Commands => App.Commands;
+        public Commands Commands
+        {
+            get
+            {
+                ThreadHelper.ThrowIfNotOnUIThread();
+                return App.Commands;
+            }
+        }
 
         public OleMenuCommandService MenuCommandService { get; }
 
