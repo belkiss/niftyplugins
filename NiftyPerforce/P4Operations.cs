@@ -27,6 +27,7 @@ namespace NiftyPerforce
 
         private static bool s_p4vcHistorySupported;
         private static bool s_p4vcDiffHaveSupported;
+        private static bool s_p4vcWorkspaceWindowSupported;
 
         private static bool LockOp(string token)
         {
@@ -273,6 +274,9 @@ namespace NiftyPerforce
         {
             if (filename.Length == 0)
                 return false;
+
+            if (s_p4vcWorkspaceWindowSupported)
+                return AsyncProcess.Schedule(s_p4vcExeName!, GetUserInfoStringFull(true, Path.GetDirectoryName(filename)) + " workspacewindow -s \"" + filename + "\"", s_p4vcDir!, null, null, 0);
 
             if (!string.IsNullOrEmpty(s_p4vDir)) // note that the cmd line also accepts -t to open P4V with a specific tab shown
                 return AsyncProcess.Schedule("p4v.exe", " -win 0 " + GetUserInfoStringFull(true, Path.GetDirectoryName(filename)) + " -s \"" + filename + "\"", s_p4vDir!, null, null, 0);
@@ -540,6 +544,10 @@ namespace NiftyPerforce
         private static void DetermineSupportedFeatures()
         {
             bool p4vcBat = s_p4vcExeName == P4vcBatFileName;
+
+            // workspacewindow was added in p4v 2023.2/2443448, and 2024.1/2573667 deprecated p4v -s and p4v -t
+            s_p4vcWorkspaceWindowSupported = p4vcBat && P4VCHasCommand("workspacewindow");
+            Log.Info("[{0}] p4vc workspacewindow", s_p4vcWorkspaceWindowSupported ? "X" : " ");
 
             // since p4vc.bat was introduced with 2021.1/2075061, if we have it we know we have diffhave, hence history
 
