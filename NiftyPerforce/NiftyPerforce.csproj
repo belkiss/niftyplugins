@@ -93,7 +93,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.SDK.Analyzers" Version="17.7.32">
+    <PackageReference Include="Microsoft.VisualStudio.SDK.Analyzers" Version="17.7.41">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
