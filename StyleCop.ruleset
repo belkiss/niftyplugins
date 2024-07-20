@@ -144,7 +144,7 @@
     <Rule Id="SA1108" Action="Warning" />
     <Rule Id="SA1109" Action="Warning" />
     <Rule Id="SA1110" Action="Warning" />
-    <Rule Id="SA1111" Action="Warning" />
+    <Rule Id="SA1111" Action="None" />
     <Rule Id="SA1112" Action="Warning" />
     <Rule Id="SA1113" Action="Warning" />
     <Rule Id="SA1114" Action="Warning" />

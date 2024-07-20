@@ -16,6 +16,19 @@ using Microsoft.VisualStudio.Shell;
 
 namespace NiftyPerforce
 {
+    public enum SettingsLookupSource
+    {
+        /// <summary>
+        /// Run p4 info and parse settings from its output
+        /// </summary>
+        P4Info,
+
+        /// <summary>
+        /// Run p4 set and parse settings from its output
+        /// </summary>
+        P4Set,
+    }
+
     /// <summary>
     /// Summary description for SccProviderOptions.
     /// </summary>
@@ -48,6 +61,10 @@ namespace NiftyPerforce
         [Category("Connection")]
         [Description("Use config from system. Effectivly disables the settings inside this dialog for the client etc and picks up the settings from the registry/p4config environment.")]
         public bool UseSystemEnv { get; set; } = true;
+
+        [Category("Connection")]
+        [Description("In case UseSystemEnv is true, choose which source to pick first to lookup the settings.")]
+        public SettingsLookupSource PreferredLookupSource { get; set; } = SettingsLookupSource.P4Set;
 
         [Category("Connection")]
         [Description("Perforce port number")]

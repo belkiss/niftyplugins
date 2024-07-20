@@ -1,5 +1,6 @@
 ﻿// Copyright (C) 2006-2017 Jim Tilander, 2017-2024 Lambert Clara. See the COPYING file in the project root for full license information.
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 #if NIFTY_LEGACY
@@ -21,3 +22,5 @@ using NiftyPerforce.Manifests;
 
 [assembly: AssemblyVersion(Vsix.Version)]
 [assembly: AssemblyFileVersion(Vsix.Version)]
+
+[assembly: InternalsVisibleTo("NiftyPerforce.Tests")]

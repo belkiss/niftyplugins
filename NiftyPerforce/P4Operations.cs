@@ -7,6 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using Aurora;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace NiftyPerforce
 {
@@ -291,73 +292,43 @@ namespace NiftyPerforce
 
         private static string GetUserInfoStringFull(bool lookup, string? dir)
         {
+            OptionsDialogPage config = Singleton<OptionsDialogPage>.Instance;
+
             // NOTE: This to allow the user to have a P4CONFIG variable and connect to multiple perforce servers seamlessly.
-            if (Singleton<NiftyPerforce.OptionsDialogPage>.Instance.UseSystemEnv)
+            if (config.UseSystemEnv)
             {
                 if (lookup && dir != null)
                 {
-                    try
+                    SettingsLookupSource[] lookupSources = (config.PreferredLookupSource == SettingsLookupSource.P4Set) ?
+                        new SettingsLookupSource[] { SettingsLookupSource.P4Set, SettingsLookupSource.P4Info } :
+                        new SettingsLookupSource[] { SettingsLookupSource.P4Info, SettingsLookupSource.P4Set };
+
+                    foreach (SettingsLookupSource lookupSource in lookupSources)
                     {
-                        string output = Aurora.Process.Execute("p4", dir, $"-s -L \"{dir}\" info");
-                        var userpattern = new Regex(@"User name: (?<user>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
-                        var portpattern = new Regex(@"Server address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
-                        var brokerpattern = new Regex(@"Broker address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
-                        var proxypattern = new Regex(@"Proxy address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
-                        var clientpattern = new Regex(@"Client name: (?<client>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
-
-                        Match usermatch = userpattern.Match(output);
-                        Match portmatch = portpattern.Match(output);
-                        Match brokermatch = brokerpattern.Match(output);
-                        Match proxymatch = proxypattern.Match(output);
-                        Match clientmatch = clientpattern.Match(output);
-
-                        string port = portmatch.Groups["port"].Value.Trim();
-                        string? broker = brokermatch.Success ? brokermatch.Groups["port"].Value.Trim() : null;
-                        string? proxy = proxymatch.Success ? proxymatch.Groups["port"].Value.Trim() : null;
-                        string username = usermatch.Groups["user"].Value.Trim();
-                        string client = clientmatch.Groups["client"].Value.Trim();
-
-                        string server;
-                        Regex encryptionpattern;
-                        if (!string.IsNullOrEmpty(broker))
+                        switch (lookupSource)
                         {
-                            server = broker!;
-                            encryptionpattern = new Regex(@"Broker encryption: (?<encrypted>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
-                        }
-                        else if (!string.IsNullOrEmpty(proxy))
-                        {
-                            server = proxy!;
-                            encryptionpattern = new Regex(@"Proxy encryption: (?<encrypted>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
-                        }
-                        else
-                        {
-                            server = port;
-                            encryptionpattern = new Regex(@"Server encryption: (?<encrypted>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
-                        }
+                            case SettingsLookupSource.P4Info:
+                                string? fromP4Info = GetConnectionStringFromP4Info(dir);
+                                if (!string.IsNullOrEmpty(fromP4Info))
+                                    return fromP4Info!;
 
-                        Match encryptionmatch = encryptionpattern.Match(output);
-                        bool encrypted = encryptionmatch.Success && encryptionmatch.Groups["encrypted"].Value.Trim() == "encrypted";
-                        if (encrypted)
-                        {
-                            server = $"ssl:{server}";
+                                break;
+
+                            case SettingsLookupSource.P4Set:
+                                string? fromP4Set = GetConnectionStringFromP4Set(dir);
+                                if (!string.IsNullOrEmpty(fromP4Set))
+                                    return fromP4Set!;
+
+                                break;
+                            default:
+                                throw new NotImplementedException(lookupSource.ToString());
                         }
-
-                        string ret = $" -p {server} -u {username} -c {client} ";
-
-                        Log.Debug("GetUserInfoStringFull : " + ret);
-
-                        return ret;
-                    }
-                    catch (Aurora.ProcessException e)
-                    {
-                        Log.Error("Failed to execute info string discovery: {0}", e.Message);
                     }
                 }
 
                 return string.Empty;
             }
 
-            OptionsDialogPage config = Singleton<NiftyPerforce.OptionsDialogPage>.Instance;
             string arguments = string.Empty;
             arguments += " -p " + config.Port;
             arguments += " -u " + config.Username;
@@ -367,6 +338,115 @@ namespace NiftyPerforce
             Log.Debug("GetUserInfoStringFull : " + arguments);
 
             return arguments;
+        }
+
+        private static string? GetConnectionStringFromP4Set(string dir)
+        {
+            string args = string.Join(
+                " ",
+                "-s",
+                $"-L \"{dir}\"",
+                "set",
+                "-q"); // Reduces the output
+
+            string output = Aurora.Process.Execute("p4", dir, args);
+            return GetConnectionStringFromP4SetOutput(output);
+        }
+
+        internal static string? GetConnectionStringFromP4SetOutput(string p4setOutput)
+        {
+            if (!string.IsNullOrEmpty(p4setOutput))
+            {
+                string? client = null;
+                string? server = null;
+                string? username = null;
+                foreach (string s in p4setOutput.Split('\n'))
+                {
+                    string trim = s.Trim();
+                    if (trim.StartsWith("P4CLIENT="))
+                    {
+                        client = trim.Substring(9);
+                    }
+                    else if (trim.StartsWith("P4PORT="))
+                    {
+                        server = trim.Substring(7);
+                    }
+                    else if (trim.StartsWith("P4USER="))
+                    {
+                        username = trim.Substring(7);
+                    }
+
+                    if (!string.IsNullOrEmpty(client) && !string.IsNullOrEmpty(server) && !string.IsNullOrEmpty(username))
+                    {
+                        string ret = $"-p {server} -u {username} -c {client}";
+                        return ret;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private static string? GetConnectionStringFromP4Info(string dir)
+        {
+            try
+            {
+                string output = Aurora.Process.Execute("p4", dir, $"-s -L \"{dir}\" info");
+                var userpattern = new Regex(@"User name: (?<user>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
+                var portpattern = new Regex(@"Server address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
+                var brokerpattern = new Regex(@"Broker address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
+                var proxypattern = new Regex(@"Proxy address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
+                var clientpattern = new Regex(@"Client name: (?<client>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
+
+                Match usermatch = userpattern.Match(output);
+                Match portmatch = portpattern.Match(output);
+                Match brokermatch = brokerpattern.Match(output);
+                Match proxymatch = proxypattern.Match(output);
+                Match clientmatch = clientpattern.Match(output);
+
+                string port = portmatch.Groups["port"].Value.Trim();
+                string? broker = brokermatch.Success ? brokermatch.Groups["port"].Value.Trim() : null;
+                string? proxy = proxymatch.Success ? proxymatch.Groups["port"].Value.Trim() : null;
+                string username = usermatch.Groups["user"].Value.Trim();
+                string client = clientmatch.Groups["client"].Value.Trim();
+
+                string server;
+                Regex encryptionpattern;
+                if (!string.IsNullOrEmpty(broker))
+                {
+                    server = broker!;
+                    encryptionpattern = new Regex(@"Broker encryption: (?<encrypted>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
+                }
+                else if (!string.IsNullOrEmpty(proxy))
+                {
+                    server = proxy!;
+                    encryptionpattern = new Regex(@"Proxy encryption: (?<encrypted>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
+                }
+                else
+                {
+                    server = port;
+                    encryptionpattern = new Regex(@"Server encryption: (?<encrypted>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
+                }
+
+                Match encryptionmatch = encryptionpattern.Match(output);
+                bool encrypted = encryptionmatch.Success && encryptionmatch.Groups["encrypted"].Value.Trim() == "encrypted";
+                if (encrypted)
+                {
+                    server = $"ssl:{server}";
+                }
+
+                string ret = $" -p {server} -u {username} -c {client} ";
+
+                Log.Debug("GetUserInfoStringFull : " + ret);
+
+                return ret;
+            }
+            catch (Aurora.ProcessException e)
+            {
+                Log.Error("Failed to execute info string discovery: {0}", e.Message);
+            }
+
+            return null;
         }
 
         public static bool TimeLapseView(string dirname, string filename)
