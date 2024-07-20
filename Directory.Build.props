@@ -1,6 +1,6 @@
 ﻿<Project>
   <PropertyGroup>
-    <Copyright>Copyright (C) 2006-2017 Jim Tilander, 2017-2023 Lambert Clara. See COPYING for and README for more details.</Copyright>
+    <Copyright>Copyright (C) 2006-2017 Jim Tilander, 2017-2024 Lambert Clara. See COPYING for and README for more details.</Copyright>
     <Authors>Jim Tilander, Lambert Clara, NiftyPerforce contributors</Authors>
 
     <LangVersion>8.0</LangVersion>
