@@ -66,7 +66,7 @@ jobs:
     - name: Build NiftyPerforce in ${{ matrix.configuration }} and analyze
       shell: powershell
       run: |
-        msbuild -t:build -restore NiftyPerforce.sln /nologo /v:m /p:DeployExtension=false /p:Configuration=$env:Configuration
+        msbuild -t:build -restore NiftyPlugins.sln /nologo /v:m /p:DeployExtension=false /p:Configuration=$env:Configuration
       env:
         Configuration: ${{ matrix.configuration }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
