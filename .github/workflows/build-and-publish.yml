@@ -74,8 +74,8 @@ jobs:
     - name: Run tests
       uses: microsoft/vstest-action@v1.0.0
       with:
-        testAssembly: NiftyPerforce.Tests*.dll
-        searchFolder: ./NiftyPerforce.Tests/
+        testAssembly: NiftyPerforce.Tests.dll
+        searchFolder: NiftyPerforce.Tests\bin\${{ matrix.configuration }}\net472
         runInParallel: true
 
     - name: Upload build artifacts
