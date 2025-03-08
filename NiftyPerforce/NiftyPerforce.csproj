@@ -10,6 +10,7 @@
     <StartProgram>$(DevEnvDir)\devenv.exe</StartProgram>
     <StartArguments>/rootsuffix Exp</StartArguments>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
     <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
     <IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
     <IncludeDebugSymbolsInLocalVSIXDeployment>true</IncludeDebugSymbolsInLocalVSIXDeployment>
@@ -101,6 +102,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="System.Resources.Extensions" Version="9.0.2" />
     <Reference Include="System.Design" />
   </ItemGroup>
   <Import Project="..\Shared\AuroraCore.projitems" Label="Shared" />

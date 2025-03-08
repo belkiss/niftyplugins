@@ -59,24 +59,18 @@ jobs:
     - name: Checkout the repo
       uses: actions/checkout@v4
 
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v2.0.0
-
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Build NiftyPerforce in ${{ matrix.configuration }} and analyze
       shell: powershell
       run: |
-        msbuild -t:build -restore NiftyPlugins.sln /nologo /v:m /p:DeployExtension=false /p:Configuration=$env:Configuration
+        dotnet msbuild -t:build -restore NiftyPerforce/NiftyPerforce.csproj /nologo /v:m /p:DeployExtension=false /p:Configuration=$env:Configuration
       env:
         Configuration: ${{ matrix.configuration }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
 
     - name: Run tests
-      uses: microsoft/vstest-action@v1.0.0
-      with:
-        testAssembly: NiftyPerforce.Tests.dll
-        searchFolder: NiftyPerforce.Tests\bin\${{ matrix.configuration }}\net472
-        runInParallel: true
+      run: |
+        dotnet test -restore NiftyPerforce.Tests/NiftyPerforce.Tests.csproj /nologo /v:m /p:DeployExtension=false /p:Configuration=$env:Configuration
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
