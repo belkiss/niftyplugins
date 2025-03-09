@@ -152,77 +152,76 @@ namespace Aurora
         {
             try
             {
-                using (var process = new System.Diagnostics.Process())
+                using var process = new System.Diagnostics.Process();
+
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.FileName = executable;
+                if (timeout == 0)
                 {
-                    process.StartInfo.UseShellExecute = false;
-                    process.StartInfo.FileName = executable;
-                    if (timeout == 0)
-                    {
-                        // We are not for these processes reading the stdout and thus they could if they wrote more
-                        // data on the output line hang.
-                        process.StartInfo.RedirectStandardOutput = false;
-                        process.StartInfo.RedirectStandardError = false;
-                    }
-                    else
-                    {
-                        process.StartInfo.RedirectStandardOutput = true;
-                        process.StartInfo.RedirectStandardError = true;
-                    }
+                    // We are not for these processes reading the stdout and thus they could if they wrote more
+                    // data on the output line hang.
+                    process.StartInfo.RedirectStandardOutput = false;
+                    process.StartInfo.RedirectStandardError = false;
+                }
+                else
+                {
+                    process.StartInfo.RedirectStandardOutput = true;
+                    process.StartInfo.RedirectStandardError = true;
+                }
 
-                    process.StartInfo.CreateNoWindow = true;
-                    if (workingdir != null)
-                        process.StartInfo.WorkingDirectory = workingdir;
-                    process.StartInfo.Arguments = commandline;
+                process.StartInfo.CreateNoWindow = true;
+                if (workingdir != null)
+                    process.StartInfo.WorkingDirectory = workingdir;
+                process.StartInfo.Arguments = commandline;
 
-                    Log.Debug("executableName : " + executable);
-                    Log.Debug("workingDirectory : " + workingdir ?? "unset");
-                    Log.Debug("command : " + commandline);
+                Log.Debug("executableName : " + executable);
+                Log.Debug("workingDirectory : " + workingdir ?? "unset");
+                Log.Debug("command : " + commandline);
 
-                    if (!process.Start())
+                if (!process.Start())
+                {
+                    Log.Error("{0}: {1} Failed to start. Is Perforce installed and in the path?\n", executable, commandline);
+                    return false;
+                }
+
+                if (timeout == 0)
+                {
+                    // Fire and forget task.
+                    return true;
+                }
+
+                bool exited = false;
+                string alloutput = string.Empty;
+                using (Process.Handler stderr = new Process.Handler(), stdout = new Process.Handler())
+                {
+                    process.OutputDataReceived += stdout.OnOutput;
+                    process.BeginOutputReadLine();
+
+                    process.ErrorDataReceived += stderr.OnOutput;
+                    process.BeginErrorReadLine();
+
+                    exited = process.WaitForExit(timeout);
+
+                    stderr.Sentinel.WaitOne();
+                    stdout.Sentinel.WaitOne();
+                    alloutput = stdout.Buffer + "\n" + stderr.Buffer;
+                }
+
+                if (!exited)
+                {
+                    Log.Info("{0}: {1} timed out ({2} ms)", executable, commandline, timeout);
+                    process.Kill();
+                    return false;
+                }
+                else
+                {
+                    Log.Info(executable + ": " + commandline);
+                    Log.Info(alloutput);
+
+                    if (process.ExitCode != 0)
                     {
-                        Log.Error("{0}: {1} Failed to start. Is Perforce installed and in the path?\n", executable, commandline);
+                        Log.Debug("{0}: {1} exit code {2}", executable, commandline, process.ExitCode);
                         return false;
-                    }
-
-                    if (timeout == 0)
-                    {
-                        // Fire and forget task.
-                        return true;
-                    }
-
-                    bool exited = false;
-                    string alloutput = string.Empty;
-                    using (Process.Handler stderr = new Process.Handler(), stdout = new Process.Handler())
-                    {
-                        process.OutputDataReceived += stdout.OnOutput;
-                        process.BeginOutputReadLine();
-
-                        process.ErrorDataReceived += stderr.OnOutput;
-                        process.BeginErrorReadLine();
-
-                        exited = process.WaitForExit(timeout);
-
-                        stderr.Sentinel.WaitOne();
-                        stdout.Sentinel.WaitOne();
-                        alloutput = stdout.Buffer + "\n" + stderr.Buffer;
-                    }
-
-                    if (!exited)
-                    {
-                        Log.Info("{0}: {1} timed out ({2} ms)", executable, commandline, timeout);
-                        process.Kill();
-                        return false;
-                    }
-                    else
-                    {
-                        Log.Info(executable + ": " + commandline);
-                        Log.Info(alloutput);
-
-                        if (process.ExitCode != 0)
-                        {
-                            Log.Debug("{0}: {1} exit code {2}", executable, commandline, process.ExitCode);
-                            return false;
-                        }
                     }
                 }
 

@@ -6,10 +6,12 @@ namespace Aurora
 {
     public static class Help
     {
+        private static readonly char[] s_separator = new[] { ';' };
+
         public static string? FindFileInPath(string filename)
         {
             string? pathenv = Environment.GetEnvironmentVariable("PATH");
-            string[] items = pathenv?.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+            string[] items = pathenv?.Split(s_separator, StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
 
             foreach (string item in items)
             {

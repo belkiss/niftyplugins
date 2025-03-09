@@ -10,9 +10,24 @@ namespace Aurora
         // Internal enumeration. Only used in handlers to identify the type of message
         public enum Level
         {
+            /// <summary>
+            /// Debug level messages
+            /// </summary>
             Debug,
+
+            /// <summary>
+            /// Informational messages
+            /// </summary>
             Info,
+
+            /// <summary>
+            /// Warning messages
+            /// </summary>
             Warn,
+
+            /// <summary>
+            /// Error messages
+            /// </summary>
             Error,
         }
 

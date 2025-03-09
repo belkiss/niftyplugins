@@ -29,7 +29,7 @@ namespace NiftyPerforce.Commands
                 {
                     OnExecute(sel, Plugin.App.ActiveDocument.FullName);
                 }
-                else if (_executeForFileItems && sel.ProjectItem != null && sel.ProjectItem.Kind.ToUpperInvariant() == FileItemGUID)
+                else if (_executeForFileItems && sel.ProjectItem != null && sel.ProjectItem.Kind.Equals(FileItemGUID, System.StringComparison.OrdinalIgnoreCase))
                 {
                     OnExecute(sel, sel.ProjectItem.get_FileNames(0));
                 }

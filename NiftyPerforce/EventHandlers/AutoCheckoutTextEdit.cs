@@ -90,7 +90,10 @@ namespace NiftyPerforce.EventHandlers
                 (hint & (int)vsTextChanged.vsTextChangedMultiLine) == 0 &&
                 (hint & (int)vsTextChanged.vsTextChangedNewline) == 0 &&
                 hint != 0)
+            {
                 return;
+            }
+
             if (Plugin.App.ActiveDocument != null && Plugin.App.ActiveDocument.ReadOnly && !Plugin.App.ActiveDocument.Saved)
                 P4Operations.EditFile(Plugin.App.ActiveDocument.FullName, false);
         }
