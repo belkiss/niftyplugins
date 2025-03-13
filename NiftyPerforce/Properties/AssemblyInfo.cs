@@ -1,5 +1,6 @@
 ﻿// Copyright (C) 2006-2017 Jim Tilander, 2017-2025 Lambert Clara. See the COPYING file in the project root for full license information.
 using System.Reflection;
+using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -19,6 +20,7 @@ using NiftyPerforce.Manifests;
 [assembly: AssemblyCulture("")]
 
 [assembly: ComVisible(false)]
+[assembly: NeutralResourcesLanguage("en")]
 
 [assembly: AssemblyVersion(Vsix.Version)]
 [assembly: AssemblyFileVersion(Vsix.Version)]
