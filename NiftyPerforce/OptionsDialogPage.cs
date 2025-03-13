@@ -30,7 +30,7 @@ namespace NiftyPerforce
     }
 
     /// <summary>
-    /// Summary description for SccProviderOptions.
+    /// The options dialog page for the plugin.
     /// </summary>
     public class OptionsDialogPage : DialogPage
     {

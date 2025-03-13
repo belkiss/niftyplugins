@@ -10,9 +10,24 @@ namespace Aurora
         // Internal enumeration. Only used in handlers to identify the type of message
         public enum Level
         {
+            /// <summary>
+            /// Debug level messages
+            /// </summary>
             Debug,
+
+            /// <summary>
+            /// Informational messages
+            /// </summary>
             Info,
+
+            /// <summary>
+            /// Warning messages
+            /// </summary>
             Warn,
+
+            /// <summary>
+            /// Error messages
+            /// </summary>
             Error,
         }
 
@@ -91,18 +106,10 @@ namespace Aurora
         private static void OnMessage(Level level, string format, object[] args)
         {
             string message = args.Length > 0 ? string.Format(CultureInfo.InvariantCulture, format, args) : format;
-            string formattedLine;
             string indent = new string(' ', s_indent * 4);
             string levelName = level.ToString().PadLeft(5, ' ');
 
-            if (Prefix.Length > 0)
-            {
-                formattedLine = Prefix + " (" + levelName + "): " + indent + message + "\n";
-            }
-            else
-            {
-                formattedLine = levelName + ": " + indent + message + "\n";
-            }
+            string formattedLine = Prefix.Length > 0 ? $"{Prefix} ({levelName}): {indent}{message}\n" : $"{levelName}: {indent}{message}\n";
 
             foreach (IHandler handler in s_handlers)
             {
