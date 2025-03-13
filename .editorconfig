@@ -17,6 +17,9 @@ charset = utf-8-bom
 # Xml project files
 [*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj}]
 indent_size = 4
+dotnet_style_operator_placement_when_wrapping = beginning_of_line
+tab_width = 4
+end_of_line = crlf
 
 # Xml config files
 [*.{props,targets,ruleset,config,nuspec,resx,vsixmanifest,vsct}]
@@ -245,3 +248,5 @@ dotnet_style_qualification_for_method = false:error
 dotnet_style_qualification_for_property = false:error
 end_of_line = crlf
 tab_width = 4
+csharp_style_prefer_primary_constructors = true:suggestion
+csharp_prefer_system_threading_lock = true:suggestion
