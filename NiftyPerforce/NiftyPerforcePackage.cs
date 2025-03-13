@@ -3,6 +3,7 @@
 using System;
 using System.ComponentModel.Design;
 using System.Diagnostics;
+using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -114,7 +115,7 @@ namespace NiftyPerforce
                 string.Empty,
 #endif
                 versionString,
-                niftyAssembly != null ? System.IO.File.GetLastWriteTime(niftyAssembly.Location).ToString() : "unknown");
+                niftyAssembly != null ? System.IO.File.GetLastWriteTime(niftyAssembly.Location).ToString(CultureInfo.CurrentCulture) : "unknown");
 
             Log.Debug("    Location '{0}'", niftyAssembly?.Location ?? "unknown");
 

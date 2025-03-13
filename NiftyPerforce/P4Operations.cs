@@ -365,15 +365,15 @@ namespace NiftyPerforce
                 foreach (string s in p4setOutput.Split('\n'))
                 {
                     string trim = s.Trim();
-                    if (trim.StartsWith("P4CLIENT="))
+                    if (trim.StartsWith("P4CLIENT=", StringComparison.Ordinal))
                     {
                         client = trim.Substring(9);
                     }
-                    else if (trim.StartsWith("P4PORT="))
+                    else if (trim.StartsWith("P4PORT=", StringComparison.Ordinal))
                     {
                         server = trim.Substring(7);
                     }
-                    else if (trim.StartsWith("P4USER="))
+                    else if (trim.StartsWith("P4USER=", StringComparison.Ordinal))
                     {
                         username = trim.Substring(7);
                     }
