@@ -123,7 +123,7 @@ namespace NiftyPerforce
             Log.IncIndent();
 
             var config = (OptionsDialogPage)GetDialogPage(typeof(OptionsDialogPage));
-            Singleton<OptionsDialogPage>.Instance = config;
+            P4Operations.OptionsDialogPage = config;
 
 #if NIFTY_LEGACY
             config.OnApplyEvent += (object sender, EventArgs e) =>

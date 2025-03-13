@@ -185,9 +185,9 @@ namespace NiftyPerforce
                 return false;
             }
 
-            if (!flags.HasFlag(EditFileFlags.Force) && !Singleton<NiftyPerforce.OptionsDialogPage>.Instance.IgnoreReadOnlyOnEdit && ((File.GetAttributes(filename) & FileAttributes.ReadOnly) == 0))
+            if (!flags.HasFlag(EditFileFlags.Force) && !(OptionsDialogPage?.IgnoreReadOnlyOnEdit ?? false) && ((File.GetAttributes(filename) & FileAttributes.ReadOnly) == 0))
             {
-                Log.Info($"EditFile '{filename}' failed because file was not read only. If you want to force calling p4 edit, press the Checkout button in the menus or toggle {nameof(OptionsDialogPage.IgnoreReadOnlyOnEdit)} in the options.");
+                Log.Info($"EditFile '{filename}' failed because file was not read only. If you want to force calling p4 edit, press the Checkout button in the menus or toggle {nameof(NiftyPerforce.OptionsDialogPage.IgnoreReadOnlyOnEdit)} in the options.");
                 return false;
             }
 
@@ -208,6 +208,8 @@ namespace NiftyPerforce
 
             return AsyncProcess.Schedule("p4.exe", GetUserInfoString() + "edit \"" + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(filename), new AsyncProcess.OnDone(UnlockOp), token);
         }
+
+        public static OptionsDialogPage? OptionsDialogPage { get; set; }
 
         public static bool RevertFile(string filename, bool onlyUnchanged)
         {
@@ -291,14 +293,12 @@ namespace NiftyPerforce
 
         private static string GetUserInfoStringFull(bool lookup, string? dir)
         {
-            OptionsDialogPage config = Singleton<OptionsDialogPage>.Instance;
-
             // NOTE: This to allow the user to have a P4CONFIG variable and connect to multiple perforce servers seamlessly.
-            if (config.UseSystemEnv)
+            if (OptionsDialogPage?.UseSystemEnv ?? false)
             {
                 if (lookup && dir != null)
                 {
-                    SettingsLookupSource[] lookupSources = (config.PreferredLookupSource == SettingsLookupSource.P4Set) ?
+                    SettingsLookupSource[] lookupSources = (OptionsDialogPage!.PreferredLookupSource == SettingsLookupSource.P4Set) ?
                         new SettingsLookupSource[] { SettingsLookupSource.P4Set, SettingsLookupSource.P4Info } :
                         new SettingsLookupSource[] { SettingsLookupSource.P4Info, SettingsLookupSource.P4Set };
 
@@ -329,9 +329,12 @@ namespace NiftyPerforce
             }
 
             string arguments = string.Empty;
-            arguments += " -p " + config.Port;
-            arguments += " -u " + config.Username;
-            arguments += " -c " + config.Client;
+            if (!string.IsNullOrEmpty(OptionsDialogPage?.Port))
+                arguments += $" -p {OptionsDialogPage!.Port}";
+            if (!string.IsNullOrEmpty(OptionsDialogPage?.Username))
+                arguments += $" -u {OptionsDialogPage!.Username}";
+            if (!string.IsNullOrEmpty(OptionsDialogPage?.Client))
+                arguments += $" -c {OptionsDialogPage!.Client}";
             arguments += " ";
 
             Log.Debug("GetUserInfoStringFull : " + arguments);
