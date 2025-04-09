@@ -1,4 +1,4 @@
-﻿<Project>
+<Project>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -102,7 +102,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="System.Resources.Extensions" Version="9.0.3" />
+    <PackageReference Include="System.Resources.Extensions" Version="9.0.4" />
     <Reference Include="System.Design" />
   </ItemGroup>
   <Import Project="..\Shared\AuroraCore.projitems" Label="Shared" />
