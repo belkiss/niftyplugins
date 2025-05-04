@@ -65,7 +65,7 @@ namespace Aurora
             }
 
             s_startEvent.Release();
-            Log.Info("Scheduled {0} {1}\n", cmd.Executable, cmd.Commandline);
+            Log.Info("Scheduled {0} {1}", cmd.Executable, cmd.Commandline);
             return true;
         }
 
