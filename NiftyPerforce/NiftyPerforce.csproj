@@ -15,7 +15,7 @@
     <IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
     <IncludeDebugSymbolsInLocalVSIXDeployment>true</IncludeDebugSymbolsInLocalVSIXDeployment>
     <CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
-    <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
+    <CopyOutputSymbolsToOutputDirectory>true</CopyOutputSymbolsToOutputDirectory>
     <Configurations>Debug;Release;Debug Legacy;Release Legacy</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Debug' OR '$(Configuration)'=='Debug Legacy'">
