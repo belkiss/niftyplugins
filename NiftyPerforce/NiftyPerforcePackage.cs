@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO.Abstractions;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.CommandBars;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -54,6 +56,7 @@ namespace NiftyPerforce
     {
         private Plugin? _plugin;
         private CommandRegistry? _commandRegistry;
+        private IServiceProvider? _serviceProvider;
 
         public NiftyPerforcePackage()
         {
@@ -75,6 +78,15 @@ namespace NiftyPerforce
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             await base.InitializeAsync(cancellationToken, progress);
+
+            var services = new ServiceCollection();
+            services.AddSingleton<IFileSystem, FileSystem>();
+            services.AddSingleton<IRegistryService, DefaultRegistryService>();
+            services.AddSingleton<P4Utils>();
+
+            _serviceProvider = services.BuildServiceProvider();
+
+            AddService(_serviceProvider.GetType(), (container, cancellationToken, serviceType) => Task.FromResult(_serviceProvider as object));
 
             DTE2 dte2Service = await GetServiceAsync<DTE, DTE2>();
 
@@ -147,7 +159,7 @@ namespace NiftyPerforce
             _plugin.AddFeature(new EventHandlers.AutoCheckoutTextEdit(_plugin));
             _plugin.AddFeature(new EventHandlers.AutoCheckoutOnSave(_plugin, this));
 
-            P4Operations.CheckInstalledFiles();
+            P4Operations.CheckInstalledFiles(_serviceProvider.GetRequiredService<P4Utils>());
 
             AsyncProcess.Init();
 
