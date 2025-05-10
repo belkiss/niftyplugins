@@ -521,6 +521,26 @@ namespace NiftyPerforce
             return false;
         }
 
+        /// <summary>
+        /// Returns p4v version (note that version tagging started with p4v r18.2).
+        /// </summary>
+        /// <param name="p4vDir">Directory where to find p4v.exe.</param>
+        /// <returns>The version if found, otherwise 0.</returns>
+        internal static Version? GetP4VVersion(string? p4vDir)
+        {
+            if (!string.IsNullOrEmpty(p4vDir))
+            {
+                string p4vFullPath = Path.Combine(p4vDir, "p4v.exe");
+                if (File.Exists(p4vFullPath))
+                {
+                    var versionInfo = FileVersionInfo.GetVersionInfo(p4vFullPath);
+                    return new Version(versionInfo.FileVersion);
+                }
+            }
+
+            return null;
+        }
+
         public static void CheckInstalledFiles()
         {
             Log.Debug("Looking for installed files...");
@@ -620,37 +640,27 @@ namespace NiftyPerforce
                 }
             }
 
-            DetermineSupportedFeatures();
+            DetermineSupportedP4VFeatures();
         }
 
-        private static void DetermineSupportedFeatures()
+        internal static void DetermineSupportedP4VFeatures()
         {
-            bool p4vcBat = s_p4vcExeName == P4vcBatFileName;
+            Version version = GetP4VVersion(s_p4vcDir) ?? new Version(0, 0);
 
             // workspacewindow was added in p4v 2023.2/2443448, and 2024.1/2573667 deprecated p4v -s and p4v -t
-            s_p4vcWorkspaceWindowSupported = p4vcBat && P4VCHasCommand("workspacewindow");
+            s_p4vcWorkspaceWindowSupported = version.Major > 2023 || (version.Major == 2023 && version.Minor >= 2);
             Log.Info("[{0}] p4vc workspacewindow", s_p4vcWorkspaceWindowSupported ? "X" : " ");
 
             // since p4vc.bat was introduced with 2021.1/2075061, if we have it we know we have diffhave, hence history
 
             // diffhave was added in p4v 2020.1/1946989
-            s_p4vcDiffHaveSupported = p4vcBat || P4VCHasCommand("diffhave");
+            s_p4vcDiffHaveSupported = version.Major >= 2020;
             Log.Info("[{0}] p4vc diffhave", s_p4vcDiffHaveSupported ? "X" : " ");
 
             // history was added in p4v 2019.2 update1/1883366
             // so if we have diffhave we know we have history and can skip the test
-            s_p4vcHistorySupported = s_p4vcDiffHaveSupported || P4VCHasCommand("history");
+            s_p4vcHistorySupported = version.Major > 2019 || (version.Major == 2019 && version.Minor >= 2);
             Log.Info("[{0}] p4vc history", s_p4vcHistorySupported ? "X" : " ");
-        }
-
-        private static bool P4VCHasCommand(string command)
-        {
-            if (string.IsNullOrEmpty(s_p4vcExeName))
-                return false;
-
-            string result = Process.Execute(s_p4vcExeName!, string.Empty, $"help {command}", throwIfNonZeroExitCode: false);
-
-            return result.IndexOf("Invalid help command request...", StringComparison.Ordinal) == -1;
         }
 
         private static bool NotifyUser(string message)
