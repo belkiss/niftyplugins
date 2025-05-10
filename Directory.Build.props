@@ -27,4 +27,8 @@
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)StyleCop.json" Link="StyleCop.json" />
   </ItemGroup>
+
+  <ItemGroup>
+    <SourceRoot Include="$(MSBuildThisFileDirectory)/"/>
+  </ItemGroup>
 </Project>
