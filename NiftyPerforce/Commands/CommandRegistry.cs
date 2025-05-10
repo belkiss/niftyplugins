@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using Microsoft.VisualStudio.Shell;
+using NiftyPerforce.Core;
 
 namespace NiftyPerforce.Commands
 {

@@ -1,4 +1,4 @@
-<Project>
+﻿<Project>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -103,6 +103,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="System.Resources.Extensions" Version="9.0.4" />
+    <ProjectReference Include="..\NiftyPerforce.Core\NiftyPerforce.Core.csproj" />
     <Reference Include="System.Design" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />

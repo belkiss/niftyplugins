@@ -5,6 +5,10 @@ VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NiftyPerforce", "NiftyPerforce\NiftyPerforce.csproj", "{4633E0B5-D536-4FCC-988E-29D54DA113DF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiftyPerforce.Core", "NiftyPerforce.Core\NiftyPerforce.Core.csproj", "{D3C31D0F-0DEE-4675-9342-B7490F8DEE12}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiftyPerforce.Tests", "NiftyPerforce.Tests\NiftyPerforce.Tests.csproj", "{AEC76E3F-58C7-4733-81E1-3D56DD3EFB99}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GithubActions", "GithubActions", "{EAFAD58B-C12C-4FCE-AC50-3B04143946E6}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\build-and-publish.yml = .github\workflows\build-and-publish.yml
@@ -17,8 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.props = Directory.Build.props
 		StyleCop.ruleset = StyleCop.ruleset
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiftyPerforce.Tests", "NiftyPerforce.Tests\NiftyPerforce.Tests.csproj", "{AEC76E3F-58C7-4733-81E1-3D56DD3EFB99}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +38,14 @@ Global
 		{4633E0B5-D536-4FCC-988E-29D54DA113DF}.Release Legacy|Any CPU.Build.0 = Release Legacy|Any CPU
 		{4633E0B5-D536-4FCC-988E-29D54DA113DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4633E0B5-D536-4FCC-988E-29D54DA113DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3C31D0F-0DEE-4675-9342-B7490F8DEE12}.Debug Legacy|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3C31D0F-0DEE-4675-9342-B7490F8DEE12}.Debug Legacy|Any CPU.Build.0 = Debug|Any CPU
+		{D3C31D0F-0DEE-4675-9342-B7490F8DEE12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3C31D0F-0DEE-4675-9342-B7490F8DEE12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3C31D0F-0DEE-4675-9342-B7490F8DEE12}.Release Legacy|Any CPU.ActiveCfg = Release|Any CPU
+		{D3C31D0F-0DEE-4675-9342-B7490F8DEE12}.Release Legacy|Any CPU.Build.0 = Release|Any CPU
+		{D3C31D0F-0DEE-4675-9342-B7490F8DEE12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3C31D0F-0DEE-4675-9342-B7490F8DEE12}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AEC76E3F-58C7-4733-81E1-3D56DD3EFB99}.Debug Legacy|Any CPU.ActiveCfg = Debug|Any CPU
 		{AEC76E3F-58C7-4733-81E1-3D56DD3EFB99}.Debug Legacy|Any CPU.Build.0 = Debug|Any CPU
 		{AEC76E3F-58C7-4733-81E1-3D56DD3EFB99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

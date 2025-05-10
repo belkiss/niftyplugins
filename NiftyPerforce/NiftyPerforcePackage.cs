@@ -15,6 +15,7 @@ using Microsoft.VisualStudio.CommandBars;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using NiftyPerforce.Commands;
+using NiftyPerforce.Core;
 using Task = System.Threading.Tasks.Task;
 
 #if NIFTY_LEGACY

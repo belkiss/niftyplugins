@@ -3,6 +3,7 @@ using System;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using NiftyPerforce.Core;
 
 namespace NiftyPerforce.EventHandlers
 {

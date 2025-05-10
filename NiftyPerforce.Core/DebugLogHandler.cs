@@ -2,7 +2,7 @@
 
 using System.Diagnostics;
 
-namespace NiftyPerforce
+namespace NiftyPerforce.Core
 {
     public class DebugLogHandler : Log.IHandler
     {

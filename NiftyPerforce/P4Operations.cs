@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
+using NiftyPerforce.Core;
 
 namespace NiftyPerforce
 {

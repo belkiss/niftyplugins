@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace NiftyPerforce
+namespace NiftyPerforce.Core
 {
     public static class Log
     {

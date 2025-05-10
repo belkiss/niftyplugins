@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using EnvDTE;
 using EnvDTE80;
+using NiftyPerforce.Core;
 
 namespace NiftyPerforce.EventHandlers
 {
