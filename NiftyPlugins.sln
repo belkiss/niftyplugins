@@ -18,8 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		StyleCop.ruleset = StyleCop.ruleset
 	EndProjectSection
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AuroraCore", "Shared\AuroraCore.shproj", "{EED4A10D-51AE-418F-BF46-21AE321F9898}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiftyPerforce.Tests", "NiftyPerforce.Tests\NiftyPerforce.Tests.csproj", "{AEC76E3F-58C7-4733-81E1-3D56DD3EFB99}"
 EndProject
 Global
@@ -52,9 +50,5 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C61E079E-FABA-466A-95C9-7A2082485980}
-	EndGlobalSection
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Shared\AuroraCore.projitems*{4633e0b5-d536-4fcc-988e-29d54da113df}*SharedItemsImports = 5
-		Shared\AuroraCore.projitems*{eed4a10d-51ae-418f-bf46-21ae321f9898}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

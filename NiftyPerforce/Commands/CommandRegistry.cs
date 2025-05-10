@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using Microsoft.VisualStudio.Shell;
 
-namespace Aurora
+namespace NiftyPerforce.Commands
 {
     // Holds a dictionary between local command names and the instance that holds
     // the logic to execute and update the command itself.

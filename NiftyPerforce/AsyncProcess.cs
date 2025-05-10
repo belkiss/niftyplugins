@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Aurora
+namespace NiftyPerforce
 {
     public static class AsyncProcess
     {
@@ -13,7 +13,7 @@ namespace Aurora
 
         public static void Init()
         {
-            s_helperThread = new System.Threading.Thread(new ThreadStart(ThreadMain));
+            s_helperThread = new Thread(new ThreadStart(ThreadMain));
             s_helperThread.Start();
         }
 
@@ -74,7 +74,7 @@ namespace Aurora
         private static readonly Mutex s_queueLock = new Mutex();
         private static readonly Semaphore s_startEvent = new Semaphore(0, 9999);
         private static readonly Queue<CommandThread> s_commandQueue = new Queue<CommandThread>();
-        private static System.Threading.Thread? s_helperThread;
+        private static Thread? s_helperThread;
 
         private static void ThreadMain()
         {
@@ -97,7 +97,7 @@ namespace Aurora
                 {
                     try
                     {
-                        var thread = new System.Threading.Thread(new ThreadStart(cmd.Run));
+                        var thread = new Thread(new ThreadStart(cmd.Run));
                         thread.Start();
                     }
                     catch

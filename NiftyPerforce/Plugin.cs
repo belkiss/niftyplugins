@@ -5,7 +5,7 @@ using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 
-namespace Aurora
+namespace NiftyPerforce
 {
     // Wrapper class around registering other classes to handle the actual commands.
     // Interfaces with visual studio and handles the dispatch.
@@ -15,7 +15,7 @@ namespace Aurora
 
         public DTE2 App { get; }
 
-        public Commands Commands
+        public EnvDTE.Commands DTECommands
         {
             get
             {

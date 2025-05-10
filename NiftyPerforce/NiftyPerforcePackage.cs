@@ -8,13 +8,13 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Aurora;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft;
 using Microsoft.VisualStudio.CommandBars;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using NiftyPerforce.Commands;
 using Task = System.Threading.Tasks.Task;
 
 #if NIFTY_LEGACY
@@ -226,7 +226,7 @@ namespace NiftyPerforce
 
             try
             {
-                Command? cmd = _plugin?.Commands.Item(name, -1);
+                Command? cmd = _plugin?.DTECommands.Item(name, -1);
                 if (cmd != null)
                 {
                     profferCommands3.RemoveNamedCommand(name);
@@ -245,7 +245,7 @@ namespace NiftyPerforce
                 "Cross Project Multi Project",
             };
 
-            const string Prefix = "Aurora.NiftyPerforce.Connect";
+            const string Prefix = "NiftyPerforce.Connect";
             string absname = Prefix + "." + name;
 
             foreach (string bar in bars)

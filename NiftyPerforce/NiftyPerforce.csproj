@@ -105,7 +105,6 @@
     <PackageReference Include="System.Resources.Extensions" Version="9.0.4" />
     <Reference Include="System.Design" />
   </ItemGroup>
-  <Import Project="..\Shared\AuroraCore.projitems" Label="Shared" />
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <Import Project="$(PkgMicrosoft_VSSDK_BuildTools)\tools\vssdk\Microsoft.VsSDK.targets" />
 </Project>

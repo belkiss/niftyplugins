@@ -2,7 +2,7 @@
 
 using System.Diagnostics;
 
-namespace Aurora
+namespace NiftyPerforce
 {
     public class DebugLogHandler : Log.IHandler
     {

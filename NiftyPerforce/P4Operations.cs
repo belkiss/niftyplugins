@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
-using Aurora;
 
 namespace NiftyPerforce
 {
@@ -351,7 +350,7 @@ namespace NiftyPerforce
                 "set",
                 "-q"); // Reduces the output
 
-            string output = Aurora.Process.Execute("p4", dir, args);
+            string output = Process.Execute("p4", dir, args);
             return GetConnectionStringFromP4SetOutput(output);
         }
 
@@ -393,7 +392,7 @@ namespace NiftyPerforce
         {
             try
             {
-                string output = Aurora.Process.Execute("p4", dir, $"-s -L \"{dir}\" info");
+                string output = Process.Execute("p4", dir, $"-s -L \"{dir}\" info");
                 var userpattern = new Regex(@"User name: (?<user>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
                 var portpattern = new Regex(@"Server address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
                 var brokerpattern = new Regex(@"Broker address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
@@ -443,7 +442,7 @@ namespace NiftyPerforce
 
                 return ret;
             }
-            catch (Aurora.ProcessException e)
+            catch (ProcessException e)
             {
                 Log.Error("Failed to execute info string discovery: {0}", e.Message);
             }
@@ -648,7 +647,7 @@ namespace NiftyPerforce
             if (string.IsNullOrEmpty(s_p4vcExeName))
                 return false;
 
-            string result = Aurora.Process.Execute(s_p4vcExeName!, string.Empty, $"help {command}", throwIfNonZeroExitCode: false);
+            string result = Process.Execute(s_p4vcExeName!, string.Empty, $"help {command}", throwIfNonZeroExitCode: false);
 
             return result.IndexOf("Invalid help command request...", StringComparison.Ordinal) == -1;
         }
@@ -674,7 +673,7 @@ namespace NiftyPerforce
                 throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture, "Tried to find the mainline version of {0}, but the mainline path spec is empty", filename));
             }
 
-            string result = Aurora.Process.Execute("p4.exe", Path.GetDirectoryName(filename), GetUserInfoString() + "integrated \"" + EscapeP4Path(filename) + "\"");
+            string result = Process.Execute("p4.exe", Path.GetDirectoryName(filename), GetUserInfoString() + "integrated \"" + EscapeP4Path(filename) + "\"");
             result = UnEscapeP4Path(result);
 
             var pattern = new Regex(@"//(.*)#\d+ - .*//([^#]+)#\d+", RegexOptions.Compiled);

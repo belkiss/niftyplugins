@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace Aurora
+namespace NiftyPerforce
 {
     public static class Help
     {
