@@ -505,16 +505,17 @@ namespace NiftyPerforce
         }
 
         /// <summary>
-        /// Returns p4v version (note that version tagging started with p4v r18.2).
+        /// Returns p4v executable version.
         /// </summary>
-        /// <param name="p4vFullPath">Full path to p4v.exe.</param>
-        /// <returns>The version if found, otherwise 0.</returns>
+        /// <param name="p4vFullPath">Full path to executable.</param>
+        /// <returns>The version if found, otherwise null.</returns>
         internal static Version? GetP4VVersion(string? p4vFullPath)
         {
             if (!string.IsNullOrEmpty(p4vFullPath) && File.Exists(p4vFullPath))
             {
                 var versionInfo = FileVersionInfo.GetVersionInfo(p4vFullPath);
-                return new Version(versionInfo.FileVersion);
+                if (versionInfo.FileVersion != null)
+                    return new Version(versionInfo.FileVersion);
             }
 
             return null;
