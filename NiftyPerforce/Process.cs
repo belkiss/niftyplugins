@@ -4,6 +4,7 @@ using System;
 using System.Globalization;
 using System.Runtime.Serialization;
 using System.Threading;
+using NiftyPerforce.Core;
 
 namespace NiftyPerforce
 {
@@ -41,7 +42,7 @@ namespace NiftyPerforce
             }
         }
 
-        public static string Execute(string executable, string? workingdir, string arguments, bool throwIfNonZeroExitCode = true)
+        public static string Execute(string executable, string? workingdir, string arguments)
         {
             using var process = new System.Diagnostics.Process();
 
@@ -56,7 +57,8 @@ namespace NiftyPerforce
 
             if (!process.Start())
             {
-                throw new ProcessException("{0}: Failed to start {1}.", executable, process.StartInfo.Arguments);
+                Log.Error("{0}: Failed to start {1}.", executable, process.StartInfo.Arguments);
+                return string.Empty;
             }
 
             using Handler stderr = new Handler(), stdout = new Handler();
@@ -69,9 +71,9 @@ namespace NiftyPerforce
 
             process.WaitForExit();
 
-            if (throwIfNonZeroExitCode && process.ExitCode != 0)
+            if (process.ExitCode != 0)
             {
-                throw new ProcessException("Failed to execute {0} {1}, exit code was {2}", executable, process.StartInfo.Arguments, process.ExitCode);
+                Log.Error("Failed to execute {0} {1}, exit code was {2}", executable, process.StartInfo.Arguments, process.ExitCode);
             }
 
             stderr.Sentinel.WaitOne();
