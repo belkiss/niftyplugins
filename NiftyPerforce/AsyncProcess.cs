@@ -45,7 +45,7 @@ namespace NiftyPerforce
             return Schedule(executable, commandline, workingdir, callback, callbackArg, DefaultTimeout);
         }
 
-        public static bool Schedule(string executable, string commandline, string? workingdir, OnDone? callback, object? callbackArg, int timeout)
+        public static bool Schedule(string executable, string commandline, string? workingdir, OnDone? callback, object? callbackArg, int timeout, Dictionary<string, string>? environmentVariables = null)
         {
             var cmd = new CommandThread(
                 executable,
@@ -53,7 +53,8 @@ namespace NiftyPerforce
                 workingdir,
                 callback,
                 callbackArg,
-                timeout);
+                timeout,
+                environmentVariables);
 
             try
             {
@@ -122,7 +123,9 @@ namespace NiftyPerforce
 
             public int Timeout { get; } = 10000;
 
-            public CommandThread(string executable, string commandline, string? workingdir, OnDone? callback, object? callbackArg, int timeout)
+            public Dictionary<string, string>? EnvironmentVariables { get; }
+
+            public CommandThread(string executable, string commandline, string? workingdir, OnDone? callback, object? callbackArg, int timeout, Dictionary<string, string>? environmentVariables)
             {
                 Executable = executable;
                 Commandline = commandline;
@@ -130,6 +133,7 @@ namespace NiftyPerforce
                 Callback = callback;
                 CallbackArg = callbackArg;
                 Timeout = timeout;
+                EnvironmentVariables = environmentVariables;
             }
 
             public void Run()
@@ -137,7 +141,7 @@ namespace NiftyPerforce
                 bool ok;
                 try
                 {
-                    ok = RunCommand(Executable, Commandline, Workingdir, Timeout);
+                    ok = RunCommand(Executable, Commandline, Workingdir, Timeout, EnvironmentVariables);
                 }
                 catch
                 {
@@ -149,7 +153,7 @@ namespace NiftyPerforce
             }
         }
 
-        private static bool RunCommand(string executable, string commandline, string? workingdir, int timeout)
+        private static bool RunCommand(string executable, string commandline, string? workingdir, int timeout, Dictionary<string, string>? environmentVariables = null)
         {
             try
             {
@@ -168,6 +172,12 @@ namespace NiftyPerforce
                 {
                     process.StartInfo.RedirectStandardOutput = true;
                     process.StartInfo.RedirectStandardError = true;
+                }
+
+                if (environmentVariables != null)
+                {
+                    foreach (KeyValuePair<string, string> kvp in environmentVariables)
+                        process.StartInfo.EnvironmentVariables[kvp.Key] = kvp.Value;
                 }
 
                 process.StartInfo.CreateNoWindow = true;
