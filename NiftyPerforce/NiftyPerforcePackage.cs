@@ -13,9 +13,7 @@ using EnvDTE;
 using EnvDTE80;
 using Microsoft;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.CommandBars;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using NiftyPerforce.Commands;
 using NiftyPerforce.Core;
 using Task = System.Threading.Tasks.Task;
@@ -139,17 +137,6 @@ namespace NiftyPerforce
             var config = (OptionsDialogPage)GetDialogPage(typeof(OptionsDialogPage));
             P4Operations.OptionsDialogPage = config;
 
-#if NIFTY_LEGACY
-            config.OnApplyEvent += (object sender, EventArgs e) =>
-            {
-                if (config.CleanLegacyNiftyCommands)
-                {
-                    Cleanup();
-                    config.CleanLegacyNiftyCommands = false;
-                }
-            };
-#endif
-
             _plugin = new Plugin(dte2Service, oleMenuCommandService, config);
 
             InitCommandRegistry();
@@ -187,143 +174,6 @@ namespace NiftyPerforce
             _commandRegistry.RegisterCommand(new Commands.P4RevertItem(_plugin!, "NiftyRevert", false));
             _commandRegistry.RegisterCommand(new Commands.P4RevertItem(_plugin!, "NiftyRevertUnchanged", true));
             _commandRegistry.RegisterCommand(new Commands.P4ShowItem(_plugin!, "NiftyShow"));
-        }
-
-        /// <summary>
-        ///  Removes all installed legacy commands and controls.
-        /// </summary>
-        public void Cleanup()
-        {
-            Log.Info("Cleaning up all legacy nifty commands");
-
-            ThreadHelper.ThrowIfNotOnUIThread();
-
-            if (!(GetService(typeof(SVsProfferCommands)) is IVsProfferCommands3 profferCommands3))
-                return;
-
-            RemoveCommandBar("NiftyPerforceCmdBar", profferCommands3);
-            RemoveCommandBar("NiftyPerforce", profferCommands3);
-
-            RemoveCommand("NiftyConfig", profferCommands3);
-            RemoveCommand("NiftyEditModified", profferCommands3);
-            RemoveCommand("NiftyEdit", profferCommands3);
-            RemoveCommand("NiftyEditItem", profferCommands3);
-            RemoveCommand("NiftyEditSolution", profferCommands3);
-            RemoveCommand("NiftyDiff", profferCommands3);
-            RemoveCommand("NiftyDiffItem", profferCommands3);
-            RemoveCommand("NiftyDiffSolution", profferCommands3);
-            RemoveCommand("NiftyHistory", profferCommands3);
-            RemoveCommand("NiftyHistoryMain", profferCommands3);
-            RemoveCommand("NiftyHistoryItem", profferCommands3);
-            RemoveCommand("NiftyHistoryItemMain", profferCommands3);
-            RemoveCommand("NiftyHistorySolution", profferCommands3);
-            RemoveCommand("NiftyTimeLapse", profferCommands3);
-            RemoveCommand("NiftyTimeLapseMain", profferCommands3);
-            RemoveCommand("NiftyTimeLapseItem", profferCommands3);
-            RemoveCommand("NiftyTimeLapseItemMain", profferCommands3);
-            RemoveCommand("NiftyRevisionGraph", profferCommands3);
-            RemoveCommand("NiftyRevisionGraphMain", profferCommands3);
-            RemoveCommand("NiftyRevisionGraphItem", profferCommands3);
-            RemoveCommand("NiftyRevisionGraphItemMain", profferCommands3);
-            RemoveCommand("NiftyRevert", profferCommands3);
-            RemoveCommand("NiftyRevertItem", profferCommands3);
-            RemoveCommand("NiftyRevertUnchanged", profferCommands3);
-            RemoveCommand("NiftyRevertUnchangedItem", profferCommands3);
-            RemoveCommand("NiftyShow", profferCommands3);
-            RemoveCommand("NiftyShowItem", profferCommands3);
-        }
-
-        private void RemoveCommand(string name, IVsProfferCommands3 profferCommands3)
-        {
-            ThreadHelper.ThrowIfNotOnUIThread();
-
-            try
-            {
-                Command? cmd = _plugin?.DTECommands.Item(name, -1);
-                if (cmd != null)
-                {
-                    profferCommands3.RemoveNamedCommand(name);
-                }
-            }
-            catch (Exception)
-            {
-            }
-
-            string[] bars =
-            {
-                "Project",
-                "Item",
-                "Easy MDI Document Window",
-                "Cross Project Multi Item",
-                "Cross Project Multi Project",
-            };
-
-            const string Prefix = "NiftyPerforce.Connect";
-            string absname = Prefix + "." + name;
-
-            foreach (string bar in bars)
-            {
-                CommandBar? b = (_plugin?.App.CommandBars as CommandBars)?[bar];
-                if (b != null)
-                {
-                    bool done = false;
-                    while (!done)
-                    {
-                        bool found = false;
-                        foreach (CommandBarControl ctrl in b.Controls)
-                        {
-                            if (ctrl.Caption == name || ctrl.Caption == absname)
-                            {
-                                found = true;
-                                try
-                                {
-                                    profferCommands3.RemoveCommandBarControl(ctrl);
-                                }
-                                catch (Exception)
-                                {
-                                }
-
-                                break;
-                            }
-                        }
-
-                        done = !found;
-                    }
-                }
-            }
-        }
-
-        // Remove a command bar and contained controls
-        private static void RemoveCommandBar(string name, IVsProfferCommands3 profferCommands3)
-        {
-            ThreadHelper.ThrowIfNotOnUIThread();
-
-            var dte = GetGlobalService(typeof(DTE)) as DTE2;
-            var commandBars = dte?.CommandBars as CommandBars;
-            CommandBar? existingCmdBar = null;
-
-            try
-            {
-                existingCmdBar = commandBars?[name];
-            }
-            catch (Exception)
-            {
-            }
-
-            if (existingCmdBar != null)
-            {
-                // Remove all buttons
-                while (existingCmdBar.Controls.Count > 0)
-                {
-                    foreach (CommandBarControl ctrl in existingCmdBar.Controls)
-                    {
-                        profferCommands3.RemoveCommandBarControl(ctrl);
-                        break;
-                    }
-                }
-            }
-
-            profferCommands3.RemoveCommandBar(existingCmdBar);
         }
     }
 }

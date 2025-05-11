@@ -82,13 +82,6 @@ namespace NiftyPerforce
         [Description("Where we can find the mainline version of this file")]
         public string MainLinePath { get; set; } = string.Empty;
 
-#if NIFTY_LEGACY
-        [Category("VSIX Legacy")]
-        [Description("Clean the legacy nifty perforce commands from the IDE when clicking ok. Will not be persisted.")]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public bool CleanLegacyNiftyCommands { get; set; } = false;
-#endif
-
         public event EventHandler? OnApplyEvent;
 
         protected override void OnApply(PageApplyEventArgs e)
