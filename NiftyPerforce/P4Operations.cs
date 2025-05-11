@@ -563,27 +563,27 @@ namespace NiftyPerforce
             if (!s_p4CustomDiff)
                 Log.Info("[ ] p4 custom diff");
 
-            DetermineSupportedP4VFeatures();
+            DetermineSupportedP4VFeatures(s_p4vFullPath, out s_p4vcWorkspaceWindowSupported, out s_p4vcDiffHaveSupported, out s_p4vcHistorySupported);
         }
 
-        internal static void DetermineSupportedP4VFeatures()
+        internal static void DetermineSupportedP4VFeatures(string? p4vFullPath, out bool p4vcWorkspaceWindowSupported, out bool p4vcDiffHaveSupported, out bool p4vcHistorySupported)
         {
-            Version version = GetP4VVersion(s_p4vFullPath) ?? new Version(0, 0);
+            Version version = GetP4VVersion(p4vFullPath) ?? new Version(0, 0);
 
             // workspacewindow was added in p4v 2023.2/2443448, and 2024.1/2573667 deprecated p4v -s and p4v -t
-            s_p4vcWorkspaceWindowSupported = version.Major > 2023 || (version.Major == 2023 && version.Minor >= 2);
-            Log.Info("[{0}] p4vc workspacewindow", s_p4vcWorkspaceWindowSupported ? "X" : " ");
+            p4vcWorkspaceWindowSupported = version.Major > 2023 || (version.Major == 2023 && version.Minor >= 2);
+            Log.Info("[{0}] p4vc workspacewindow", p4vcWorkspaceWindowSupported ? "X" : " ");
 
             // since p4vc.bat was introduced with 2021.1/2075061, if we have it we know we have diffhave, hence history
 
             // diffhave was added in p4v 2020.1/1946989
-            s_p4vcDiffHaveSupported = version.Major >= 2020;
-            Log.Info("[{0}] p4vc diffhave", s_p4vcDiffHaveSupported ? "X" : " ");
+            p4vcDiffHaveSupported = version.Major >= 2020;
+            Log.Info("[{0}] p4vc diffhave", p4vcDiffHaveSupported ? "X" : " ");
 
             // history was added in p4v 2019.2 update1/1883366
             // so if we have diffhave we know we have history and can skip the test
-            s_p4vcHistorySupported = version.Major > 2019 || (version.Major == 2019 && version.Minor >= 2);
-            Log.Info("[{0}] p4vc history", s_p4vcHistorySupported ? "X" : " ");
+            p4vcHistorySupported = version.Major > 2019 || (version.Major == 2019 && version.Minor >= 2);
+            Log.Info("[{0}] p4vc history", p4vcHistorySupported ? "X" : " ");
         }
 
         private static bool NotifyUser(string message)
