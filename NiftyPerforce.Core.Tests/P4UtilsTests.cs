@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Win32;
 
@@ -16,7 +15,6 @@ namespace NiftyPerforce.Core.Tests
     {
         private sealed class P4UtilsBuilder
         {
-            private readonly IServiceCollection _services = new ServiceCollection();
             private IFileSystem? _fileSystem;
             private IRegistryService? _registryService;
 
@@ -41,11 +39,7 @@ namespace NiftyPerforce.Core.Tests
                 _fileSystem ??= new MockFileSystem();
                 _registryService ??= new MockRegistryService();
 
-                _services.AddSingleton(_fileSystem);
-                _services.AddSingleton(_registryService);
-
-                _services.AddTransient<P4Utils>();
-                return _services.BuildServiceProvider().GetRequiredService<P4Utils>();
+                return new P4Utils(_fileSystem, _registryService);
             }
         }
 
