@@ -348,7 +348,7 @@ namespace NiftyPerforce
             string args = string.Join(
                 " ",
                 "-s",
-                $"-L \"{dir}\"",
+                $"-d \"{dir.TrimEnd(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar })}\"",
                 "set",
                 "-q"); // Reduces the output
 
@@ -394,7 +394,13 @@ namespace NiftyPerforce
         {
             try
             {
-                string output = Process.Execute(s_p4FullPath!, dir, $"-s -L \"{dir}\" info");
+                string args = string.Join(
+                    " ",
+                    "-s",
+                    $"-d \"{dir.TrimEnd(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar })}\"",
+                    "info");
+
+                string output = Process.Execute(s_p4FullPath!, dir, args);
                 var userpattern = new Regex(@"User name: (?<user>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
                 var portpattern = new Regex(@"Server address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
                 var brokerpattern = new Regex(@"Broker address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
