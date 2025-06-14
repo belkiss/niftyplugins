@@ -6,7 +6,7 @@
     <LangVersion>8.0</LangVersion>
     <TargetFramework>net472</TargetFramework>
     <Nullable>enable</Nullable>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors Condition="'$(Configuration)'=='Release' OR '$(Configuration)'=='Release Legacy'">true</TreatWarningsAsErrors>
     <ImplicitUsings>disable</ImplicitUsings>
     <NuGetAudit>false</NuGetAudit>
 
