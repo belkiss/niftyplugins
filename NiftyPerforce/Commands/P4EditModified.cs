@@ -19,7 +19,7 @@ namespace NiftyPerforce.Commands
             if (!Plugin.App.Solution.Saved)
             {
                 Log.Info($"P4EditModified : solution {Plugin.App.Solution.FullName} was dirty, checkout");
-                P4Operations.EditFile(Plugin.App.Solution.FullName, false);
+                Plugin.P4Operations.EditFile(Plugin.App.Solution.FullName, false);
             }
 
             foreach (Project p in Plugin.App.Solution.Projects)
@@ -27,7 +27,7 @@ namespace NiftyPerforce.Commands
                 if (!p.Saved)
                 {
                     Log.Info($"P4EditModified : project {p.FullName} was dirty, checkout");
-                    P4Operations.EditFile(p.FullName, false);
+                    Plugin.P4Operations.EditFile(p.FullName, false);
                 }
             }
 
@@ -36,7 +36,7 @@ namespace NiftyPerforce.Commands
                 if (!doc.Saved)
                 {
                     Log.Info($"P4EditModified : document {doc.FullName} was dirty, checkout");
-                    P4Operations.EditFile(doc.FullName, false);
+                    Plugin.P4Operations.EditFile(doc.FullName, false);
                 }
             }
 

@@ -83,37 +83,37 @@ namespace NiftyPerforce.EventHandlers
             }
         }
 
-        private static void OnItemAdded(ProjectItem item)
+        private void OnItemAdded(ProjectItem item)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            P4Operations.EditFile(item.ContainingProject.FullName, false);
+            _plugin.P4Operations.EditFile(item.ContainingProject.FullName, false);
 
             if (item.ProjectItems != null)
             {
                 for (int i = 0; i < item.FileCount; i++)
                 {
                     string name = item.FileNames[(short)i];
-                    P4Operations.AddFile(name);
+                    _plugin.P4Operations.AddFile(name);
                 }
             }
             else
             {
                 if (System.IO.File.Exists(item.Name))
-                    P4Operations.AddFile(item.Name);
+                    _plugin.P4Operations.AddFile(item.Name);
             }
         }
 
-        private static void OnItemRemoved(ProjectItem item)
+        private void OnItemRemoved(ProjectItem item)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            P4Operations.EditFile(item.ContainingProject.FullName, false);
+            _plugin.P4Operations.EditFile(item.ContainingProject.FullName, false);
 
             for (int i = 0; i < item.FileCount; i++)
             {
                 string name = item.FileNames[(short)i];
-                P4Operations.DeleteFile(name);
+                _plugin.P4Operations.DeleteFile(name);
             }
         }
 
@@ -121,8 +121,8 @@ namespace NiftyPerforce.EventHandlers
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            P4Operations.EditFile(_plugin.App.Solution.FullName, false);
-            P4Operations.AddFile(project.FullName);
+            _plugin.P4Operations.EditFile(_plugin.App.Solution.FullName, false);
+            _plugin.P4Operations.AddFile(project.FullName);
 
             // TODO: [jt] We should if the operation is not a add new project but rather a add existing project
             //       step through all the project items and add them to perforce. Or maybe we want the user
@@ -133,8 +133,8 @@ namespace NiftyPerforce.EventHandlers
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            P4Operations.EditFile(_plugin.App.Solution.FullName, false);
-            P4Operations.DeleteFile(project.FullName);
+            _plugin.P4Operations.EditFile(_plugin.App.Solution.FullName, false);
+            _plugin.P4Operations.DeleteFile(project.FullName);
 
             // TODO: [jt] Do we want to automatically delete the items from perforce here?
         }

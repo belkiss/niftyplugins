@@ -12,7 +12,7 @@ namespace NiftyPerforce.Commands
 
         protected override void OnExecute(SelectedItem item, string filePath)
         {
-            P4Operations.EditFile(filePath, true);
+            Plugin.P4Operations.EditFile(filePath, true);
         }
     }
 }

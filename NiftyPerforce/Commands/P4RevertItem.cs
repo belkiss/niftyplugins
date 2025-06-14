@@ -23,7 +23,7 @@ namespace NiftyPerforce.Commands
                     return;
             }
 
-            P4Operations.RevertFile(filePath, _onlyUnchanged);
+            Plugin.P4Operations.RevertFile(filePath, _onlyUnchanged);
         }
     }
 }

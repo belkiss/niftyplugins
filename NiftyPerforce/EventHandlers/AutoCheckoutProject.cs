@@ -77,7 +77,7 @@ namespace NiftyPerforce.EventHandlers
 
             foreach (Project project in (Array)Plugin.App.ActiveSolutionProjects)
             {
-                P4Operations.EditFileImmediate(project.FullName);
+                Plugin.P4Operations.EditFileImmediate(project.FullName);
             }
         }
     }

@@ -50,7 +50,7 @@ namespace NiftyPerforce.EventHandlers
 
             RunningDocumentInfo runningDocumentInfo = _rdt!.Value.GetDocumentInfo(docCookie);
             string filePath = runningDocumentInfo.Moniker;
-            return P4Operations.EditFileImmediate(filePath);
+            return Plugin.P4Operations.EditFileImmediate(filePath);
         }
     }
 

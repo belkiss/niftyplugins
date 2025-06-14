@@ -78,7 +78,7 @@ namespace NiftyPerforce.EventHandlers
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
             if (Plugin.App.ActiveDocument != null && Plugin.App.ActiveDocument.ReadOnly)
-                P4Operations.EditFile(Plugin.App.ActiveDocument.FullName, false);
+                Plugin.P4Operations.EditFile(Plugin.App.ActiveDocument.FullName, false);
         }
 
         // [jt] This handler checks for things like paste operations. In theory we should be able to remove the handler above, but
@@ -95,7 +95,7 @@ namespace NiftyPerforce.EventHandlers
             }
 
             if (Plugin.App.ActiveDocument != null && Plugin.App.ActiveDocument.ReadOnly && !Plugin.App.ActiveDocument.Saved)
-                P4Operations.EditFile(Plugin.App.ActiveDocument.FullName, false);
+                Plugin.P4Operations.EditFile(Plugin.App.ActiveDocument.FullName, false);
         }
 
         private void OnCheckoutCurrentDocument(string guid, int id, object customIn, object customOut, ref bool cancelDefault)
@@ -103,7 +103,7 @@ namespace NiftyPerforce.EventHandlers
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
             if (Plugin.App.ActiveDocument != null && Plugin.App.ActiveDocument.ReadOnly && !Plugin.App.ActiveDocument.Saved)
-                P4Operations.EditFile(Plugin.App.ActiveDocument.FullName, false);
+                Plugin.P4Operations.EditFile(Plugin.App.ActiveDocument.FullName, false);
         }
     }
 }

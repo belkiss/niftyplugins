@@ -1,5 +1,6 @@
 ﻿// Copyright (C) 2006-2017 Jim Tilander, 2017-2025 Lambert Clara. See the COPYING file in the project root for full license information.
 
+using System;
 using System.Collections.Generic;
 using EnvDTE;
 using EnvDTE80;
@@ -19,11 +20,14 @@ namespace NiftyPerforce
 
         public object Options { get; }
 
-        public Plugin(DTE2 application, OleMenuCommandService oleMenuCommandService, object options)
+        public P4Operations P4Operations { get; }
+
+        public Plugin(DTE2 application, OleMenuCommandService oleMenuCommandService, object options, P4Operations operations)
         {
             App = application;
             MenuCommandService = oleMenuCommandService;
             Options = options;
+            P4Operations = operations;
         }
 
         public void AddFeature(Feature feature)

@@ -21,10 +21,10 @@ namespace NiftyPerforce.Commands
             if (_mMainLine)
             {
                 var options = (OptionsDialogPage)Plugin.Options;
-                filePath = P4Operations.RemapToMain(filePath, options.MainLinePath);
+                filePath = Plugin.P4Operations.RemapToMain(filePath, options.MainLinePath);
             }
 
-            P4Operations.RevisionGraph(dirname!, filePath);
+            Plugin.P4Operations.RevisionGraph(dirname!, filePath);
         }
     }
 }

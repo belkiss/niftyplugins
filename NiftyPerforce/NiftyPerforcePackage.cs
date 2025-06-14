@@ -115,9 +115,13 @@ namespace NiftyPerforce
             Log.Debug("Booting up...");
 
             var config = (OptionsDialogPage)GetDialogPage(typeof(OptionsDialogPage));
-            P4Operations.OptionsDialogPage = config;
+            _plugin = new Plugin(dte2Service, oleMenuCommandService, config, new P4Operations());
+            void ApplyOptions()
+            {
+                _plugin.P4Operations.SetOptions(config.IgnoreReadOnlyOnEdit, config.UseSystemEnv, config.PreferredLookupSource, config.Port, config.Client, config.Username);
+            }
 
-            _plugin = new Plugin(dte2Service, oleMenuCommandService, config);
+            config.OnApplyEvent += (s, e) => ApplyOptions();
 
             InitCommandRegistry();
 
@@ -126,7 +130,8 @@ namespace NiftyPerforce
             _plugin.AddFeature(new EventHandlers.AutoCheckoutTextEdit(_plugin));
             _plugin.AddFeature(new EventHandlers.AutoCheckoutOnSave(_plugin, this));
 
-            P4Operations.CheckInstalledFiles(new P4Utils(new FileSystem(), new DefaultRegistryService()));
+            _plugin.P4Operations.CheckInstalledFiles(new P4Utils(new FileSystem(), new DefaultRegistryService()));
+            ApplyOptions();
 
             AsyncProcess.Init();
 
