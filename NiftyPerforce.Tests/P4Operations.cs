@@ -10,7 +10,7 @@ namespace NiftyPerforce.Tests
         [TestMethod]
         public void ParseP4Set()
         {
-            string p4SetOutput = @"
+            const string P4SetOutput = @"
 P4CHARSET=utf8
 P4CLIENT=some.user_ClientName
 P4CONFIG=p4config.txt
@@ -22,7 +22,7 @@ exit: 0
 ";
             Assert.AreEqual(
                 "-p ssl:someport:1666 -u some.user -c some.user_ClientName",
-                NiftyPerforce.P4Operations.GetConnectionStringFromP4SetOutput(p4SetOutput));
+                NiftyPerforce.P4Operations.GetConnectionStringFromP4SetOutput(P4SetOutput));
         }
     }
 }
