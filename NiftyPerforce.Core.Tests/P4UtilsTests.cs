@@ -18,10 +18,6 @@ namespace NiftyPerforce.Core.Tests
             private IFileSystem? _fileSystem;
             private IRegistryService? _registryService;
 
-            public P4UtilsBuilder()
-            {
-            }
-
             public P4UtilsBuilder WithFileSystem(IFileSystem fileSystem)
             {
                 _fileSystem = fileSystem;

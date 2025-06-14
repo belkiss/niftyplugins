@@ -54,14 +54,6 @@ namespace NiftyPerforce
         private Plugin? _plugin;
         private CommandRegistry? _commandRegistry;
 
-        public NiftyPerforcePackage()
-        {
-            // Inside this method you can place any initialization code that does not require
-            // any Visual Studio service because at this point the package object is created but
-            // not sited yet inside Visual Studio environment. The place to do all the other
-            // initialization is the Initialize method.
-        }
-
         private async Task<TReturnType> GetServiceAsync<TServiceType, TReturnType>() => (TReturnType)await GetServiceAsync(typeof(TServiceType));
 
         /// <summary>
