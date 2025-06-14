@@ -163,6 +163,7 @@ namespace NiftyPerforce
             _commandRegistry.RegisterCommand(new Commands.P4RevertItem(_plugin!, "NiftyRevert", false));
             _commandRegistry.RegisterCommand(new Commands.P4RevertItem(_plugin!, "NiftyRevertUnchanged", true));
             _commandRegistry.RegisterCommand(new Commands.P4ShowItem(_plugin!, "NiftyShow"));
+            _commandRegistry.RegisterCommand(new Commands.CopyRelativePath(_plugin!, "NiftyCopyRelativePath"));
         }
     }
 }
