@@ -19,12 +19,12 @@ namespace NiftyPerforce
 
         private static bool s_p4CustomDiff;
         private static string? s_p4FullPath;
-        private static string? s_p4vFullPath;
-        private static string? s_p4vcFullPath;
+        private static string? s_p4VFullPath;
+        private static string? s_p4VcFullPath;
 
-        private static bool s_p4vcHistorySupported;
-        private static bool s_p4vcDiffHaveSupported;
-        private static bool s_p4vcWorkspaceWindowSupported;
+        private static bool s_p4VcHistorySupported;
+        private static bool s_p4VcDiffHaveSupported;
+        private static bool s_p4VcWorkspaceWindowSupported;
 
         private static bool LockOp(string token)
         {
@@ -44,9 +44,9 @@ namespace NiftyPerforce
             return false;
         }
 
-        private static void UnlockOp(bool ok, object? token_)
+        private static void UnlockOp(bool ok, object? tokenObject)
         {
-            string? token = token_ as string;
+            string? token = tokenObject as string;
             Trace.Assert(token != null, $"{nameof(UnlockOp)} must be called with a string token");
 
             bool removed = false;
@@ -243,8 +243,8 @@ namespace NiftyPerforce
             if (s_p4CustomDiff)
                 return AsyncProcess.Schedule(s_p4FullPath!, GetUserInfoString(s_p4FullPath) + " diff \"" + EscapeP4Path(filename) + "#have\"", dirname, new AsyncProcess.OnDone(UnlockOp), token);
 
-            if (s_p4vcDiffHaveSupported)
-                return AsyncProcess.Schedule(s_p4vcFullPath!, GetUserInfoStringFull(s_p4FullPath, true, dirname) + " diffhave \"" + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(s_p4vcFullPath), new AsyncProcess.OnDone(UnlockOp), token, 0);
+            if (s_p4VcDiffHaveSupported)
+                return AsyncProcess.Schedule(s_p4VcFullPath!, GetUserInfoStringFull(s_p4FullPath, true, dirname) + " diffhave \"" + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(s_p4VcFullPath), new AsyncProcess.OnDone(UnlockOp), token, 0);
 
             // Otherwise let's show a unified diff in the outputpane.
             return AsyncProcess.Schedule(s_p4FullPath!, GetUserInfoString(s_p4FullPath) + " diff -du \"" + EscapeP4Path(filename) + "#have\"", dirname, new AsyncProcess.OnDone(UnlockOp), token);
@@ -255,17 +255,17 @@ namespace NiftyPerforce
             if (filename.Length == 0)
                 return false;
 
-            if (s_p4vcHistorySupported || !string.IsNullOrEmpty(s_p4vFullPath))
+            if (s_p4VcHistorySupported || !string.IsNullOrEmpty(s_p4VFullPath))
             {
                 string token = FormatToken("history", filename);
                 if (!LockOp(token))
                     return false;
 
-                if (s_p4vcHistorySupported)
-                    return AsyncProcess.Schedule(s_p4vcFullPath!, GetUserInfoStringFull(s_p4FullPath, true, dirname) + " history \"" + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(s_p4vcFullPath), new AsyncProcess.OnDone(UnlockOp), token, 0);
+                if (s_p4VcHistorySupported)
+                    return AsyncProcess.Schedule(s_p4VcFullPath!, GetUserInfoStringFull(s_p4FullPath, true, dirname) + " history \"" + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(s_p4VcFullPath), new AsyncProcess.OnDone(UnlockOp), token, 0);
 
-                if (!string.IsNullOrEmpty(s_p4vFullPath))
-                    return AsyncProcess.Schedule(s_p4vFullPath!, " -win 0 " + GetUserInfoStringFull(s_p4FullPath, true, dirname) + " -cmd \"history " + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(s_p4vFullPath), new AsyncProcess.OnDone(UnlockOp), token, 0);
+                if (!string.IsNullOrEmpty(s_p4VFullPath))
+                    return AsyncProcess.Schedule(s_p4VFullPath!, " -win 0 " + GetUserInfoStringFull(s_p4FullPath, true, dirname) + " -cmd \"history " + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(s_p4VFullPath), new AsyncProcess.OnDone(UnlockOp), token, 0);
             }
 
             return NotifyUser("could not find a supported p4vc.exe or p4v.exe installed in perforce directory");
@@ -276,11 +276,11 @@ namespace NiftyPerforce
             if (filename.Length == 0)
                 return false;
 
-            if (s_p4vcWorkspaceWindowSupported)
-                return AsyncProcess.Schedule(s_p4vcFullPath!, GetUserInfoStringFull(s_p4FullPath, true, Path.GetDirectoryName(filename)) + " workspacewindow -s \"" + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(s_p4vcFullPath), null, null, 0);
+            if (s_p4VcWorkspaceWindowSupported)
+                return AsyncProcess.Schedule(s_p4VcFullPath!, GetUserInfoStringFull(s_p4FullPath, true, Path.GetDirectoryName(filename)) + " workspacewindow -s \"" + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(s_p4VcFullPath), null, null, 0);
 
-            if (!string.IsNullOrEmpty(s_p4vFullPath)) // note that the cmd line also accepts -t to open P4V with a specific tab shown
-                return AsyncProcess.Schedule(s_p4vFullPath!, " -win 0 " + GetUserInfoStringFull(s_p4FullPath, true, Path.GetDirectoryName(filename)) + " -s \"" + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(s_p4vFullPath), null, null, 0);
+            if (!string.IsNullOrEmpty(s_p4VFullPath)) // note that the cmd line also accepts -t to open P4V with a specific tab shown
+                return AsyncProcess.Schedule(s_p4VFullPath!, " -win 0 " + GetUserInfoStringFull(s_p4FullPath, true, Path.GetDirectoryName(filename)) + " -s \"" + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(s_p4VFullPath), null, null, 0);
 
             return NotifyUser("could not find p4v.exe installed in perforce directory");
         }
@@ -358,14 +358,14 @@ namespace NiftyPerforce
             return GetConnectionStringFromP4SetOutput(output);
         }
 
-        internal static string? GetConnectionStringFromP4SetOutput(string p4setOutput)
+        internal static string? GetConnectionStringFromP4SetOutput(string p4SetOutput)
         {
-            if (!string.IsNullOrEmpty(p4setOutput))
+            if (!string.IsNullOrEmpty(p4SetOutput))
             {
                 string? client = null;
                 string? server = null;
                 string? username = null;
-                foreach (string s in p4setOutput.Split('\n'))
+                foreach (string s in p4SetOutput.Split('\n'))
                 {
                     string trim = s.Trim();
                     if (trim.StartsWith("P4CLIENT=", StringComparison.Ordinal))
@@ -462,7 +462,7 @@ namespace NiftyPerforce
 
         public static bool TimeLapseView(string dirname, string filename)
         {
-            if (string.IsNullOrEmpty(s_p4vcFullPath))
+            if (string.IsNullOrEmpty(s_p4VcFullPath))
                 return NotifyUser("could not find p4vc in perforce directory");
 
             string arguments = GetUserInfoStringFull(s_p4FullPath, true, dirname);
@@ -472,12 +472,12 @@ namespace NiftyPerforce
             if (!LockOp(token))
                 return false;
 
-            return AsyncProcess.Schedule(s_p4vcFullPath!, arguments, Path.GetDirectoryName(s_p4vcFullPath), new AsyncProcess.OnDone(UnlockOp), token, 0);
+            return AsyncProcess.Schedule(s_p4VcFullPath!, arguments, Path.GetDirectoryName(s_p4VcFullPath), new AsyncProcess.OnDone(UnlockOp), token, 0);
         }
 
         public static bool RevisionGraph(string dirname, string filename)
         {
-            if (string.IsNullOrEmpty(s_p4vcFullPath))
+            if (string.IsNullOrEmpty(s_p4VcFullPath))
                 return NotifyUser("could not find p4vc in perforce directory");
 
             string arguments = GetUserInfoStringFull(s_p4FullPath, true, dirname);
@@ -487,7 +487,7 @@ namespace NiftyPerforce
             if (!LockOp(token))
                 return false;
 
-            return AsyncProcess.Schedule(s_p4vcFullPath!, arguments, Path.GetDirectoryName(s_p4vcFullPath), new AsyncProcess.OnDone(UnlockOp), token, 0);
+            return AsyncProcess.Schedule(s_p4VcFullPath!, arguments, Path.GetDirectoryName(s_p4VcFullPath), new AsyncProcess.OnDone(UnlockOp), token, 0);
         }
 
         private static string? GetRegistryValue(string key, string value, bool global)
@@ -515,13 +515,13 @@ namespace NiftyPerforce
         /// <summary>
         /// Returns p4v executable version.
         /// </summary>
-        /// <param name="p4vFullPath">Full path to executable.</param>
+        /// <param name="p4VFullPath">Full path to executable.</param>
         /// <returns>The version if found, otherwise null.</returns>
-        private static Version? GetP4VVersion(string? p4vFullPath)
+        private static Version? GetP4VVersion(string? p4VFullPath)
         {
-            if (!string.IsNullOrEmpty(p4vFullPath) && File.Exists(p4vFullPath))
+            if (!string.IsNullOrEmpty(p4VFullPath) && File.Exists(p4VFullPath))
             {
-                var versionInfo = FileVersionInfo.GetVersionInfo(p4vFullPath);
+                var versionInfo = FileVersionInfo.GetVersionInfo(p4VFullPath);
                 if (versionInfo.FileVersion != null)
                     return new Version(versionInfo.FileVersion);
             }
@@ -536,16 +536,16 @@ namespace NiftyPerforce
             s_p4CustomDiff = false;
 
             s_p4FullPath = p4Utils.LocateP4InstallPath(P4Utils.P4ExeName);
-            s_p4vFullPath = p4Utils.LocateP4InstallPath(P4Utils.P4VExeName);
-            s_p4vcFullPath = p4Utils.LocateP4InstallPath(P4Utils.P4VCBatName);
-            s_p4vcFullPath ??= p4Utils.LocateP4InstallPath(P4Utils.P4VCExeName);
+            s_p4VFullPath = p4Utils.LocateP4InstallPath(P4Utils.P4VExeName);
+            s_p4VcFullPath = p4Utils.LocateP4InstallPath(P4Utils.P4VcBatName);
+            s_p4VcFullPath ??= p4Utils.LocateP4InstallPath(P4Utils.P4VcExeName);
 
             if (s_p4FullPath != null)
                 Log.Info("Found perforce installation at {0}", Path.GetDirectoryName(s_p4FullPath));
 
             Log.Info("[{0}] {1}", s_p4FullPath != null ? "X" : " ", s_p4FullPath ?? P4Utils.P4ExeName);
-            Log.Info("[{0}] {1}", s_p4vFullPath != null ? "X" : " ", s_p4vFullPath ?? P4Utils.P4VExeName);
-            Log.Info("[{0}] {1}", s_p4vcFullPath != null ? "X" : " ", s_p4vcFullPath ?? "p4vc(.bat|.exe)");
+            Log.Info("[{0}] {1}", s_p4VFullPath != null ? "X" : " ", s_p4VFullPath ?? P4Utils.P4VExeName);
+            Log.Info("[{0}] {1}", s_p4VcFullPath != null ? "X" : " ", s_p4VcFullPath ?? "p4vc(.bat|.exe)");
 
             string? p4diff = GetRegistryValue("SOFTWARE\\Perforce\\Environment", "P4DIFF", true);
             if (!string.IsNullOrEmpty(p4diff))
@@ -571,27 +571,27 @@ namespace NiftyPerforce
             if (!s_p4CustomDiff)
                 Log.Info("[ ] p4 custom diff");
 
-            DetermineSupportedP4VFeatures(s_p4vFullPath, out s_p4vcWorkspaceWindowSupported, out s_p4vcDiffHaveSupported, out s_p4vcHistorySupported);
+            DetermineSupportedP4VFeatures(s_p4VFullPath, out s_p4VcWorkspaceWindowSupported, out s_p4VcDiffHaveSupported, out s_p4VcHistorySupported);
         }
 
-        private static void DetermineSupportedP4VFeatures(string? p4vFullPath, out bool p4vcWorkspaceWindowSupported, out bool p4vcDiffHaveSupported, out bool p4vcHistorySupported)
+        private static void DetermineSupportedP4VFeatures(string? p4VFullPath, out bool p4VcWorkspaceWindowSupported, out bool p4VcDiffHaveSupported, out bool p4VcHistorySupported)
         {
-            Version version = GetP4VVersion(p4vFullPath) ?? new Version(0, 0);
+            Version version = GetP4VVersion(p4VFullPath) ?? new Version(0, 0);
 
             // workspacewindow was added in p4v 2023.2/2443448, and 2024.1/2573667 deprecated p4v -s and p4v -t
-            p4vcWorkspaceWindowSupported = version.Major > 2023 || (version.Major == 2023 && version.Minor >= 2);
-            Log.Info("[{0}] p4vc workspacewindow", p4vcWorkspaceWindowSupported ? "X" : " ");
+            p4VcWorkspaceWindowSupported = version.Major > 2023 || (version.Major == 2023 && version.Minor >= 2);
+            Log.Info("[{0}] p4vc workspacewindow", p4VcWorkspaceWindowSupported ? "X" : " ");
 
             // since p4vc.bat was introduced with 2021.1/2075061, if we have it we know we have diffhave, hence history
 
             // diffhave was added in p4v 2020.1/1946989
-            p4vcDiffHaveSupported = version.Major >= 2020;
-            Log.Info("[{0}] p4vc diffhave", p4vcDiffHaveSupported ? "X" : " ");
+            p4VcDiffHaveSupported = version.Major >= 2020;
+            Log.Info("[{0}] p4vc diffhave", p4VcDiffHaveSupported ? "X" : " ");
 
             // history was added in p4v 2019.2 update1/1883366
             // so if we have diffhave we know we have history and can skip the test
-            p4vcHistorySupported = version.Major > 2019 || (version.Major == 2019 && version.Minor >= 2);
-            Log.Info("[{0}] p4vc history", p4vcHistorySupported ? "X" : " ");
+            p4VcHistorySupported = version.Major > 2019 || (version.Major == 2019 && version.Minor >= 2);
+            Log.Info("[{0}] p4vc history", p4VcHistorySupported ? "X" : " ");
         }
 
         private static bool NotifyUser(string message)

@@ -22,20 +22,20 @@ namespace NiftyPerforce.EventHandlers
             RegisterEvents();
         }
 
-        private bool RDTAdvised => _rdt != null;
+        private bool RdtAdvised => _rdt != null;
 
         private void RegisterEvents()
         {
             if (((OptionsDialogPage)Plugin.Options).AutoCheckoutOnSave)
             {
-                if (!RDTAdvised)
+                if (!RdtAdvised)
                 {
                     Log.Info("Adding handlers for automatically checking out dirty files when you save");
                     _rdt = new Lazy<RunningDocumentTable>(() => new RunningDocumentTable(_serviceProvider));
                     _rdte = _rdt.Value.Advise(new RunningDocTableEvents(this));
                 }
             }
-            else if (RDTAdvised)
+            else if (RdtAdvised)
             {
                 Log.Info("Removing handlers for automatically checking out dirty files when you save");
                 _rdt!.Value.Unadvise(_rdte);
@@ -45,7 +45,7 @@ namespace NiftyPerforce.EventHandlers
 
         internal bool OnBeforeSave(uint docCookie)
         {
-            if (!RDTAdvised)
+            if (!RdtAdvised)
                 return false;
 
             RunningDocumentInfo runningDocumentInfo = _rdt!.Value.GetDocumentInfo(docCookie);
@@ -79,12 +79,12 @@ namespace NiftyPerforce.EventHandlers
 
         public int OnAfterDocumentWindowHide(uint docCookie, IVsWindowFrame pFrame) => VSConstants.S_OK;
 
-        public int OnAfterFirstDocumentLock(uint docCookie, uint dwRDTLockType, uint dwReadLocksRemaining, uint dwEditLocksRemaining) => VSConstants.S_OK;
+        public int OnAfterFirstDocumentLock(uint docCookie, uint dwRdtLockType, uint dwReadLocksRemaining, uint dwEditLocksRemaining) => VSConstants.S_OK;
 
         public int OnAfterSave(uint docCookie) => VSConstants.S_OK;
 
         public int OnBeforeDocumentWindowShow(uint docCookie, int fFirstShow, IVsWindowFrame pFrame) => VSConstants.S_OK;
 
-        public int OnBeforeLastDocumentUnlock(uint docCookie, uint dwRDTLockType, uint dwReadLocksRemaining, uint dwEditLocksRemaining) => VSConstants.S_OK;
+        public int OnBeforeLastDocumentUnlock(uint docCookie, uint dwRdtLockType, uint dwReadLocksRemaining, uint dwEditLocksRemaining) => VSConstants.S_OK;
     }
 }

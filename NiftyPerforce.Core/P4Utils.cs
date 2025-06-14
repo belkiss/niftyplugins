@@ -16,8 +16,8 @@ namespace NiftyPerforce.Core
         //    #105247 (Change #2069769)
         //      The p4vc.exe executable has been removed from the Windows installers.
         //      To start P4VC, use the p4vc.bat script.
-        public const string P4VCBatName = "p4vc.bat";
-        public const string P4VCExeName = "p4vc.exe";
+        public const string P4VcBatName = "p4vc.bat";
+        public const string P4VcExeName = "p4vc.exe";
 
         private readonly IFileSystem _fileSystemService;
         private readonly IRegistryService _registryService;

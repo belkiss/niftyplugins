@@ -35,12 +35,12 @@ namespace NiftyPerforce.Commands
         private OleMenuCommand RegisterCommandPrivate(CommandBase commandHandler)
         {
             OleMenuCommandService menuCommandService = _plugin.MenuCommandService;
-            var commandID = new CommandID(_cmdGroupGuid, commandHandler.CommandId);
+            var commandId = new CommandID(_cmdGroupGuid, commandHandler.CommandId);
 
-            var vscommand = new OleMenuCommand(OleMenuCommandCallback, commandID);
+            var vscommand = new OleMenuCommand(OleMenuCommandCallback, commandId);
             vscommand.BeforeQueryStatus += OleMenuCommandBeforeQueryStatus; // LCTODO: this spams too much, figure out what's wrong
             menuCommandService.AddCommand(vscommand);
-            _commandsById[commandID.ID] = commandHandler;
+            _commandsById[commandId.ID] = commandHandler;
 
             return vscommand;
         }

@@ -50,21 +50,21 @@ namespace NiftyPerforce.Core.Tests
         [TestMethod]
         [DataRow(Environment.SpecialFolder.ProgramFiles)]
         [DataRow(Environment.SpecialFolder.ProgramFiles, P4Utils.P4ExeName)]
-        [DataRow(Environment.SpecialFolder.ProgramFiles, P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VCBatName)]
-        [DataRow(Environment.SpecialFolder.ProgramFiles, P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VCExeName, P4Utils.P4VCBatName)]
-        [DataRow(Environment.SpecialFolder.ProgramFiles, P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VCExeName)]
+        [DataRow(Environment.SpecialFolder.ProgramFiles, P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VcBatName)]
+        [DataRow(Environment.SpecialFolder.ProgramFiles, P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VcExeName, P4Utils.P4VcBatName)]
+        [DataRow(Environment.SpecialFolder.ProgramFiles, P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VcExeName)]
         [DataRow(Environment.SpecialFolder.ProgramFiles, P4Utils.P4ExeName, P4Utils.P4VExeName)]
-        [DataRow(Environment.SpecialFolder.ProgramFiles, P4Utils.P4VCBatName)]
-        [DataRow(Environment.SpecialFolder.ProgramFiles, P4Utils.P4VCExeName)]
+        [DataRow(Environment.SpecialFolder.ProgramFiles, P4Utils.P4VcBatName)]
+        [DataRow(Environment.SpecialFolder.ProgramFiles, P4Utils.P4VcExeName)]
         [DataRow(Environment.SpecialFolder.ProgramFiles, P4Utils.P4VExeName)]
         [DataRow(Environment.SpecialFolder.ProgramFilesX86)]
         [DataRow(Environment.SpecialFolder.ProgramFilesX86, P4Utils.P4ExeName)]
-        [DataRow(Environment.SpecialFolder.ProgramFilesX86, P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VCBatName)]
-        [DataRow(Environment.SpecialFolder.ProgramFilesX86, P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VCExeName, P4Utils.P4VCBatName)]
-        [DataRow(Environment.SpecialFolder.ProgramFilesX86, P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VCExeName)]
+        [DataRow(Environment.SpecialFolder.ProgramFilesX86, P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VcBatName)]
+        [DataRow(Environment.SpecialFolder.ProgramFilesX86, P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VcExeName, P4Utils.P4VcBatName)]
+        [DataRow(Environment.SpecialFolder.ProgramFilesX86, P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VcExeName)]
         [DataRow(Environment.SpecialFolder.ProgramFilesX86, P4Utils.P4ExeName, P4Utils.P4VExeName)]
-        [DataRow(Environment.SpecialFolder.ProgramFilesX86, P4Utils.P4VCBatName)]
-        [DataRow(Environment.SpecialFolder.ProgramFilesX86, P4Utils.P4VCExeName)]
+        [DataRow(Environment.SpecialFolder.ProgramFilesX86, P4Utils.P4VcBatName)]
+        [DataRow(Environment.SpecialFolder.ProgramFilesX86, P4Utils.P4VcExeName)]
         [DataRow(Environment.SpecialFolder.ProgramFilesX86, P4Utils.P4VExeName)]
         public void LocateP4InstallPath_ProgramFiles(Environment.SpecialFolder specialFolder, params string[] files)
         {
@@ -81,26 +81,25 @@ namespace NiftyPerforce.Core.Tests
 
             var hashSet = new HashSet<string>(files);
 
-            string? result;
-            result = p4Utils.LocateP4InstallPath(P4Utils.P4ExeName);
+            string? result = p4Utils.LocateP4InstallPath(P4Utils.P4ExeName);
             Assert.IsTrue(hashSet.Contains(P4Utils.P4ExeName) ? result != null : result == null);
             result = p4Utils.LocateP4InstallPath(P4Utils.P4VExeName);
             Assert.IsTrue(hashSet.Contains(P4Utils.P4VExeName) ? result != null : result == null);
-            result = p4Utils.LocateP4InstallPath(P4Utils.P4VCExeName);
-            Assert.IsTrue(hashSet.Contains(P4Utils.P4VCExeName) ? result != null : result == null);
-            result = p4Utils.LocateP4InstallPath(P4Utils.P4VCBatName);
-            Assert.IsTrue(hashSet.Contains(P4Utils.P4VCBatName) ? result != null : result == null);
+            result = p4Utils.LocateP4InstallPath(P4Utils.P4VcExeName);
+            Assert.IsTrue(hashSet.Contains(P4Utils.P4VcExeName) ? result != null : result == null);
+            result = p4Utils.LocateP4InstallPath(P4Utils.P4VcBatName);
+            Assert.IsTrue(hashSet.Contains(P4Utils.P4VcBatName) ? result != null : result == null);
         }
 
         [TestMethod]
         [DataRow]
         [DataRow(P4Utils.P4ExeName)]
-        [DataRow(P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VCBatName)]
-        [DataRow(P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VCExeName, P4Utils.P4VCBatName)]
-        [DataRow(P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VCExeName)]
+        [DataRow(P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VcBatName)]
+        [DataRow(P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VcExeName, P4Utils.P4VcBatName)]
+        [DataRow(P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VcExeName)]
         [DataRow(P4Utils.P4ExeName, P4Utils.P4VExeName)]
-        [DataRow(P4Utils.P4VCBatName)]
-        [DataRow(P4Utils.P4VCExeName)]
+        [DataRow(P4Utils.P4VcBatName)]
+        [DataRow(P4Utils.P4VcExeName)]
         [DataRow(P4Utils.P4VExeName)]
         public void LocateP4InstallPath_RegistryP4INSTROOT(params string[] files)
         {
@@ -119,26 +118,25 @@ namespace NiftyPerforce.Core.Tests
 
             var hashSet = new HashSet<string>(files);
 
-            string? result;
-            result = p4Utils.LocateP4InstallPath(P4Utils.P4ExeName);
+            string? result = p4Utils.LocateP4InstallPath(P4Utils.P4ExeName);
             Assert.IsTrue(hashSet.Contains(P4Utils.P4ExeName) ? result != null : result == null);
             result = p4Utils.LocateP4InstallPath(P4Utils.P4VExeName);
             Assert.IsTrue(hashSet.Contains(P4Utils.P4VExeName) ? result != null : result == null);
-            result = p4Utils.LocateP4InstallPath(P4Utils.P4VCExeName);
-            Assert.IsTrue(hashSet.Contains(P4Utils.P4VCExeName) ? result != null : result == null);
-            result = p4Utils.LocateP4InstallPath(P4Utils.P4VCBatName);
-            Assert.IsTrue(hashSet.Contains(P4Utils.P4VCBatName) ? result != null : result == null);
+            result = p4Utils.LocateP4InstallPath(P4Utils.P4VcExeName);
+            Assert.IsTrue(hashSet.Contains(P4Utils.P4VcExeName) ? result != null : result == null);
+            result = p4Utils.LocateP4InstallPath(P4Utils.P4VcBatName);
+            Assert.IsTrue(hashSet.Contains(P4Utils.P4VcBatName) ? result != null : result == null);
         }
 
         [TestMethod]
         [DataRow]
         [DataRow(P4Utils.P4ExeName)]
-        [DataRow(P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VCBatName)]
-        [DataRow(P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VCExeName, P4Utils.P4VCBatName)]
-        [DataRow(P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VCExeName)]
+        [DataRow(P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VcBatName)]
+        [DataRow(P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VcExeName, P4Utils.P4VcBatName)]
+        [DataRow(P4Utils.P4ExeName, P4Utils.P4VExeName, P4Utils.P4VcExeName)]
         [DataRow(P4Utils.P4ExeName, P4Utils.P4VExeName)]
-        [DataRow(P4Utils.P4VCBatName)]
-        [DataRow(P4Utils.P4VCExeName)]
+        [DataRow(P4Utils.P4VcBatName)]
+        [DataRow(P4Utils.P4VcExeName)]
         [DataRow(P4Utils.P4VExeName)]
         public void LocateP4InstallPath_RegistryAppPaths(params string[] files)
         {
@@ -159,15 +157,14 @@ namespace NiftyPerforce.Core.Tests
 
             var hashSet = new HashSet<string>(files);
 
-            string? result;
-            result = p4Utils.LocateP4InstallPath(P4Utils.P4ExeName);
+            string? result = p4Utils.LocateP4InstallPath(P4Utils.P4ExeName);
             Assert.IsTrue(hashSet.Contains(P4Utils.P4ExeName) ? result != null : result == null);
             result = p4Utils.LocateP4InstallPath(P4Utils.P4VExeName);
             Assert.IsTrue(hashSet.Contains(P4Utils.P4VExeName) ? result != null : result == null);
-            result = p4Utils.LocateP4InstallPath(P4Utils.P4VCExeName);
-            Assert.IsTrue(hashSet.Contains(P4Utils.P4VCExeName) ? result != null : result == null);
-            result = p4Utils.LocateP4InstallPath(P4Utils.P4VCBatName);
-            Assert.IsTrue(hashSet.Contains(P4Utils.P4VCBatName) ? result != null : result == null);
+            result = p4Utils.LocateP4InstallPath(P4Utils.P4VcExeName);
+            Assert.IsTrue(hashSet.Contains(P4Utils.P4VcExeName) ? result != null : result == null);
+            result = p4Utils.LocateP4InstallPath(P4Utils.P4VcBatName);
+            Assert.IsTrue(hashSet.Contains(P4Utils.P4VcBatName) ? result != null : result == null);
         }
     }
 }
