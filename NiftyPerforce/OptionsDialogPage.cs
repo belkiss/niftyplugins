@@ -90,10 +90,5 @@ namespace NiftyPerforce
             if (e?.ApplyBehavior == ApplyKind.Apply)
                 OnApplyEvent?.Invoke(this, EventArgs.Empty);
         }
-
-        protected override void SaveSetting(PropertyDescriptor property)
-        {
-            base.SaveSetting(property);
-        }
     }
 }

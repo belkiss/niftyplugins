@@ -31,7 +31,7 @@ namespace NiftyPerforce.Commands
                 }
                 else if (_executeForFileItems && sel.ProjectItem != null && sel.ProjectItem.Kind.Equals(FileItemGuid, System.StringComparison.OrdinalIgnoreCase))
                 {
-                    OnExecute(sel, sel.ProjectItem.get_FileNames(0));
+                    OnExecute(sel, sel.ProjectItem.FileNames[0]);
                 }
                 else if (_executeForProjectItems && sel.Project != null)
                 {
@@ -60,6 +60,6 @@ namespace NiftyPerforce.Commands
             return true;
         }
 
-        public abstract void OnExecute(SelectedItem item, string fileName);
+        protected abstract void OnExecute(SelectedItem item, string fileName);
     }
 }

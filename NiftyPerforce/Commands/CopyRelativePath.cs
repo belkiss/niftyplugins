@@ -1,11 +1,7 @@
 ﻿// Copyright (C) 2006-2017 Jim Tilander, 2017-2025 Lambert Clara. See the COPYING file in the project root for full license information.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using EnvDTE;
 
@@ -45,7 +41,7 @@ namespace NiftyPerforce.Commands
             return true;
         }
 
-        public override void OnExecute(SelectedItem item, string fileName)
+        protected override void OnExecute(SelectedItem item, string fileName)
         {
             // do nothing, as we override OnCommand() instead
         }
@@ -53,21 +49,15 @@ namespace NiftyPerforce.Commands
         private string? SelectBasePath()
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
-            using (var folderDialog = new FolderBrowserDialog())
-            {
-                folderDialog.Description = "Select the base path to compute the relative path (hold shift to clear that path next time)";
-                if (Plugin.App.ActiveDocument?.FullName != null)
-                {
-                    folderDialog.SelectedPath = Path.GetDirectoryName(Plugin.App.ActiveDocument.FullName);
-                }
+            using var folderDialog = new FolderBrowserDialog();
 
-                if (folderDialog.ShowDialog() == DialogResult.OK)
-                {
-                    return folderDialog.SelectedPath;
-                }
+            folderDialog.Description = "Select the base path to compute the relative path (hold shift to ask again next time)";
+            if (Plugin.App.ActiveDocument?.FullName != null)
+            {
+                folderDialog.SelectedPath = Path.GetDirectoryName(Plugin.App.ActiveDocument.FullName);
             }
 
-            return null;
+            return folderDialog.ShowDialog() == DialogResult.OK ? folderDialog.SelectedPath : null;
         }
 
         private string? GetRelativeToDirectory()
@@ -89,6 +79,11 @@ namespace NiftyPerforce.Commands
 
         private static string? GetRelativePath(string? relativeTo, string? filePath)
         {
+            if (filePath == null)
+            {
+                return string.Empty;
+            }
+
             if (string.IsNullOrWhiteSpace(relativeTo))
             {
                 return filePath;

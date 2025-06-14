@@ -41,12 +41,12 @@ namespace NiftyPerforce.EventHandlers
                     Log.Info("Adding handlers for automatically checking out text files as you edit them");
                     _registeredCommands = new List<string>();
                     var events = (Events2)Plugin.App.Events;
-                    _textDocEvents = events.get_TextDocumentKeyPressEvents(null);
-                    _beforeKeyPressEventHandler = new _dispTextDocumentKeyPressEvents_BeforeKeyPressEventHandler(OnBeforeKeyPress);
+                    _textDocEvents = events.TextDocumentKeyPressEvents[null];
+                    _beforeKeyPressEventHandler = OnBeforeKeyPress;
                     _textDocEvents.BeforeKeyPress += _beforeKeyPressEventHandler;
 
-                    _textEditorEvents = events.get_TextEditorEvents(null);
-                    _lineChangedEventHandler = new _dispTextEditorEvents_LineChangedEventHandler(OnLineChanged);
+                    _textEditorEvents = events.TextEditorEvents[null];
+                    _lineChangedEventHandler = OnLineChanged;
                     _textEditorEvents.LineChanged += _lineChangedEventHandler;
 
                     foreach (string command in _commands)

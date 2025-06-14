@@ -15,7 +15,7 @@ namespace NiftyPerforce
 
     public abstract class PreCommandFeature : Feature
     {
-        protected Plugin Plugin { get; private set; }
+        protected Plugin Plugin { get; }
 
         protected PreCommandFeature(Plugin plugin, string name)
             : base(name)

@@ -89,12 +89,12 @@ namespace NiftyPerforce
 
             // Show where we are and when we were compiled...
             var niftyAssembly = Assembly.GetExecutingAssembly();
-            Version? version = niftyAssembly?.GetName().Version;
+            Version? version = niftyAssembly.GetName().Version;
             string versionString = string.Empty;
             if (version != null)
             {
                 versionString = string.Join(".", version.Major, version.Minor, version.Build);
-                string? informationalVersion = niftyAssembly!.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+                string? informationalVersion = niftyAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
                 if (!string.IsNullOrEmpty(informationalVersion))
                     versionString += " " + informationalVersion;
             }
@@ -107,7 +107,7 @@ namespace NiftyPerforce
                 string.Empty,
 #endif
                 versionString,
-                niftyAssembly != null ? System.IO.File.GetLastWriteTime(niftyAssembly.Location).ToString(CultureInfo.CurrentCulture) : "unknown");
+                System.IO.File.GetLastWriteTime(niftyAssembly.Location).ToString(CultureInfo.CurrentCulture));
 
             Log.Debug("    Location '{0}'", niftyAssembly?.Location ?? "unknown");
 

@@ -14,7 +14,7 @@ namespace NiftyPerforce.Commands
             _onlyUnchanged = onlyUnchanged;
         }
 
-        public override void OnExecute(SelectedItem item, string fileName)
+        protected override void OnExecute(SelectedItem item, string fileName)
         {
             if (!_onlyUnchanged)
             {

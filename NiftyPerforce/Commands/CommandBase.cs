@@ -4,7 +4,7 @@ namespace NiftyPerforce.Commands
 {
     public abstract class CommandBase
     {
-        public Plugin Plugin { get; }
+        protected Plugin Plugin { get; }
 
         public string Name { get; }
 

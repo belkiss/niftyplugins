@@ -14,7 +14,7 @@ namespace NiftyPerforce
 
         public static void Init()
         {
-            s_helperThread = new Thread(new ThreadStart(ThreadMain));
+            s_helperThread = new Thread(ThreadMain);
             s_helperThread.Start();
         }
 
@@ -25,18 +25,15 @@ namespace NiftyPerforce
 
         public static bool Run(string executable, string commandline, string? workingdir, OnDone? callback, object? callbackArg)
         {
-            int timeout = 1000;
+            const int Timeout = 1000;
 
-            if (!RunCommand(executable, commandline, workingdir, timeout))
+            if (!RunCommand(executable, commandline, workingdir, Timeout))
             {
                 Log.Debug("Failed to run immediate (process hung?), trying again on a remote thread: " + commandline);
                 return Schedule(executable, commandline, workingdir, callback, callbackArg);
             }
-            else
-            {
-                callback?.Invoke(true, callbackArg);
-            }
 
+            callback?.Invoke(true, callbackArg);
             return true;
         }
 
@@ -83,7 +80,7 @@ namespace NiftyPerforce
             while (true)
             {
                 s_startEvent.WaitOne();
-                CommandThread? cmd = null;
+                CommandThread? cmd;
 
                 try
                 {
@@ -99,7 +96,7 @@ namespace NiftyPerforce
                 {
                     try
                     {
-                        var thread = new Thread(new ThreadStart(cmd.Run));
+                        var thread = new Thread(cmd.Run);
                         thread.Start();
                     }
                     catch
@@ -201,8 +198,8 @@ namespace NiftyPerforce
                     return true;
                 }
 
-                bool exited = false;
-                string alloutput = string.Empty;
+                bool exited;
+                string alloutput;
                 using (Process.Handler stderr = new Process.Handler(), stdout = new Process.Handler())
                 {
                     process.OutputDataReceived += stdout.OnOutput;

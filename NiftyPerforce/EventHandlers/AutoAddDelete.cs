@@ -43,10 +43,10 @@ namespace NiftyPerforce.EventHandlers
                 if (!AddFilesHandlersInstalled)
                 {
                     Log.Info("Adding handlers to automatically add files to perforce as you add them to the project");
-                    _itemAddedEventHandler = new _dispProjectItemsEvents_ItemAddedEventHandler(OnItemAdded);
+                    _itemAddedEventHandler = OnItemAdded;
                     _projectEvents.ItemAdded += _itemAddedEventHandler;
 
-                    _projectAddedEventHandler = new _dispSolutionEvents_ProjectAddedEventHandler(OnProjectAdded);
+                    _projectAddedEventHandler = OnProjectAdded;
                     _solutionEvents.ProjectAdded += _projectAddedEventHandler;
                 }
             }
@@ -65,10 +65,10 @@ namespace NiftyPerforce.EventHandlers
                 if (!RemoveFilesHandlersInstalled)
                 {
                     Log.Info("Adding handlers to automatically delete files from perforce as you remove them from the project");
-                    _itemRemovedEventHandler = new _dispProjectItemsEvents_ItemRemovedEventHandler(OnItemRemoved);
+                    _itemRemovedEventHandler = OnItemRemoved;
                     _projectEvents.ItemRemoved += _itemRemovedEventHandler;
 
-                    _projectRemovedEventHandler = new _dispSolutionEvents_ProjectRemovedEventHandler(OnProjectRemoved);
+                    _projectRemovedEventHandler = OnProjectRemoved;
                     _solutionEvents.ProjectRemoved += _projectRemovedEventHandler;
                 }
             }
@@ -83,7 +83,7 @@ namespace NiftyPerforce.EventHandlers
             }
         }
 
-        private void OnItemAdded(ProjectItem item)
+        private static void OnItemAdded(ProjectItem item)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -93,7 +93,7 @@ namespace NiftyPerforce.EventHandlers
             {
                 for (int i = 0; i < item.FileCount; i++)
                 {
-                    string name = item.get_FileNames((short)i);
+                    string name = item.FileNames[(short)i];
                     P4Operations.AddFile(name);
                 }
             }
@@ -104,7 +104,7 @@ namespace NiftyPerforce.EventHandlers
             }
         }
 
-        private void OnItemRemoved(ProjectItem item)
+        private static void OnItemRemoved(ProjectItem item)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -112,7 +112,7 @@ namespace NiftyPerforce.EventHandlers
 
             for (int i = 0; i < item.FileCount; i++)
             {
-                string name = item.get_FileNames((short)i);
+                string name = item.FileNames[(short)i];
                 P4Operations.DeleteFile(name);
             }
         }

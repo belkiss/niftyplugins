@@ -11,7 +11,7 @@ namespace NiftyPerforce
     // Interfaces with visual studio and handles the dispatch.
     public class Plugin
     {
-        private readonly Dictionary<string, Feature> _features = new Dictionary<string, Feature>();
+        private readonly List<Feature> _features = new List<Feature>();
 
         public DTE2 App { get; }
 
@@ -28,7 +28,7 @@ namespace NiftyPerforce
 
         public void AddFeature(Feature feature)
         {
-            _features.Add(feature.Name, feature);
+            _features.Add(feature);
         }
 
         public CommandEvents? FindCommandEvents(string commandName)
@@ -40,7 +40,7 @@ namespace NiftyPerforce
             {
                 Command command = App.DTE.Commands.Item(commandName);
                 if (command != null)
-                    events = App.DTE.Events.get_CommandEvents(command.Guid, command.ID);
+                    events = App.DTE.Events.CommandEvents[command.Guid, command.ID];
             }
             catch
             {

@@ -10,7 +10,7 @@ namespace NiftyPerforce.Commands
         {
         }
 
-        public override void OnExecute(SelectedItem item, string fileName)
+        protected override void OnExecute(SelectedItem item, string fileName)
         {
             P4Operations.EditFile(fileName, true);
         }

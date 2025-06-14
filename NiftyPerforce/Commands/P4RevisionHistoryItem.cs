@@ -13,7 +13,7 @@ namespace NiftyPerforce.Commands
             _mMainLine = mainLine;
         }
 
-        public override void OnExecute(SelectedItem item, string fileName)
+        protected override void OnExecute(SelectedItem item, string fileName)
         {
             if (!TryGetDirectoryName(fileName, out string? dirname))
                 return;

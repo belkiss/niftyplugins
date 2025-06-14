@@ -12,14 +12,12 @@ namespace NiftyPerforce.Commands
     // the logic to execute and update the command itself.
     public class CommandRegistry
     {
-        private readonly Dictionary<string, CommandBase> _commands;
         private readonly Dictionary<int, CommandBase> _commandsById;
         private readonly Plugin _plugin;
         private readonly Guid _cmdGroupGuid;
 
         public CommandRegistry(Plugin plugin, Guid cmdGroupGuid)
         {
-            _commands = new Dictionary<string, CommandBase>();
             _commandsById = new Dictionary<int, CommandBase>();
             _plugin = plugin;
             _cmdGroupGuid = cmdGroupGuid;
@@ -27,9 +25,7 @@ namespace NiftyPerforce.Commands
 
         public void RegisterCommand(CommandBase commandHandler)
         {
-            OleMenuCommand command = RegisterCommandPrivate(commandHandler);
-            if (command != null)
-                _commands.Add(commandHandler.CanonicalName, commandHandler);
+            RegisterCommandPrivate(commandHandler);
         }
 
         private OleMenuCommand RegisterCommandPrivate(CommandBase commandHandler)
