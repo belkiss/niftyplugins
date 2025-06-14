@@ -68,13 +68,14 @@ namespace NiftyPerforce.Commands
             }
 
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
-            if (Control.ModifierKeys == Keys.Shift || Plugin.App.Solution?.FullName == null)
+            string? solutionPath = Plugin.App.Solution?.FullName;
+            if (Control.ModifierKeys == Keys.Shift || string.IsNullOrWhiteSpace(solutionPath))
             {
                 _relativePath = SelectBasePath();
                 return _relativePath;
             }
 
-            return Path.GetDirectoryName(Plugin.App.Solution.FullName);
+            return Path.GetDirectoryName(solutionPath);
         }
 
         private static string? GetRelativePath(string? relativeTo, string? filePath)
