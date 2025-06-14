@@ -44,7 +44,7 @@ namespace NiftyPerforce.Core
 
         public static int HandlerCount => s_handlers.Count;
 
-        public static void AddHandler(IHandler handler)
+        public static void AddHandler(IHandler? handler)
         {
             if (handler == null)
                 return;

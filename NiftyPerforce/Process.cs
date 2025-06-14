@@ -13,15 +13,9 @@ namespace NiftyPerforce
         // Helper class to capture output correctly and send an event once we've reached the end of the file.
         public class Handler : IDisposable
         {
-            public string Buffer { get; private set; }
+            public string Buffer { get; private set; } = string.Empty;
 
-            public ManualResetEvent Sentinel { get; set; }
-
-            public Handler()
-            {
-                Buffer = string.Empty;
-                Sentinel = new ManualResetEvent(false);
-            }
+            public ManualResetEvent Sentinel { get; } = new ManualResetEvent(false);
 
             public void Dispose()
             {
@@ -29,7 +23,7 @@ namespace NiftyPerforce
                 GC.SuppressFinalize(this);
             }
 
-            public void OnOutput(object sender, System.Diagnostics.DataReceivedEventArgs e)
+            public void OnOutput(object sender, System.Diagnostics.DataReceivedEventArgs? e)
             {
                 if (e?.Data == null)
                 {
@@ -80,33 +74,6 @@ namespace NiftyPerforce
             stdout.Sentinel.WaitOne();
 
             return stdout.Buffer + "\n" + stderr.Buffer;
-        }
-    }
-
-    public class ProcessException : Exception
-    {
-        public ProcessException()
-        {
-        }
-
-        public ProcessException(string message)
-            : base(message)
-        {
-        }
-
-        public ProcessException(string info, params object[] vaargs)
-            : this(string.Format(CultureInfo.InvariantCulture, info, vaargs))
-        {
-        }
-
-        public ProcessException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
-
-        protected ProcessException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
         }
     }
 }

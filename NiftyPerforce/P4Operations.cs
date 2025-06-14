@@ -39,11 +39,9 @@ namespace NiftyPerforce
                 Log.Debug("## Locked \"" + token + "\"");
                 return true;
             }
-            else
-            {
-                Log.Error(token + " already in progress");
-                return false;
-            }
+
+            Log.Error(token + " already in progress");
+            return false;
         }
 
         private static void UnlockOp(bool ok, object? token_)
@@ -99,7 +97,7 @@ namespace NiftyPerforce
             if (!LockOp(token))
                 return false;
 
-            return AsyncProcess.Schedule(s_p4FullPath!, GetUserInfoString(s_p4FullPath) + "delete \"" + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(filename), new AsyncProcess.OnDone(UnlockOp), token);
+            return AsyncProcess.Schedule(s_p4FullPath!, GetUserInfoString(s_p4FullPath) + "delete \"" + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(filename), UnlockOp, token);
         }
 
         public static bool AddFile(string filename)
@@ -122,12 +120,12 @@ namespace NiftyPerforce
 
         public static bool EditFile(string filename, bool force)
         {
-            return Internal_CheckEditFile(new CheckoutCallback((string f) => Internal_EditFile(f, force ? EditFileFlags.Force : EditFileFlags.None)), filename);
+            return Internal_CheckEditFile((string f) => Internal_EditFile(f, force ? EditFileFlags.Force : EditFileFlags.None), filename);
         }
 
         public static bool EditFileImmediate(string filename)
         {
-            return Internal_CheckEditFile(new CheckoutCallback((string f) => Internal_EditFile(f, EditFileFlags.Immediate)), filename);
+            return Internal_CheckEditFile((string f) => Internal_EditFile(f, EditFileFlags.Immediate), filename);
         }
 
         private static bool Internal_CheckEditFile(CheckoutCallback callback, string filename)
@@ -454,9 +452,9 @@ namespace NiftyPerforce
 
                 return ret;
             }
-            catch (ProcessException e)
+            catch
             {
-                Log.Error("Failed to execute info string discovery: {0}", e.Message);
+                Log.Error("Failed to execute info string discovery");
             }
 
             return null;
@@ -492,7 +490,7 @@ namespace NiftyPerforce
             return AsyncProcess.Schedule(s_p4vcFullPath!, arguments, Path.GetDirectoryName(s_p4vcFullPath), new AsyncProcess.OnDone(UnlockOp), token, 0);
         }
 
-        public static string? GetRegistryValue(string key, string value, bool global)
+        private static string? GetRegistryValue(string key, string value, bool global)
         {
             Microsoft.Win32.RegistryKey? hklm = Microsoft.Win32.Registry.LocalMachine;
             if (!global)
@@ -519,7 +517,7 @@ namespace NiftyPerforce
         /// </summary>
         /// <param name="p4vFullPath">Full path to executable.</param>
         /// <returns>The version if found, otherwise null.</returns>
-        internal static Version? GetP4VVersion(string? p4vFullPath)
+        private static Version? GetP4VVersion(string? p4vFullPath)
         {
             if (!string.IsNullOrEmpty(p4vFullPath) && File.Exists(p4vFullPath))
             {
@@ -576,7 +574,7 @@ namespace NiftyPerforce
             DetermineSupportedP4VFeatures(s_p4vFullPath, out s_p4vcWorkspaceWindowSupported, out s_p4vcDiffHaveSupported, out s_p4vcHistorySupported);
         }
 
-        internal static void DetermineSupportedP4VFeatures(string? p4vFullPath, out bool p4vcWorkspaceWindowSupported, out bool p4vcDiffHaveSupported, out bool p4vcHistorySupported)
+        private static void DetermineSupportedP4VFeatures(string? p4vFullPath, out bool p4vcWorkspaceWindowSupported, out bool p4vcDiffHaveSupported, out bool p4vcHistorySupported)
         {
             Version version = GetP4VVersion(p4vFullPath) ?? new Version(0, 0);
 

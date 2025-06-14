@@ -17,7 +17,7 @@ namespace NiftyPerforce.Core
             if (hive == RegistryHive.LocalMachine || hive == RegistryHive.CurrentUser)
             {
                 RegistryKey registryKey = hive == RegistryHive.LocalMachine ? Registry.LocalMachine : Registry.CurrentUser;
-                using RegistryKey subKey = registryKey.OpenSubKey(key);
+                using RegistryKey? subKey = registryKey.OpenSubKey(key);
                 return subKey?.GetValue(name) as string;
             }
 

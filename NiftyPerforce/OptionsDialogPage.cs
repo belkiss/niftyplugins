@@ -84,7 +84,7 @@ namespace NiftyPerforce
 
         public event EventHandler? OnApplyEvent;
 
-        protected override void OnApply(PageApplyEventArgs e)
+        protected override void OnApply(PageApplyEventArgs? e)
         {
             base.OnApply(e);
             if (e?.ApplyBehavior == ApplyKind.Apply)

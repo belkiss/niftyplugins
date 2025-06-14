@@ -15,15 +15,6 @@ namespace NiftyPerforce
 
         public DTE2 App { get; }
 
-        public EnvDTE.Commands DTECommands
-        {
-            get
-            {
-                ThreadHelper.ThrowIfNotOnUIThread();
-                return App.Commands;
-            }
-        }
-
         public OleMenuCommandService MenuCommandService { get; }
 
         public object Options { get; }
@@ -47,7 +38,7 @@ namespace NiftyPerforce
             CommandEvents? events = null;
             try
             {
-                Command command = App.DTE.Commands.Item(commandName, -1);
+                Command command = App.DTE.Commands.Item(commandName);
                 if (command != null)
                     events = App.DTE.Events.get_CommandEvents(command.Guid, command.ID);
             }

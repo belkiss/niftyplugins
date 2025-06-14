@@ -74,11 +74,7 @@ namespace NiftyPerforce.Core
             }
 
             // and finally, try to find the executable through the path environment variable
-            candidate = FindFileInPath(fileName!);
-            if (candidate != null)
-                return candidate;
-
-            return null;
+            return FindFileInPath(fileName!);
         }
 
         private string? FindFileInPath(string fileName)
