@@ -355,7 +355,7 @@ namespace NiftyPerforce
                 "set",
                 "-q"); // Reduces the output
 
-            string output = Process.Execute(p4FullPath, dir, args);
+            string output = Core.Process.Execute(p4FullPath, dir, args);
             return GetConnectionStringFromP4SetOutput(output);
         }
 
@@ -403,7 +403,7 @@ namespace NiftyPerforce
                     $"-d \"{dir.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)}\"",
                     "info");
 
-                string output = Process.Execute(p4FullPath, dir, args);
+                string output = Core.Process.Execute(p4FullPath, dir, args);
                 var userpattern = new Regex(@"User name: (?<user>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
                 var portpattern = new Regex(@"Server address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
                 var brokerpattern = new Regex(@"Broker address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
@@ -616,7 +616,7 @@ namespace NiftyPerforce
                 throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture, "Tried to find the mainline version of {0}, but the mainline path spec is empty", filename));
             }
 
-            string result = Process.Execute(s_p4FullPath!, Path.GetDirectoryName(filename), GetUserInfoString(s_p4FullPath) + "integrated \"" + EscapeP4Path(filename) + "\"");
+            string result = Core.Process.Execute(s_p4FullPath!, Path.GetDirectoryName(filename), GetUserInfoString(s_p4FullPath) + "integrated \"" + EscapeP4Path(filename) + "\"");
             result = UnEscapeP4Path(result);
 
             var pattern = new Regex(@"//(.*)#\d+ - .*//([^#]+)#\d+", RegexOptions.Compiled);
