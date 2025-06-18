@@ -7,13 +7,28 @@ using EnvDTE;
 
 namespace NiftyPerforce.Commands
 {
-    internal sealed class CopyRelativePath : ItemCommandBase
+    internal sealed class CopyPath : ItemCommandBase
     {
+        private readonly Mode _mode;
         private string? _relativePath;
 
-        public CopyRelativePath(Plugin plugin, string canonicalName)
-            : base("CopyRelativePath", canonicalName, plugin, true, true, PackageIds.NiftyCopyRelativePath)
+        internal enum Mode
         {
+            /// <summary>
+            /// Copy the current file path relative to the solution directory
+            /// </summary>
+            RelativePath,
+
+            /// <summary>
+            /// Copy the current file name only
+            /// </summary>
+            FileName,
+        }
+
+        public CopyPath(Plugin plugin, string canonicalName, Mode mode)
+            : base("CopyPath", canonicalName, plugin, true, true, mode == Mode.FileName ? PackageIds.NiftyCopyFileName : PackageIds.NiftyCopyRelativePath)
+        {
+            _mode = mode;
         }
 
         public override bool IsEnabled()
@@ -28,7 +43,8 @@ namespace NiftyPerforce.Commands
 
             try
             {
-                string? pathToCopy = GetRelativePath(GetRelativeToDirectory(), Plugin.App.ActiveDocument?.FullName);
+                string? activeDoc = Plugin.App.ActiveDocument?.FullName;
+                string? pathToCopy = _mode == Mode.FileName ? Path.GetFileName(activeDoc) : GetRelativePath(GetRelativeToDirectory(), activeDoc);
                 if (!string.IsNullOrWhiteSpace(pathToCopy))
                 {
                     Clipboard.SetText(pathToCopy);
@@ -52,9 +68,10 @@ namespace NiftyPerforce.Commands
             using var folderDialog = new FolderBrowserDialog();
 
             folderDialog.Description = "Select the base path to compute the relative path (hold shift to ask again next time)";
-            if (Plugin.App.ActiveDocument?.FullName != null)
+            string? activeDoc = Plugin.App.ActiveDocument?.FullName;
+            if (!string.IsNullOrEmpty(activeDoc))
             {
-                folderDialog.SelectedPath = Path.GetDirectoryName(Plugin.App.ActiveDocument.FullName);
+                folderDialog.SelectedPath = Path.GetDirectoryName(activeDoc);
             }
 
             return folderDialog.ShowDialog() == DialogResult.OK ? folderDialog.SelectedPath : null;

@@ -144,7 +144,8 @@
       <Button guid="guidNiftyPerforcePackageCmdSet" id="NiftyRevert"                 priority="0x000a" type="Button"><Parent guid="guidNiftyPerforcePackageCmdSet" id="NiftyFileOperationsRevertCommandGroup" /><Icon guid="ImageCatalogGuid" id="Undo" />               <CommandFlag>DynamicVisibility</CommandFlag><CommandFlag>AllowVisibilityChangeOnToolBar</CommandFlag><CommandFlag>IconIsMoniker</CommandFlag>                                           <Strings><ButtonText>Nifty Revert</ButtonText>               <ToolTipText>Reverts an opened item</ToolTipText>                             </Strings></Button>
       <Button guid="guidNiftyPerforcePackageCmdSet" id="NiftyRevertUnchanged"        priority="0x000b" type="Button"><Parent guid="guidNiftyPerforcePackageCmdSet" id="NiftyFileOperationsRevertCommandGroup" /><Icon guid="ImageCatalogGuid" id="UndoCheckedOutItem" /> <CommandFlag>DynamicVisibility</CommandFlag><CommandFlag>AllowVisibilityChangeOnToolBar</CommandFlag><CommandFlag>IconIsMoniker</CommandFlag>                                           <Strings><ButtonText>Nifty Revert Unchanged</ButtonText>     <ToolTipText>Reverts an opened item, only if unchanged</ToolTipText>          </Strings></Button>
       <Button guid="guidNiftyPerforcePackageCmdSet" id="NiftyShow"                   priority="0x000c" type="Button"><Parent guid="guidNiftyPerforcePackageCmdSet" id="NiftyFileStatusCommandGroup" />          <Icon guid="guidIcons"        id="p4vimage" />           <CommandFlag>DynamicVisibility</CommandFlag><CommandFlag>AllowVisibilityChangeOnToolBar</CommandFlag>                                                                                   <Strings><ButtonText>Nifty Show in p4v</ButtonText>          <ToolTipText>Opens the item in p4v</ToolTipText>                              </Strings></Button>
-      <Button guid="guidNiftyPerforcePackageCmdSet" id="NiftyCopyRelativePath"       priority="0x000d" type="Button"><Parent guid="guidNiftyPerforcePackageCmdSet" id="NiftyFileTabGroup" />                    <Icon guid="ImageCatalogGuid" id="Copy" />               <CommandFlag>DynamicVisibility</CommandFlag><CommandFlag>AllowVisibilityChangeOnToolBar</CommandFlag><CommandFlag>IconIsMoniker</CommandFlag>                                           <Strings><ButtonText>Nifty Copy Relative Path</ButtonText>   <ToolTipText>Copy the current file path relative to the .sln</ToolTipText>    </Strings></Button>
+      <Button guid="guidNiftyPerforcePackageCmdSet" id="NiftyCopyFileName"           priority="0x000d" type="Button"><Parent guid="guidNiftyPerforcePackageCmdSet" id="NiftyFileTabGroup" />                    <Icon guid="ImageCatalogGuid" id="DisplayName" />        <CommandFlag>DynamicVisibility</CommandFlag><CommandFlag>AllowVisibilityChangeOnToolBar</CommandFlag><CommandFlag>IconIsMoniker</CommandFlag>                                           <Strings><ButtonText>Nifty Copy File Name</ButtonText>       <ToolTipText>Copy the current file name</ToolTipText>                         </Strings></Button>
+      <Button guid="guidNiftyPerforcePackageCmdSet" id="NiftyCopyRelativePath"       priority="0x000e" type="Button"><Parent guid="guidNiftyPerforcePackageCmdSet" id="NiftyFileTabGroup" />                    <Icon guid="ImageCatalogGuid" id="Copy" />               <CommandFlag>DynamicVisibility</CommandFlag><CommandFlag>AllowVisibilityChangeOnToolBar</CommandFlag><CommandFlag>IconIsMoniker</CommandFlag>                                           <Strings><ButtonText>Nifty Copy Relative Path</ButtonText>   <ToolTipText>Copy the current file path relative to the .sln</ToolTipText>    </Strings></Button>
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -163,7 +164,8 @@
     <!-- Place stuff in the tab right click menu (IDM_VS_CTXT_EZDOCWINTAB) -->
     <!--<CommandPlacement guid="guidNiftyPerforcePackageCmdSet" id="NiftyEditModified" priority="0x0001"><Parent guid="guidNiftyPerforcePackageCmdSet" id="NiftyFileTabGroup"/></CommandPlacement>-->
     <!--<CommandPlacement guid="guidNiftyPerforcePackageCmdSet" id="NiftyDiff"         priority="0x0001"><Parent guid="guidNiftyPerforcePackageCmdSet" id="NiftyFileTabSubMenuGroup"/></CommandPlacement>-->
-    <CommandPlacement guid="guidNiftyPerforcePackageCmdSet" id="NiftyCopyRelativePath" priority="0x0001"><Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_EZDOCWINTAB"/></CommandPlacement>
+    <CommandPlacement guid="guidNiftyPerforcePackageCmdSet" id="NiftyCopyFileName"     priority="0x0001"><Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_EZDOCWINTAB"/></CommandPlacement>
+    <CommandPlacement guid="guidNiftyPerforcePackageCmdSet" id="NiftyCopyRelativePath" priority="0x0002"><Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_EZDOCWINTAB"/></CommandPlacement>
 
     <CommandPlacement guid="guidNiftyPerforcePackageCmdSet" id="NiftyFileOperationsCommandGroup"        priority="0x1001"><Parent guid="guidNiftyPerforcePackageCmdSet" id="NiftyFileTabSubMenu"/></CommandPlacement>
     <CommandPlacement guid="guidNiftyPerforcePackageCmdSet" id="NiftyFileStatusCommandGroup"            priority="0x1002"><Parent guid="guidNiftyPerforcePackageCmdSet" id="NiftyFileTabSubMenu"/></CommandPlacement>
@@ -228,7 +230,8 @@
       <IDSymbol name="NiftyRevert"            value="0x0700" />
       <IDSymbol name="NiftyRevertUnchanged"   value="0x0701" />
       <IDSymbol name="NiftyShow"              value="0x0800" />
-      <IDSymbol name="NiftyCopyRelativePath"  value="0x0900" />
+      <IDSymbol name="NiftyCopyFileName"      value="0x0900" />
+      <IDSymbol name="NiftyCopyRelativePath"  value="0x0901" />
     </GuidSymbol>
 
 
