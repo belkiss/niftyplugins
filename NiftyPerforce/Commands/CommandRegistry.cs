@@ -59,7 +59,7 @@ namespace NiftyPerforce.Commands
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.ToString());
+                Log.Debug(ex.ToString());
             }
         }
 
@@ -86,7 +86,7 @@ namespace NiftyPerforce.Commands
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.ToString());
+                Log.Debug(ex.ToString());
             }
         }
     }
