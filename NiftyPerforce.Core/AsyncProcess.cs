@@ -191,9 +191,13 @@ namespace NiftyPerforce.Core
                     process.StartInfo.RedirectStandardError = true;
                 }
 
-                if (environmentVariables != null)
+                Log.Debug("cmd: '{0} {1}'", executable, commandline);
+                Log.Debug("dir: '{0}'", workingdir ?? "unset");
+
+                if ((environmentVariables?.Count ?? 0) > 0)
                 {
-                    foreach (KeyValuePair<string, string> kvp in environmentVariables)
+                    Log.Debug("extra environment variables: {0}", string.Join(",", environmentVariables.Select(kvp => $"{kvp.Key}={kvp.Value}")));
+                    foreach (KeyValuePair<string, string> kvp in environmentVariables!)
                         process.StartInfo.EnvironmentVariables[kvp.Key] = kvp.Value;
                 }
 
@@ -201,10 +205,6 @@ namespace NiftyPerforce.Core
                 if (workingdir != null)
                     process.StartInfo.WorkingDirectory = workingdir;
                 process.StartInfo.Arguments = commandline;
-
-                Log.Debug("executableName : " + executable);
-                Log.Debug("workingDirectory : " + workingdir ?? "unset");
-                Log.Debug("command : " + commandline);
 
                 if (!process.Start())
                 {
@@ -232,7 +232,10 @@ namespace NiftyPerforce.Core
 
                     stderr.Sentinel.WaitOne();
                     stdout.Sentinel.WaitOne();
-                    alloutput = stdout.Buffer + "\n" + stderr.Buffer;
+                    alloutput = stdout.Buffer.Trim();
+                    if (alloutput.Length > 0 && stderr.Buffer.Length > 0)
+                        alloutput += "\n";
+                    alloutput += stderr.Buffer.Trim();
                 }
 
                 if (!exited)
