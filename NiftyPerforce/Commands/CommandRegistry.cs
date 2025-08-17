@@ -25,11 +25,6 @@ namespace NiftyPerforce.Commands
 
         public void RegisterCommand(CommandBase commandHandler)
         {
-            RegisterCommandPrivate(commandHandler);
-        }
-
-        private OleMenuCommand RegisterCommandPrivate(CommandBase commandHandler)
-        {
             OleMenuCommandService menuCommandService = _plugin.MenuCommandService;
             var commandId = new CommandID(_cmdGroupGuid, commandHandler.CommandId);
 
@@ -37,8 +32,6 @@ namespace NiftyPerforce.Commands
             vscommand.BeforeQueryStatus += OleMenuCommandBeforeQueryStatus; // LCTODO: this spams too much, figure out what's wrong
             menuCommandService.AddCommand(vscommand);
             _commandsById[commandId.ID] = commandHandler;
-
-            return vscommand;
         }
 
         private void OleMenuCommandBeforeQueryStatus(object? sender, EventArgs e)
