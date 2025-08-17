@@ -48,18 +48,18 @@ namespace NiftyPerforce.Commands
             return Plugin.App.SelectedItems.Count > 0;
         }
 
-        protected static bool TryGetDirectoryName(string fileName, out string? dirName)
+        protected static bool TryGetDirectoryName(string filePath, out string? dirName)
         {
-            dirName = Path.GetDirectoryName(fileName);
+            dirName = Path.GetDirectoryName(filePath);
             if (dirName == null)
             {
-                Log.Error("Couldn't get directory name from '{0}'", fileName);
+                Log.Error("Couldn't get directory name from '{0}'", filePath);
                 return false;
             }
 
             return true;
         }
 
-        protected abstract void OnExecute(SelectedItem item, string fileName);
+        protected abstract void OnExecute(SelectedItem item, string filePath);
     }
 }
