@@ -13,18 +13,18 @@ namespace NiftyPerforce.Commands
             _mMainLine = mainLine;
         }
 
-        protected override void OnExecute(SelectedItem item, string fileName)
+        protected override void OnExecute(SelectedItem item, string filePath)
         {
-            if (!TryGetDirectoryName(fileName, out string? dirname))
+            if (!TryGetDirectoryName(filePath, out string? dirname))
                 return;
 
             if (_mMainLine)
             {
                 var options = (OptionsDialogPage)Plugin.Options;
-                fileName = P4Operations.RemapToMain(fileName, options.MainLinePath);
+                filePath = P4Operations.RemapToMain(filePath, options.MainLinePath);
             }
 
-            P4Operations.RevisionGraph(dirname!, fileName);
+            P4Operations.RevisionGraph(dirname!, filePath);
         }
     }
 }

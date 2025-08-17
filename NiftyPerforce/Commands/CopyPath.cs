@@ -57,7 +57,7 @@ namespace NiftyPerforce.Commands
             return true;
         }
 
-        protected override void OnExecute(SelectedItem item, string fileName)
+        protected override void OnExecute(SelectedItem item, string filePath)
         {
             // do nothing, as we override OnCommand() instead
         }

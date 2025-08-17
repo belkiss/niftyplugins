@@ -10,9 +10,9 @@ namespace NiftyPerforce.Commands
         {
         }
 
-        protected override void OnExecute(SelectedItem item, string fileName)
+        protected override void OnExecute(SelectedItem item, string filePath)
         {
-            P4Operations.P4VShowFile(fileName);
+            P4Operations.P4VShowFile(filePath);
         }
     }
 }

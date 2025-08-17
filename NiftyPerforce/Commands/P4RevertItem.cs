@@ -14,16 +14,16 @@ namespace NiftyPerforce.Commands
             _onlyUnchanged = onlyUnchanged;
         }
 
-        protected override void OnExecute(SelectedItem item, string fileName)
+        protected override void OnExecute(SelectedItem item, string filePath)
         {
             if (!_onlyUnchanged)
             {
-                string message = "You are about to revert the file '" + fileName + "'. Do you want to do this?";
+                string message = "You are about to revert the file '" + filePath + "'. Do you want to do this?";
                 if (MessageBox.Show(message, "Revert File?", MessageBoxButtons.YesNo) != DialogResult.Yes)
                     return;
             }
 
-            P4Operations.RevertFile(fileName, _onlyUnchanged);
+            P4Operations.RevertFile(filePath, _onlyUnchanged);
         }
     }
 }
