@@ -109,11 +109,10 @@ namespace NiftyPerforce
                 versionString,
                 System.IO.File.GetLastWriteTime(niftyAssembly.Location).ToString(CultureInfo.CurrentCulture));
 
-            Log.Debug("    Location '{0}'", niftyAssembly?.Location ?? "unknown");
+            Log.Debug("Location: '{0}'", niftyAssembly?.Location ?? "unknown");
 
             // Now we can take care of registering ourselves and all our commands and hooks.
             Log.Debug("Booting up...");
-            Log.IncIndent();
 
             var config = (OptionsDialogPage)GetDialogPage(typeof(OptionsDialogPage));
             P4Operations.OptionsDialogPage = config;
@@ -131,8 +130,7 @@ namespace NiftyPerforce
 
             AsyncProcess.Init();
 
-            Log.DecIndent();
-            Log.Debug("Initialized...");
+            Log.Debug("Initialization complete.");
         }
 
         private void InitCommandRegistry()

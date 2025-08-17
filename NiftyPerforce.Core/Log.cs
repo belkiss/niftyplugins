@@ -1,7 +1,10 @@
 ﻿// Copyright (C) 2006-2017 Jim Tilander, 2017-2025 Lambert Clara. See the COPYING file in the project root for full license information.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
+using System.Threading;
 
 namespace NiftyPerforce.Core
 {
@@ -71,16 +74,6 @@ namespace NiftyPerforce.Core
             }
         }
 
-        public static void IncIndent()
-        {
-            s_indent++;
-        }
-
-        public static void DecIndent()
-        {
-            s_indent--;
-        }
-
         public static void Debug(string message, params object[] args)
         {
 #if DEBUG
@@ -105,12 +98,18 @@ namespace NiftyPerforce.Core
 
         private static void OnMessage(Level level, string format, object[] args)
         {
-            string message = args.Length > 0 ? string.Format(CultureInfo.InvariantCulture, format, args) : format;
-            string indent = new string(' ', s_indent * 4);
+            var chunks = new List<string>(4);
+            if (!string.IsNullOrEmpty(Prefix))
+                chunks.Add(Prefix);
+
             string levelName = level.ToString().PadLeft(5, ' ');
+            chunks.Add(levelName);
+            chunks.Add($"{Environment.CurrentManagedThreadId,4:X}");
 
-            string formattedLine = Prefix.Length > 0 ? $"{Prefix} ({levelName}): {indent}{message}\n" : $"{levelName}: {indent}{message}\n";
+            string message = args.Length > 0 ? string.Format(CultureInfo.InvariantCulture, format, args) : format;
+            chunks.Add($"{message}\n");
 
+            string formattedLine = string.Join("|", chunks);
             foreach (IHandler handler in s_handlers)
             {
                 handler.OnMessage(level, message, formattedLine);
@@ -118,6 +117,5 @@ namespace NiftyPerforce.Core
         }
 
         private static readonly List<IHandler> s_handlers = new List<IHandler>();
-        private static int s_indent;
     }
 }
