@@ -65,16 +65,6 @@ namespace NiftyPerforce
             }
         }
 
-        private static string EscapeP4Path(string filename)
-        {
-            return filename.Replace("%", "%25").Replace("#", "%23").Replace("@", "%40");
-        }
-
-        private static string UnEscapeP4Path(string escapedfilename)
-        {
-            return escapedfilename.Replace("%40", "@").Replace("%23", "#").Replace("%25", "%");
-        }
-
         private static string FormatToken(string operation, string filename)
         {
             string token = operation + " " + Path.GetFullPath(filename).ToLowerInvariant();
@@ -97,7 +87,7 @@ namespace NiftyPerforce
             if (!LockOp(token))
                 return false;
 
-            return AsyncProcess.Schedule(s_p4FullPath!, GetUserInfoString(s_p4FullPath) + "delete \"" + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(filename), UnlockOp, token);
+            return AsyncProcess.Schedule(s_p4FullPath!, GetUserInfoString(s_p4FullPath) + "delete \"" + P4Utils.EscapeP4Path(filename) + "\"", Path.GetDirectoryName(filename), UnlockOp, token);
         }
 
         public static bool AddFile(string filename)
@@ -203,9 +193,9 @@ namespace NiftyPerforce
                 return false;
 
             if (immediate)
-                return AsyncProcess.Run(s_p4FullPath!, GetUserInfoString(s_p4FullPath) + "edit \"" + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(filename), UnlockOp, token);
+                return AsyncProcess.Run(s_p4FullPath!, GetUserInfoString(s_p4FullPath) + "edit \"" + P4Utils.EscapeP4Path(filename) + "\"", Path.GetDirectoryName(filename), UnlockOp, token);
 
-            return AsyncProcess.Schedule(s_p4FullPath!, GetUserInfoString(s_p4FullPath) + "edit \"" + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(filename), UnlockOp, token);
+            return AsyncProcess.Schedule(s_p4FullPath!, GetUserInfoString(s_p4FullPath) + "edit \"" + P4Utils.EscapeP4Path(filename) + "\"", Path.GetDirectoryName(filename), UnlockOp, token);
         }
 
         public static OptionsDialogPage? OptionsDialogPage { get; set; }
@@ -223,7 +213,7 @@ namespace NiftyPerforce
                 return false;
 
             string revertArguments = onlyUnchanged ? "-a " : string.Empty;
-            return AsyncProcess.Schedule(s_p4FullPath!, GetUserInfoString(s_p4FullPath) + "revert " + revertArguments + "\"" + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(filename), UnlockOp, token);
+            return AsyncProcess.Schedule(s_p4FullPath!, GetUserInfoString(s_p4FullPath) + "revert " + revertArguments + "\"" + P4Utils.EscapeP4Path(filename) + "\"", Path.GetDirectoryName(filename), UnlockOp, token);
         }
 
         public static bool DiffFile(string filename)
@@ -242,13 +232,13 @@ namespace NiftyPerforce
 
             // Let's figure out if the user has some custom diff tool installed. Then we just send whatever we have without any fancy options.
             if (s_p4CustomDiff)
-                return AsyncProcess.Schedule(s_p4FullPath!, GetUserInfoString(s_p4FullPath) + " diff \"" + EscapeP4Path(filename) + "#have\"", dirname, UnlockOp, token);
+                return AsyncProcess.Schedule(s_p4FullPath!, GetUserInfoString(s_p4FullPath) + " diff \"" + P4Utils.EscapeP4Path(filename) + "#have\"", dirname, UnlockOp, token);
 
             if (s_p4VcDiffHaveSupported)
-                return AsyncProcess.Schedule(s_p4VcFullPath!, GetUserInfoStringFull(s_p4FullPath, true, dirname) + " diffhave \"" + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(s_p4VcFullPath), UnlockOp, token, 0);
+                return AsyncProcess.Schedule(s_p4VcFullPath!, GetUserInfoStringFull(s_p4FullPath, true, dirname) + " diffhave \"" + P4Utils.EscapeP4Path(filename) + "\"", Path.GetDirectoryName(s_p4VcFullPath), UnlockOp, token, 0);
 
             // Otherwise let's show a unified diff in the outputpane.
-            return AsyncProcess.Schedule(s_p4FullPath!, GetUserInfoString(s_p4FullPath) + " diff -du \"" + EscapeP4Path(filename) + "#have\"", dirname, UnlockOp, token);
+            return AsyncProcess.Schedule(s_p4FullPath!, GetUserInfoString(s_p4FullPath) + " diff -du \"" + P4Utils.EscapeP4Path(filename) + "#have\"", dirname, UnlockOp, token);
         }
 
         public static bool RevisionHistoryFile(string dirname, string filename)
@@ -263,10 +253,10 @@ namespace NiftyPerforce
                     return false;
 
                 if (s_p4VcHistorySupported)
-                    return AsyncProcess.Schedule(s_p4VcFullPath!, GetUserInfoStringFull(s_p4FullPath, true, dirname) + " history \"" + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(s_p4VcFullPath), UnlockOp, token, 0);
+                    return AsyncProcess.Schedule(s_p4VcFullPath!, GetUserInfoStringFull(s_p4FullPath, true, dirname) + " history \"" + P4Utils.EscapeP4Path(filename) + "\"", Path.GetDirectoryName(s_p4VcFullPath), UnlockOp, token, 0);
 
                 if (!string.IsNullOrEmpty(s_p4VFullPath))
-                    return AsyncProcess.Schedule(s_p4VFullPath!, " -win 0 " + GetUserInfoStringFull(s_p4FullPath, true, dirname) + " -cmd \"history " + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(s_p4VFullPath), UnlockOp, token, 0);
+                    return AsyncProcess.Schedule(s_p4VFullPath!, " -win 0 " + GetUserInfoStringFull(s_p4FullPath, true, dirname) + " -cmd \"history " + P4Utils.EscapeP4Path(filename) + "\"", Path.GetDirectoryName(s_p4VFullPath), UnlockOp, token, 0);
             }
 
             return NotifyUser("could not find a supported p4vc.exe or p4v.exe installed in perforce directory");
@@ -278,10 +268,10 @@ namespace NiftyPerforce
                 return false;
 
             if (s_p4VcWorkspaceWindowSupported)
-                return AsyncProcess.Schedule(s_p4VcFullPath!, GetUserInfoStringFull(s_p4FullPath, true, Path.GetDirectoryName(filename)) + " workspacewindow -s \"" + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(s_p4VcFullPath), null, null, 0);
+                return AsyncProcess.Schedule(s_p4VcFullPath!, GetUserInfoStringFull(s_p4FullPath, true, Path.GetDirectoryName(filename)) + " workspacewindow -s \"" + P4Utils.EscapeP4Path(filename) + "\"", Path.GetDirectoryName(s_p4VcFullPath), null, null, 0);
 
             if (!string.IsNullOrEmpty(s_p4VFullPath)) // note that the cmd line also accepts -t to open P4V with a specific tab shown
-                return AsyncProcess.Schedule(s_p4VFullPath!, " -win 0 " + GetUserInfoStringFull(s_p4FullPath, true, Path.GetDirectoryName(filename)) + " -s \"" + EscapeP4Path(filename) + "\"", Path.GetDirectoryName(s_p4VFullPath), null, null, 0);
+                return AsyncProcess.Schedule(s_p4VFullPath!, " -win 0 " + GetUserInfoStringFull(s_p4FullPath, true, Path.GetDirectoryName(filename)) + " -s \"" + P4Utils.EscapeP4Path(filename) + "\"", Path.GetDirectoryName(s_p4VFullPath), null, null, 0);
 
             return NotifyUser("could not find p4v.exe installed in perforce directory");
         }
@@ -616,8 +606,8 @@ namespace NiftyPerforce
                 throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture, "Tried to find the mainline version of {0}, but the mainline path spec is empty", filename));
             }
 
-            string result = Core.Process.Execute(s_p4FullPath!, Path.GetDirectoryName(filename), GetUserInfoString(s_p4FullPath) + "integrated \"" + EscapeP4Path(filename) + "\"");
-            result = UnEscapeP4Path(result);
+            string result = Core.Process.Execute(s_p4FullPath!, Path.GetDirectoryName(filename), GetUserInfoString(s_p4FullPath) + "integrated \"" + P4Utils.EscapeP4Path(filename) + "\"");
+            result = P4Utils.UnEscapeP4Path(result);
 
             var pattern = new Regex(@"//(.*)#\d+ - .*//([^#]+)#\d+", RegexOptions.Compiled);
 

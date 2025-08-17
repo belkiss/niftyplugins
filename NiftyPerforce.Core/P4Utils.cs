@@ -28,6 +28,16 @@ namespace NiftyPerforce.Core
             _registryService = registryService;
         }
 
+        public static string EscapeP4Path(string filename)
+        {
+            return filename.Replace("%", "%25").Replace("#", "%23").Replace("@", "%40");
+        }
+
+        public static string UnEscapeP4Path(string escapedfilename)
+        {
+            return escapedfilename.Replace("%40", "@").Replace("%23", "#").Replace("%25", "%");
+        }
+
         /// <summary>
         /// Finds the Perforce installation path by checking in common installation locations.
         /// </summary>
