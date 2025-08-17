@@ -26,14 +26,19 @@ namespace NiftyPerforce.Core
         {
             const int Timeout = 1000;
 
-            if (!RunCommand(executable, commandline, workingdir, Timeout))
+            bool ok;
+            try
             {
-                Log.Debug("Failed to run immediate (process hung?), trying again on a remote thread: " + commandline);
-                return Schedule(executable, commandline, workingdir, callback, callbackArg);
+                ok = RunCommand(executable, commandline, workingdir, Timeout);
+            }
+            catch
+            {
+                ok = false;
+                Log.Error("Caught unhandled exception when running process -- suppressing so that we don't bring down Visual Studio");
             }
 
-            callback?.Invoke(true, callbackArg);
-            return true;
+            callback?.Invoke(ok, callbackArg);
+            return ok;
         }
 
         public static bool Schedule(string executable, string commandline, string? workingdir, OnDone? callback, object? callbackArg)
