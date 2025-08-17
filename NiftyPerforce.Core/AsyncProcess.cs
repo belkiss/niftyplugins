@@ -1,6 +1,9 @@
 ﻿// Copyright (C) 2006-2017 Jim Tilander, 2017-2025 Lambert Clara. See the COPYING file in the project root for full license information.
 
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 
 namespace NiftyPerforce.Core
@@ -14,12 +17,21 @@ namespace NiftyPerforce.Core
         public static void Init()
         {
             s_helperThread = new Thread(ThreadMain);
+            s_loop = true;
             s_helperThread.Start();
         }
 
         public static void Term()
         {
-            s_helperThread?.Abort();
+            if (!s_loop)
+                return;
+
+            s_loop = false;
+            s_startEvent.Release();
+            if (!s_helperThread?.Join(1000) ?? false)
+            {
+                s_helperThread?.Abort();
+            }
         }
 
         public static bool Run(string executable, string commandline, string? workingdir, OnDone? callback, object? callbackArg)
@@ -78,12 +90,16 @@ namespace NiftyPerforce.Core
         private static readonly Semaphore s_startEvent = new Semaphore(0, 9999);
         private static readonly Queue<CommandThread> s_commandQueue = new Queue<CommandThread>();
         private static Thread? s_helperThread;
+        private static bool s_loop;
 
         private static void ThreadMain()
         {
             while (true)
             {
                 s_startEvent.WaitOne();
+                if (!s_loop)
+                    return;
+
                 CommandThread? cmd;
 
                 try
