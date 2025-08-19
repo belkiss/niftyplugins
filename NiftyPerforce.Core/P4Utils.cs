@@ -1,6 +1,7 @@
 ﻿// Copyright (C) 2006-2017 Jim Tilander, 2017-2025 Lambert Clara. See the COPYING file in the project root for full license information.
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Abstractions;
 using Microsoft.Win32;
@@ -85,6 +86,43 @@ namespace NiftyPerforce.Core
 
             // and finally, try to find the executable through the path environment variable
             return FindFileInPath(fileName!);
+        }
+
+        /// <summary>
+        /// Returns file version.
+        /// </summary>
+        /// <param name="fileFullPath">Full path to file.</param>
+        /// <returns>The version if found, otherwise null.</returns>
+        public Version? GetFileVersion(string? fileFullPath)
+        {
+            if (!string.IsNullOrEmpty(fileFullPath) && _fileSystemService.File.Exists(fileFullPath))
+            {
+                var versionInfo = FileVersionInfo.GetVersionInfo(fileFullPath);
+                if (versionInfo.FileVersion != null)
+                    return new Version(versionInfo.FileVersion);
+            }
+
+            return null;
+        }
+
+        public void DetermineSupportedP4VFeatures(string? p4VFullPath, out bool p4VcWorkspaceWindowSupported, out bool p4VcDiffHaveSupported, out bool p4VcHistorySupported)
+        {
+            Version version = GetFileVersion(p4VFullPath) ?? new Version(0, 0);
+
+            // workspacewindow was added in p4v 2023.2/2443448, and 2024.1/2573667 deprecated p4v -s and p4v -t
+            p4VcWorkspaceWindowSupported = version.Major > 2023 || (version.Major == 2023 && version.Minor >= 2);
+            Log.Info("[{0}] p4vc workspacewindow", p4VcWorkspaceWindowSupported ? "X" : " ");
+
+            // since p4vc.bat was introduced with 2021.1/2075061, if we have it we know we have diffhave, hence history
+
+            // diffhave was added in p4v 2020.1/1946989
+            p4VcDiffHaveSupported = version.Major >= 2020;
+            Log.Info("[{0}] p4vc diffhave", p4VcDiffHaveSupported ? "X" : " ");
+
+            // history was added in p4v 2019.2 update1/1883366
+            // so if we have diffhave we know we have history and can skip the test
+            p4VcHistorySupported = version.Major > 2019 || (version.Major == 2019 && version.Minor >= 2);
+            Log.Info("[{0}] p4vc history", p4VcHistorySupported ? "X" : " ");
         }
 
         private string? FindFileInPath(string fileName)
