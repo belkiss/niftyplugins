@@ -15,6 +15,16 @@ namespace NiftyPerforce
     {
         private static readonly object s_opsInFlightLock = new object();
         private static readonly HashSet<string> s_opsInFlight = new HashSet<string>();
+
+        internal static bool HasOpsInFlight
+        {
+            get
+            {
+                lock (s_opsInFlightLock)
+                    return s_opsInFlight.Count > 0;
+            }
+        }
+
         private static readonly HashSet<string> s_alreadyNotified = new HashSet<string>();
 
         private bool _p4CustomDiff;
