@@ -136,6 +136,34 @@ namespace NiftyPerforce
             return AsyncProcess.Schedule(_p4FullPath!, GetUserInfoString(_p4FullPath) + "add -f \"" + filename + "\"", Path.GetDirectoryName(filename), UnlockOp, token);
         }
 
+        internal bool Submit(string filename, string? description)
+        {
+            if (filename.Length == 0)
+            {
+                Log.Debug("Submit failed due to empty filename");
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(_p4FullPath))
+            {
+                Log.Debug($"Submit '{filename}' failed because p4 exe was not found");
+                return NotifyUser("could not find p4 exe installed in perforce directory");
+            }
+
+            string token = FormatToken("submit", filename);
+            if (!LockOp(token))
+                return false;
+
+            string submitArguments = string.Empty;
+            if (!string.IsNullOrEmpty(description))
+            {
+                submitArguments = $"-d \"{description}\" ";
+            }
+
+            // use Run instead of Schedule because we want to block until the submit is done
+            return AsyncProcess.Run(_p4FullPath!, GetUserInfoString(_p4FullPath) + $"submit {submitArguments}\"" + P4Utils.EscapeP4Path(filename) + "\"", Path.GetDirectoryName(filename), UnlockOp, token);
+        }
+
         public bool EditFile(string filename, bool force)
         {
             return Internal_CheckEditFile(f => Internal_EditFile(f, force ? EditFileFlags.Force : EditFileFlags.None), filename);
