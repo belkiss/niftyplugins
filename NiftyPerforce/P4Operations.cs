@@ -216,7 +216,14 @@ namespace NiftyPerforce
             return AsyncProcess.Schedule(_p4FullPath!, GetUserInfoString(_p4FullPath) + "edit \"" + P4Utils.EscapeP4Path(filename) + "\"", Path.GetDirectoryName(filename), UnlockOp, token);
         }
 
-        public bool RevertFile(string filename, bool onlyUnchanged)
+        public enum RevertFileOptions
+        {
+            None,
+            OnlyUnchanged,
+            DeleteOpenForAdd,
+        }
+
+        public bool RevertFile(string filename, RevertFileOptions options)
         {
             if (filename.Length == 0)
                 return false;
@@ -228,7 +235,22 @@ namespace NiftyPerforce
             if (!LockOp(token))
                 return false;
 
-            string revertArguments = onlyUnchanged ? "-a " : string.Empty;
+            string revertArguments = string.Empty;
+            switch (options)
+            {
+                case RevertFileOptions.None:
+                    break;
+                case RevertFileOptions.OnlyUnchanged:
+                    revertArguments = "-a ";
+                    break;
+                case RevertFileOptions.DeleteOpenForAdd:
+                    revertArguments = "-w ";
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(options), options, null);
+            }
+
             return AsyncProcess.Schedule(_p4FullPath!, GetUserInfoString(_p4FullPath) + "revert " + revertArguments + "\"" + P4Utils.EscapeP4Path(filename) + "\"", Path.GetDirectoryName(filename), UnlockOp, token);
         }
 
