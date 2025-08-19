@@ -286,7 +286,23 @@ namespace NiftyPerforce
                 return AsyncProcess.Schedule(_p4VcFullPath!, GetUserInfoStringFull(_p4FullPath, true, dirname) + " diffhave \"" + P4Utils.EscapeP4Path(filename) + "\"", Path.GetDirectoryName(_p4VcFullPath), UnlockOp, token, 0);
 
             // Otherwise let's show a unified diff in the outputpane.
-            return AsyncProcess.Schedule(_p4FullPath!, GetUserInfoString(_p4FullPath) + " diff -du \"" + P4Utils.EscapeP4Path(filename) + "#have\"", dirname, UnlockOp, token);
+            return UnifiedDiffFile(dirname, filename, token);
+        }
+
+        internal bool UnifiedDiffFile(string dirname, string filePath, string? token = null)
+        {
+            if (string.IsNullOrEmpty(_p4FullPath))
+                return NotifyUser("could not find p4 exe installed in perforce directory");
+
+            if (string.IsNullOrEmpty(token))
+            {
+                token = FormatToken("diff", filePath);
+                if (!LockOp(token))
+                    return false;
+            }
+
+            // Show a unified diff in the outputpane.
+            return AsyncProcess.Schedule(_p4FullPath!, GetUserInfoString(_p4FullPath) + " diff -du \"" + P4Utils.EscapeP4Path(filePath) + "#have\"", dirname, UnlockOp, token);
         }
 
         public bool RevisionHistoryFile(string dirname, string filename)
