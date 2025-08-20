@@ -169,9 +169,9 @@ namespace NiftyPerforce
             return Internal_CheckEditFile(f => Internal_EditFile(f, force ? EditFileFlags.Force : EditFileFlags.None), filename);
         }
 
-        public bool EditFileImmediate(string filename)
+        public bool EditFileImmediate(string filename, bool force = false)
         {
-            return Internal_CheckEditFile(f => Internal_EditFile(f, EditFileFlags.Immediate), filename);
+            return Internal_CheckEditFile(f => Internal_EditFile(f, EditFileFlags.Immediate | (force ? EditFileFlags.Force : EditFileFlags.None)), filename);
         }
 
         private static bool Internal_CheckEditFile(CheckoutCallback callback, string filename)
