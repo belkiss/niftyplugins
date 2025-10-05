@@ -15,6 +15,7 @@ namespace NiftyPerforce
     {
         private static readonly object s_opsInFlightLock = new object();
         private static readonly HashSet<string> s_opsInFlight = new HashSet<string>();
+        private static bool s_unattended = true;
 
         internal static bool HasOpsInFlight
         {
@@ -43,6 +44,11 @@ namespace NiftyPerforce
         private string? _port;
         private string? _client;
         private string? _username;
+
+        public P4Operations(bool unattended)
+        {
+            s_unattended = unattended;
+        }
 
         public void SetOptions(bool ignoreReadOnlyOnEdit, bool useSystemEnv, SettingsLookupSource preferredLookupSource, string port, string client, string username)
         {
@@ -566,7 +572,8 @@ namespace NiftyPerforce
             if (!s_alreadyNotified.Contains(message))
             {
                 Log.Error(message);
-                System.Windows.Forms.MessageBox.Show(message, "NiftyPerforce Notice!", System.Windows.Forms.MessageBoxButtons.OK);
+                if (!s_unattended)
+                    System.Windows.Forms.MessageBox.Show(message, "NiftyPerforce Notice!", System.Windows.Forms.MessageBoxButtons.OK);
                 s_alreadyNotified.Add(message);
             }
 

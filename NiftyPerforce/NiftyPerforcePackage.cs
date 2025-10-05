@@ -115,7 +115,7 @@ namespace NiftyPerforce
             Log.Debug("Booting up...");
 
             var config = (OptionsDialogPage)GetDialogPage(typeof(OptionsDialogPage));
-            _plugin = new Plugin(dte2Service, oleMenuCommandService, config, new P4Operations());
+            _plugin = new Plugin(dte2Service, oleMenuCommandService, config, new P4Operations(unattended: false));
             void ApplyOptions()
             {
                 _plugin.P4Operations.SetOptions(config.IgnoreReadOnlyOnEdit, config.UseSystemEnv, config.PreferredLookupSource, config.Port, config.Client, config.Username);
