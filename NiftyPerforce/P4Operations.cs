@@ -565,6 +565,7 @@ namespace NiftyPerforce
         {
             if (!s_alreadyNotified.Contains(message))
             {
+                Log.Error(message);
                 System.Windows.Forms.MessageBox.Show(message, "NiftyPerforce Notice!", System.Windows.Forms.MessageBoxButtons.OK);
                 s_alreadyNotified.Add(message);
             }
