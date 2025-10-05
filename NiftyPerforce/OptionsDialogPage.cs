@@ -36,50 +36,62 @@ namespace NiftyPerforce
     {
         [Category("Operation")]
         [Description("Controls if we automagically check out files from perforce upon keypress (loose some performance in editor)")]
+        [DefaultValue(false)]
         public bool AutoCheckoutOnEdit { get; set; } = false;
 
         [Category("Operation")]
         [Description("Automatically check out projects on edit properties (loose some performance in editor)")]
+        [DefaultValue(false)]
         public bool AutoCheckoutProject { get; set; } = false;
 
         [Category("Operation")]
         [Description("Controls if we automagically check out files from perforce before saving")]
+        [DefaultValue(true)]
         public bool AutoCheckoutOnSave { get; set; } = true;
 
         [Category("Operation")]
         [Description("Automagically add files to perforce")]
+        [DefaultValue(false)]
         public bool AutoAdd { get; set; } = false;
 
         [Category("Operation")]
         [Description("Automagically delete files from perforce when we're deleting files from visual studio (fairly dangerous)")]
+        [DefaultValue(false)]
         public bool AutoDelete { get; set; } = false;
 
         [Category("Operation")]
         [Description("Try to do a p4 edit even though the file is writable. Useful if you have a git repository above your p4 workspace. Costly!")]
+        [DefaultValue(false)]
         public bool IgnoreReadOnlyOnEdit { get; set; } = false;
 
         [Category("Connection")]
         [Description("Use config from system. Effectivly disables the settings inside this dialog for the client etc and picks up the settings from the registry/p4config environment.")]
+        [DefaultValue(true)]
         public bool UseSystemEnv { get; set; } = true;
 
         [Category("Connection")]
         [Description("In case UseSystemEnv is true, choose which source to pick first to lookup the settings.")]
+        [DefaultValue(SettingsLookupSource.P4Set)]
         public SettingsLookupSource PreferredLookupSource { get; set; } = SettingsLookupSource.P4Set;
 
         [Category("Connection")]
         [Description("Perforce port number")]
+        [DefaultValue("")]
         public string Port { get; set; } = string.Empty;
 
         [Category("Connection")]
         [Description("Perforce client")]
+        [DefaultValue("")]
         public string Client { get; set; } = string.Empty;
 
         [Category("Connection")]
         [Description("Perforce username")]
+        [DefaultValue("")]
         public string Username { get; set; } = string.Empty;
 
         [Category("Branching")]
         [Description("Where we can find the mainline version of this file")]
+        [DefaultValue("")]
         public string MainLinePath { get; set; } = string.Empty;
 
         public event EventHandler? OnApplyEvent;
