@@ -10,9 +10,9 @@ namespace NiftyPerforce.Manifests
     {
         public const string Id = "NiftyPerforce.belkiss.3cc12a76-88f6-4e50-9ede-377ba823db79";
         public const string Name = "Nifty Perforce - belkiss' fork";
-        public const string Description = @"Simple Perforce integration for Visual Studio 2022";
+        public const string Description = @"Simple Perforce integration for Visual Studio 2022/2026";
         public const string Language = "en-US";
-        public const string Version = "3.0.6";
+        public const string Version = "3.0.7";
         public const string Author = "Lambert Clara";
         public const string Tags = "perforce";
         public const bool IsPreview = false;
