@@ -256,8 +256,19 @@ namespace NiftyPerforce
 
         public enum RevertFileOptions
         {
+            /// <summary>
+            /// Classic revert, will leave the files on disk in case of adds.
+            /// </summary>
             None,
+
+            /// <summary>
+            /// Reverts only the files that were unchanged.
+            /// </summary>
             OnlyUnchanged,
+
+            /// <summary>
+            /// Reverts and delete the file in case it was open of add.
+            /// </summary>
             DeleteOpenForAdd,
         }
 
