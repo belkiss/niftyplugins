@@ -404,16 +404,16 @@ namespace NiftyPerforce
                         switch (lookupSource)
                         {
                             case SettingsLookupSource.P4Info:
-                                string? fromP4Info = GetConnectionStringFromP4Info(p4FullPath!, dir);
-                                if (!string.IsNullOrEmpty(fromP4Info))
-                                    return fromP4Info!;
+                                P4ConnectionInfo? fromP4Info = GetConnectionInfoFromP4Info(p4FullPath!, dir);
+                                if (fromP4Info?.IsValid() ?? false)
+                                    return fromP4Info.ConnectionString!;
 
                                 break;
 
                             case SettingsLookupSource.P4Set:
-                                string? fromP4Set = GetConnectionStringFromP4Set(p4FullPath!, dir);
-                                if (!string.IsNullOrEmpty(fromP4Set))
-                                    return fromP4Set!;
+                                P4ConnectionInfo? fromP4Set = GetConnectionInfoFromP4Set(p4FullPath!, dir);
+                                if (fromP4Set?.IsValid() ?? false)
+                                    return fromP4Set.ConnectionString!;
 
                                 break;
                             default:
@@ -439,7 +439,7 @@ namespace NiftyPerforce
             return arguments;
         }
 
-        private static string? GetConnectionStringFromP4Set(string p4FullPath, string dir)
+        private static P4ConnectionInfo? GetConnectionInfoFromP4Set(string p4FullPath, string dir)
         {
             string args = string.Join(
                 " ",
@@ -449,109 +449,19 @@ namespace NiftyPerforce
                 "-q"); // Reduces the output
 
             string output = Core.Process.Execute(p4FullPath, dir, args);
-            return GetConnectionStringFromP4SetOutput(output);
+            return P4ConnectionInfo.FromP4SetOutput(output);
         }
 
-        internal static string? GetConnectionStringFromP4SetOutput(string p4SetOutput)
+        private static P4ConnectionInfo? GetConnectionInfoFromP4Info(string p4FullPath, string dir)
         {
-            if (!string.IsNullOrEmpty(p4SetOutput))
-            {
-                string? client = null;
-                string? server = null;
-                string? username = null;
-                foreach (string s in p4SetOutput.Split('\n'))
-                {
-                    string trim = s.Trim();
-                    if (trim.StartsWith("P4CLIENT=", StringComparison.Ordinal))
-                    {
-                        client = trim.Substring(9);
-                    }
-                    else if (trim.StartsWith("P4PORT=", StringComparison.Ordinal))
-                    {
-                        server = trim.Substring(7);
-                    }
-                    else if (trim.StartsWith("P4USER=", StringComparison.Ordinal))
-                    {
-                        username = trim.Substring(7);
-                    }
+            string args = string.Join(
+                " ",
+                "-s",
+                $"-d \"{dir.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)}\"",
+                "info");
 
-                    if (!string.IsNullOrEmpty(client) && !string.IsNullOrEmpty(server) && !string.IsNullOrEmpty(username))
-                    {
-                        string ret = $"-p {server} -u {username} -c {client}";
-                        return ret;
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        private static string? GetConnectionStringFromP4Info(string p4FullPath, string dir)
-        {
-            try
-            {
-                string args = string.Join(
-                    " ",
-                    "-s",
-                    $"-d \"{dir.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)}\"",
-                    "info");
-
-                string output = Core.Process.Execute(p4FullPath, dir, args);
-                var userpattern = new Regex(@"User name: (?<user>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
-                var portpattern = new Regex(@"Server address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
-                var brokerpattern = new Regex(@"Broker address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
-                var proxypattern = new Regex(@"Proxy address: (?<port>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
-                var clientpattern = new Regex(@"Client name: (?<client>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
-
-                Match usermatch = userpattern.Match(output);
-                Match portmatch = portpattern.Match(output);
-                Match brokermatch = brokerpattern.Match(output);
-                Match proxymatch = proxypattern.Match(output);
-                Match clientmatch = clientpattern.Match(output);
-
-                string port = portmatch.Groups["port"].Value.Trim();
-                string? broker = brokermatch.Success ? brokermatch.Groups["port"].Value.Trim() : null;
-                string? proxy = proxymatch.Success ? proxymatch.Groups["port"].Value.Trim() : null;
-                string username = usermatch.Groups["user"].Value.Trim();
-                string client = clientmatch.Groups["client"].Value.Trim();
-
-                string server;
-                Regex encryptionpattern;
-                if (!string.IsNullOrEmpty(broker))
-                {
-                    server = broker!;
-                    encryptionpattern = new Regex(@"Broker encryption: (?<encrypted>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
-                }
-                else if (!string.IsNullOrEmpty(proxy))
-                {
-                    server = proxy!;
-                    encryptionpattern = new Regex(@"Proxy encryption: (?<encrypted>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
-                }
-                else
-                {
-                    server = port;
-                    encryptionpattern = new Regex(@"Server encryption: (?<encrypted>.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
-                }
-
-                Match encryptionmatch = encryptionpattern.Match(output);
-                bool encrypted = encryptionmatch.Success && encryptionmatch.Groups["encrypted"].Value.Trim() == "encrypted";
-                if (encrypted)
-                {
-                    server = $"ssl:{server}";
-                }
-
-                string ret = $" -p {server} -u {username} -c {client} ";
-
-                Log.Debug("GetUserInfoStringFull : " + ret);
-
-                return ret;
-            }
-            catch
-            {
-                Log.Error("Failed to execute info string discovery");
-            }
-
-            return null;
+            string output = Core.Process.Execute(p4FullPath, dir, args);
+            return P4ConnectionInfo.FromP4InfoOutput(output);
         }
 
         public bool TimeLapseView(string dirname, string filename)
