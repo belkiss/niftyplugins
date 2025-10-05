@@ -69,7 +69,7 @@ namespace NiftyPerforce.Core.Tests
         public void LocateP4InstallPath_ProgramFiles(Environment.SpecialFolder specialFolder, params string[] files)
         {
             string specialFolderPath = Environment.GetFolderPath(specialFolder);
-            Assert.IsTrue(specialFolderPath.Length > 0);
+            Assert.IsGreaterThan(0, specialFolderPath.Length);
 
             var fileSystem = new MockFileSystem();
             foreach (string file in files)
