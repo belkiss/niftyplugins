@@ -55,8 +55,8 @@ jobs:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
       DOTNET_NOLOGO: true
 
-      VsixManifestPath: ${{ contains(matrix.configuration, 'Legacy') && 'NiftyPerforce\Manifests\source.extension.vsixmanifest' || 'NiftyPerforce\Manifests\source.extension.vsixmanifest' }}
-      VsixManifestSourcePath: ${{ contains(matrix.configuration, 'Legacy') && 'NiftyPerforce\Manifests\Legacy\source.extension.cs' || 'NiftyPerforce\Manifests\Legacy\source.extension.cs' }}
+      VsixManifestPath: ${{ contains(matrix.configuration, 'Legacy') && 'NiftyPerforce\Manifests\Legacy\source.extension.vsixmanifest' || 'NiftyPerforce\Manifests\source.extension.vsixmanifest' }}
+      VsixManifestSourcePath: ${{ contains(matrix.configuration, 'Legacy') && 'NiftyPerforce\Manifests\Legacy\source.extension.cs' || 'NiftyPerforce\Manifests\source.extension.cs' }}
 
     steps:
     - name: Checkout the repo
