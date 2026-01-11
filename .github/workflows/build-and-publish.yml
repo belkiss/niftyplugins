@@ -55,12 +55,22 @@ jobs:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
       DOTNET_NOLOGO: true
 
+      VsixManifestPath: ${{ contains(matrix.configuration, 'Legacy') && NiftyPerforce\Manifests\source.extension.vsixmanifest || NiftyPerforce\Manifests\source.extension.vsixmanifest }}
+      VsixManifestSourcePath: ${{ contains(matrix.configuration, 'Legacy') && NiftyPerforce\Manifests\Legacy\source.extension.cs || NiftyPerforce\Manifests\Legacy\source.extension.cs }}
+
     steps:
     - name: Checkout the repo
       uses: actions/checkout@v6
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2.0.0
+
+    - name: Increment VSIX version
+      id: vsix_version
+      uses: timheuer/vsix-version-stamp@v2
+      with:
+        manifest-file: ${{ env.VsixManifestPath }}
+        vsix-token-source-file: ${{ env.VsixManifestSourcePath }}
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Build NiftyPerforce in ${{ matrix.configuration }} and analyze
