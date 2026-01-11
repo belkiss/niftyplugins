@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2006-2017 Jim Tilander, 2017-2025 Lambert Clara. See the COPYING file in the project root for full license information.
+﻿// Copyright (C) 2006-2017 Jim Tilander, 2017-2026 Lambert Clara. See the COPYING file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
@@ -12,22 +12,22 @@ namespace NiftyPerforce.Core
         public enum Level
         {
             /// <summary>
-            /// Debug level messages
+            /// Debug level messages.
             /// </summary>
             Debug,
 
             /// <summary>
-            /// Informational messages
+            /// Informational messages.
             /// </summary>
             Info,
 
             /// <summary>
-            /// Warning messages
+            /// Warning messages.
             /// </summary>
             Warn,
 
             /// <summary>
-            /// Error messages
+            /// Error messages.
             /// </summary>
             Error,
         }

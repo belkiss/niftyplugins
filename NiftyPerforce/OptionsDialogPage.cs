@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2006-2017 Jim Tilander, 2017-2025 Lambert Clara. See the COPYING file in the project root for full license information.
+﻿// Copyright (C) 2006-2017 Jim Tilander, 2017-2026 Lambert Clara. See the COPYING file in the project root for full license information.
 
 /***************************************************************************
 
@@ -19,12 +19,12 @@ namespace NiftyPerforce
     public enum SettingsLookupSource
     {
         /// <summary>
-        /// Run p4 info and parse settings from its output
+        /// Run p4 info and parse settings from its output.
         /// </summary>
         P4Info,
 
         /// <summary>
-        /// Run p4 set and parse settings from its output
+        /// Run p4 set and parse settings from its output.
         /// </summary>
         P4Set,
     }

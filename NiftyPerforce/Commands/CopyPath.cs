@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2006-2017 Jim Tilander, 2017-2025 Lambert Clara. See the COPYING file in the project root for full license information.
+﻿// Copyright (C) 2006-2017 Jim Tilander, 2017-2026 Lambert Clara. See the COPYING file in the project root for full license information.
 
 using System;
 using System.IO;
@@ -15,12 +15,12 @@ namespace NiftyPerforce.Commands
         internal enum Mode
         {
             /// <summary>
-            /// Copy the current file path relative to the solution directory
+            /// Copy the current file path relative to the solution directory.
             /// </summary>
             RelativePath,
 
             /// <summary>
-            /// Copy the current file name only
+            /// Copy the current file name only.
             /// </summary>
             FileName,
         }

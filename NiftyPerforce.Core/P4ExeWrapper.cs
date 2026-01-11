@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2006-2017 Jim Tilander, 2017-2025 Lambert Clara. See the COPYING file in the project root for full license information.
+﻿// Copyright (C) 2006-2017 Jim Tilander, 2017-2026 Lambert Clara. See the COPYING file in the project root for full license information.
 
 using System;
 using System.Diagnostics;
@@ -8,42 +8,42 @@ namespace NiftyPerforce.Core
     public enum P4Commands
     {
         /// <summary>
-        /// p4 add
+        /// p4 add.
         /// </summary>
         Add,
 
         /// <summary>
-        /// p4 delete
+        /// p4 delete.
         /// </summary>
         Delete,
 
         /// <summary>
-        /// p4 edit
+        /// p4 edit.
         /// </summary>
         Edit,
 
         /// <summary>
-        /// p4 edit, but called without checking if the file is read-only or not
+        /// p4 edit, but called without checking if the file is read-only or not.
         /// </summary>
         EditForce,
 
         /// <summary>
-        /// p4 revert
+        /// p4 revert.
         /// </summary>
         Revert,
 
         /// <summary>
-        /// p4 revert only if file is unchanged
+        /// p4 revert only if file is unchanged.
         /// </summary>
         RevertUnchanged,
 
         /// <summary>
-        /// p4 revert and delete files that were opened for add
+        /// p4 revert and delete files that were opened for add.
         /// </summary>
         RevertDeleteOpenForAdd,
 
         /// <summary>
-        /// p4 submit
+        /// p4 submit.
         /// </summary>
         Submit,
     }
