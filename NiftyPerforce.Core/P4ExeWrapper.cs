@@ -80,9 +80,7 @@ namespace NiftyPerforce.Core
             return true;
         }
 
-#pragma warning disable SA1011 // Closing square brackets should be spaced correctly
-        public (string exe, string arguments) GetArgumentsForCommand(P4Commands command, P4ConnectionInfo connectionInfo, string filePath, object[]? data = null)
-#pragma warning restore SA1011 // Closing square brackets should be spaced correctly
+        public (string ExePath, string Arguments) GetArgumentsForCommand(P4Commands command, P4ConnectionInfo connectionInfo, string filePath, object[]? data = null)
         {
             string escapedFilePath = P4Utils.EscapeP4Path(filePath);
             Trace.Assert(connectionInfo.IsValid());

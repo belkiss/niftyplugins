@@ -78,7 +78,7 @@ if exist %TEMP%\p4vcerr.out (
                 _p4vcExecutablePath = _p4Utils.LocateP4InstallPath(P4Utils.P4VcBatName);
                 _p4vcBatFound = _p4vcExecutablePath != null && _fileSystemService.File.ReadAllText(_p4vcExecutablePath).Equals(P4VCBatContent, StringComparison.Ordinal);
                 _p4vcExecutablePath ??= _p4Utils.LocateP4InstallPath(P4Utils.P4VcExeName);
-                _p4vExecutablePath = _p4vcExecutablePath != null ? _fileSystemService.Path.Combine(_fileSystemService.Path.GetDirectoryName(_p4vcExecutablePath) !, P4Utils.P4VExeName) : null;
+                _p4vExecutablePath = _p4vcExecutablePath != null ? _fileSystemService.Path.Combine(_fileSystemService.Path.GetDirectoryName(_p4vcExecutablePath)!, P4Utils.P4VExeName) : null;
                 _p4vVersion = _p4vExecutablePath != null ? _p4Utils.GetFileVersion(_p4vExecutablePath) : null;
                 if (_p4vVersion == null)
                 {
@@ -133,7 +133,7 @@ if exist %TEMP%\p4vcerr.out (
             return true;
         }
 
-        private (string exe, string arguments) RemapToP4VIfNeeded(string exe, string arguments)
+        private (string ExePath, string Arguments) RemapToP4VIfNeeded(string exe, string arguments)
         {
             if (_p4vcBatFound)
             {
@@ -143,7 +143,7 @@ if exist %TEMP%\p4vcerr.out (
             return (exe, arguments);
         }
 
-        public (string exe, string arguments) GetArgumentsForCommand(P4VCommands command, P4ConnectionInfo connectionInfo, string filePath)
+        public (string ExePath, string Arguments) GetArgumentsForCommand(P4VCommands command, P4ConnectionInfo connectionInfo, string filePath)
         {
             string escapedFilePath = P4Utils.EscapeP4Path(filePath);
             Trace.Assert(connectionInfo.IsValid());

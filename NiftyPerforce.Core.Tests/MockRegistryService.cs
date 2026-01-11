@@ -19,10 +19,10 @@ namespace NiftyPerforce.Core.Tests
 
         public void SetValue(string key, string name, RegistryHive hive, string value)
         {
-            _values ??= new Dictionary<(string key, string name, RegistryHive hive), string>();
+            _values ??= new Dictionary<(string Key, string Name, RegistryHive Hive), string>();
             _values.Add((key, name, hive), value);
         }
 
-        private Dictionary<(string key, string name, RegistryHive hive), string>? _values;
+        private Dictionary<(string Key, string Name, RegistryHive Hive), string>? _values;
     }
 }
