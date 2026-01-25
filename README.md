@@ -49,8 +49,8 @@ documentation):
 > p4 set P4CONFIG=p4config.txt
 ```
 
-Then create a p4config.txt file at the root of each and every workspace you work
-in, like this:
+Then create a p4config.txt file at the root of every workspace you work in, like
+this:
 
 ```
 P4PORT=ssl:ida:3548

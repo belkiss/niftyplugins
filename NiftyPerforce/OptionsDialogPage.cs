@@ -65,7 +65,7 @@ namespace NiftyPerforce
         public bool IgnoreReadOnlyOnEdit { get; set; } = false;
 
         [Category("Connection")]
-        [Description("Use config from system. Effectivly disables the settings inside this dialog for the client etc and picks up the settings from the registry/p4config environment.")]
+        [Description("Use config from system. Effectively disables the settings inside this dialog for the client etc and picks up the settings from the registry/p4config environment.")]
         [DefaultValue(true)]
         public bool UseSystemEnv { get; set; } = true;
 
