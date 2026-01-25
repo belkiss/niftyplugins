@@ -1,4 +1,10 @@
 repos:
+-   repo: https://github.com/executablebooks/mdformat
+    rev: 1.0.0
+    hooks:
+    - id: mdformat
+      name: Format Markdown
+      args: [--wrap, "80", --number, --end-of-line, "crlf"]
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
