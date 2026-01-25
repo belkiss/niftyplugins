@@ -8,9 +8,22 @@ repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
+    -   id: check-case-conflict
+    -   id: check-executables-have-shebangs
+    -   id: check-shebang-scripts-are-executable
+    -   id: check-illegal-windows-names
+    -   id: mixed-line-ending
     -   id: trailing-whitespace
         exclude: \.(resx|Designer\.cs)$
     -   id: end-of-file-fixer
         exclude: \.(resx|Designer\.cs)$
+    -   id: check-json
+    -   id: check-toml
+    -   id: check-xml
     -   id: check-yaml
     -   id: check-added-large-files
+    -   id: check-merge-conflict
+    -   id: check-symlinks
+    -   id: destroyed-symlinks
+    -   id: check-vcs-permalinks
+    -   id: detect-private-key
