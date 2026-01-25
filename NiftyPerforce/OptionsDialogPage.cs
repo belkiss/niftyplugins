@@ -1,14 +1,7 @@
-﻿// Copyright (C) 2006-2017 Jim Tilander, 2017-2026 Lambert Clara. See the COPYING file in the project root for full license information.
-
-/***************************************************************************
-
-Copyright (c) Microsoft Corporation. All rights reserved.
-THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
-ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
-IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
-PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
-
-***************************************************************************/
+﻿// SPDX-FileCopyrightText: 2006-2017 Jim Tilander
+// SPDX-FileCopyrightText: 2017-2026 Lambert Clara
+//
+// SPDX-License-Identifier: MIT
 
 using System;
 using System.ComponentModel;

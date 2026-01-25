@@ -1,0 +1,11 @@
+version = 1
+
+[[annotations]]
+path = ["NiftyPerforce/Resources/*.png"]
+SPDX-FileCopyrightText = ["2006-2017 Jim Tilander", "2017-2026 Lambert Clara"]
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["NiftyPlugins.sln"]
+SPDX-FileCopyrightText = ["2006-2017 Jim Tilander", "2017-2026 Lambert Clara"]
+SPDX-License-Identifier = "MIT"

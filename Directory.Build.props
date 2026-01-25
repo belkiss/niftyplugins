@@ -1,4 +1,11 @@
-﻿<Project>
+﻿<!--
+SPDX-FileCopyrightText: 2006-2017 Jim Tilander
+SPDX-FileCopyrightText: 2017-2026 Lambert Clara
+
+SPDX-License-Identifier: MIT
+-->
+
+<Project>
   <PropertyGroup>
     <Copyright>Copyright (C) 2006-2017 Jim Tilander, 2017-2026 Lambert Clara. See COPYING for and README for more details.</Copyright>
     <Authors>Jim Tilander, Lambert Clara, NiftyPerforce contributors</Authors>

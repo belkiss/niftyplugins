@@ -1,4 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+SPDX-FileCopyrightText: 2006-2017 Jim Tilander
+SPDX-FileCopyrightText: 2017-2026 Lambert Clara
+
+SPDX-License-Identifier: MIT
+-->
+
 <CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
   <!--  This is the file that defines the actual layout and type of the commands.

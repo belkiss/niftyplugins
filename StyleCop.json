@@ -3,7 +3,7 @@
     "settings": {
         "documentationRules": {
             "companyName": "Jim Tilander, Lambert Clara, NiftyPerforce contributors",
-            "copyrightText": "Copyright (C) 2006-2017 Jim Tilander, 2017-2026 Lambert Clara. See the {licenseFile} file in the project root for full license information.",
+            "copyrightText": "SPDX-FileCopyrightText: 2006-2017 Jim Tilander\nSPDX-FileCopyrightText: 2017-2026 Lambert Clara\n\nSPDX-License-Identifier: MIT",
             "variables": {
                 "licenseFile": "COPYING"
             },

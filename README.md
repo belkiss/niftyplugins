@@ -1,3 +1,10 @@
+<!--
+SPDX-FileCopyrightText: 2006-2017 Jim Tilander
+SPDX-FileCopyrightText: 2017-2026 Lambert Clara
+
+SPDX-License-Identifier: MIT
+-->
+
 # Introduction
 
 This repository holds a forked version of Nifty Plugins, originally written by

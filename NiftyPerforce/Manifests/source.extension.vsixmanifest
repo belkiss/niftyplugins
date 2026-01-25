@@ -1,4 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+SPDX-FileCopyrightText: 2006-2017 Jim Tilander
+SPDX-FileCopyrightText: 2017-2026 Lambert Clara
+
+SPDX-License-Identifier: MIT
+-->
+
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
         <Identity Id="NiftyPerforce.belkiss.3cc12a76-88f6-4e50-9ede-377ba823db79" Version="3.0.7" Language="en-US" Publisher="Lambert Clara" />
