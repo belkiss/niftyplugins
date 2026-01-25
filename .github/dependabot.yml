@@ -14,5 +14,6 @@ updates:
     schedule:
       interval: "daily"
     ignore:
-      # ignore all updates since it will most certainly break the plugin compatibility with old VS versions
+      # ignore all updates since it will most certainly break the plugin
+      # compatibility with old VS versions
       - dependency-name: "Microsoft.VisualStudio.SDK"

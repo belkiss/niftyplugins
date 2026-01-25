@@ -1,0 +1,16 @@
+extends: default
+
+rules:
+  empty-lines:
+    max: 1
+    max-start: 0
+    max-end: 0
+
+  line-length:
+    ignore: /.github/workflows/build-and-publish.yml
+
+  new-lines:
+    type: dos
+
+  truthy:
+    ignore: /.github/workflows/build-and-publish.yml

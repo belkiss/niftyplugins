@@ -1,29 +1,41 @@
+---
 repos:
--   repo: https://github.com/executablebooks/mdformat
+  - repo: https://github.com/executablebooks/mdformat
     rev: 1.0.0
     hooks:
-    - id: mdformat
-      name: Format Markdown
-      args: [--wrap, "80", --number, --end-of-line, "crlf"]
--   repo: https://github.com/pre-commit/pre-commit-hooks
+      - id: mdformat
+        name: Format Markdown
+        args: [--wrap, "80", --number, --end-of-line, "crlf"]
+
+  - repo: https://github.com/DominiqueFuchs/resx-hooks
+    rev: v0.3.0
+    hooks:
+      - id: check-all
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.38.0
+    hooks:
+      - id: yamllint
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
-    -   id: check-case-conflict
-    -   id: check-executables-have-shebangs
-    -   id: check-shebang-scripts-are-executable
-    -   id: check-illegal-windows-names
-    -   id: mixed-line-ending
-    -   id: trailing-whitespace
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      - id: check-illegal-windows-names
+      - id: mixed-line-ending
+      - id: trailing-whitespace
         exclude: \.(resx|Designer\.cs)$
-    -   id: end-of-file-fixer
+      - id: end-of-file-fixer
         exclude: \.(resx|Designer\.cs)$
-    -   id: check-json
-    -   id: check-toml
-    -   id: check-xml
-    -   id: check-yaml
-    -   id: check-added-large-files
-    -   id: check-merge-conflict
-    -   id: check-symlinks
-    -   id: destroyed-symlinks
-    -   id: check-vcs-permalinks
-    -   id: detect-private-key
+      - id: check-json
+      - id: check-toml
+      - id: check-xml
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: destroyed-symlinks
+      - id: check-vcs-permalinks
+      - id: detect-private-key
