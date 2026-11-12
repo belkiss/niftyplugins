@@ -19,7 +19,7 @@ SPDX-License-Identifier: MIT
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
     <PackageReference Include="MSTest" Version="4.5.2" />
-    <PackageReference Include="TestableIO.System.IO.Abstractions.TestingHelpers" Version="22.3.0" />
+    <PackageReference Include="TestableIO.System.IO.Abstractions.TestingHelpers" Version="23.0.0" />
   </ItemGroup>
 
   <ItemGroup>
