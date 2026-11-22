@@ -404,9 +404,9 @@ namespace NiftyPerforce
                 }
                 else if (lookup && dir != null)
                 {
-                    SettingsLookupSource[] lookupSources = _preferredLookupSource == SettingsLookupSource.P4Info ?
-                        new[] { SettingsLookupSource.P4Info, SettingsLookupSource.P4Set } :
-                        new[] { SettingsLookupSource.P4Set, SettingsLookupSource.P4Info };
+                    SettingsLookupSource[] lookupSources = _preferredLookupSource == SettingsLookupSource.P4Info
+                        ? new[] { SettingsLookupSource.P4Info, SettingsLookupSource.P4Set }
+                        : new[] { SettingsLookupSource.P4Set, SettingsLookupSource.P4Info };
 
                     foreach (SettingsLookupSource lookupSource in lookupSources)
                     {
